@@ -2,12 +2,27 @@ import React from 'react';
 import { useState } from 'react';
 import FormContainer from '../../components/FormContainer';
 import InputContainer from '../../components/InputContainer';
+
 import './CharacterNameForm.css';
 
 const CharacterNameForm = ({ avatar }) => {
   const [hasAvatar, setHasAvatar] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('submited');
+  };
+
   return (
-    <FormContainer sm={true}>
+    <form
+      style={{
+        display: 'flex',
+        // backgroundColor: 'green',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onSubmit={handleSubmit}
+    >
       <div className='character-name-container'>
         <div className='avatar-container'>
           {!hasAvatar ? (
@@ -27,7 +42,7 @@ const CharacterNameForm = ({ avatar }) => {
           value={'Profile 123persons name'}
         />
       </div>
-    </FormContainer>
+    </form>
   );
 };
 

@@ -1,5 +1,5 @@
 const express = require('express');
-
+const cors = require('cors');
 const path = require('path');
 // const bodyParser = require('body-parser');
 require('dotenv').config();
@@ -25,6 +25,24 @@ const monsterRoutes = require('./routes/monsters');
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use(
+  cors({
+    origin: (origin, cb) => cb(null, true),
+    credentials: true,
+    preflightContinue: true,
+    exposedHeaders: [
+      'Access-Control-Allow-Headers',
+      'Access-Control-Allow-Origin',
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'X-Password-Expired',
+    ],
+    optionsSuccessStatus: 200,
+  })
+);
 
 // parse application/x-www-form-urlencoded
 // app.use(bodyParser.urlencoded({ extended: false }));

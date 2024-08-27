@@ -5,9 +5,6 @@ const CharacterSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  img: {
-    type: String,
-  },
   name: {
     type: String,
     required: true,
@@ -399,14 +396,6 @@ const CharacterSchema = new mongoose.Schema({
     },
     info: [],
   },
-  // height: {
-  //   type: String,
-  //   required: true,
-  // },
-  // weight: {
-  //   type: Number,
-  //   required: true,
-  // },
   date: {
     type: Date,
     default: Date.now,

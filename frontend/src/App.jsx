@@ -6,13 +6,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomeScreen from './screens/HomeScreen';
 import MonstersScreen from './screens/MonstersScreen/MonstersScreen';
-import DungeonScreen from './screens/DungeonScreen';
 import CharacterScreen from './screens/CharacterBuilderScreens/CharacterScreen';
 import ChooseRaceScreen from './screens/CharacterBuilderScreens/ChooseRace/ChooseRaceScreen';
 import ChooseClassScreen from './screens/CharacterBuilderScreens/ChooseClass/ChooseClassScreen';
 import ChooseAbilitiesScreen from './screens/CharacterBuilderScreens/ChooseAbilities/ChooseAbilitiesScreen';
 import CharacterDetailsScreen from './screens/CharacterDetailsScreen/CharacterDetailsScreen';
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 function App() {
   return (
@@ -44,7 +44,7 @@ function App() {
             exact
           ></Route>
           <Route path='/login' element={<LoginScreen />} exact></Route>
-          <Route path='/dungeons' element={<DungeonScreen />} exact></Route>
+          <Route path='/register' element={<RegisterScreen />} exact></Route>
         </Routes>
       </div>
       <Footer />

@@ -3,14 +3,7 @@ import { Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './CharacterBuilderStepMenu.css';
 
-const CharacterBuilderStepMenu = ({
-  step0,
-  step1,
-  step2,
-  step3,
-  step4,
-  step5,
-}) => {
+const CharacterBuilderStepMenu = ({ step0, step1, step2, step3, step4 }) => {
   return (
     <Nav className='character-builder-nav'>
       <span>Character Builder</span>
@@ -59,17 +52,6 @@ const CharacterBuilderStepMenu = ({
       </Nav.Item>
       <Nav.Item>
         {step4 ? (
-          <LinkContainer to='/chequip'>
-            <Nav.Link className='character-builder-menulink'>
-              4. EQUIPMENT
-            </Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>4. EQUIPMENT</Nav.Link>
-        )}
-      </Nav.Item>
-      <Nav.Item>
-        {step5 ? (
           <LinkContainer to='/chfinal'>
             <Nav.Link className='character-builder-menulink'>
               <i className='fa-solid fa-address-card'></i>

@@ -53,7 +53,16 @@ const ChooseRaceScreen = () => {
   return (
     <div id='chrace'>
       <CharacterBuilderStepMenu step0 step1></CharacterBuilderStepMenu>
-      <CharacterNameForm />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <CharacterNameForm />
+      </div>
+
       {/* if there is a selectedRace.name property and we're not showing the confirmation modal then Return the PageContainer
         which includes the final race manager options
         otherwise we should only see the filtering options for selecting the race

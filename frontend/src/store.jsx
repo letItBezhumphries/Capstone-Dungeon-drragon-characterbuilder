@@ -3,12 +3,13 @@ import { backendApi } from './slices/backendApiSlice';
 import { open5eRaceApi } from './services/races';
 import { open5eClassApi } from './services/classes';
 import { open5eMonstersApi } from './services/monsters';
-import { characterBuilderSliceReducer } from './slices/characterBuilderSlice';
+import buildCharacterSliceReducer from './slices/builderSlice';
 import {
   backendMonstersApi,
   backendCharactersApi,
   backendUsersApi,
 } from './services/backend';
+import formReducer from './slices/formSlice';
 import authSliceReducer from './slices/authSlice';
 
 const rootReducer = combineReducers({
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
   [backendMonstersApi.reducerPath]: backendMonstersApi.reducer,
   [backendCharactersApi.reducerPath]: backendCharactersApi.reducer,
   [backendUsersApi.reducerPath]: backendUsersApi.reducer,
-  characterForm: characterBuilderSliceReducer,
+  characerBuilder: buildCharacterSliceReducer,
+  form: formReducer,
   auth: authSliceReducer,
 });
 

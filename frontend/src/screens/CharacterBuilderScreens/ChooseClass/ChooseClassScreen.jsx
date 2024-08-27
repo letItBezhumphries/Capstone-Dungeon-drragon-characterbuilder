@@ -75,7 +75,15 @@ const ChooseClassScreen = ({ classes }) => {
   return (
     <div id='chclass'>
       <CharacterBuilderStepMenu step0 step1 step2></CharacterBuilderStepMenu>
-      <CharacterNameForm />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <CharacterNameForm />
+      </div>
       {selectedClass?.name && !showConfirmationModal ? (
         <StepFormControlWrapper>
           <PageContainer
