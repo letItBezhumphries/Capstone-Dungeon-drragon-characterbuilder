@@ -81,14 +81,23 @@ const CharacterEditScreen = () => {
         Go Back
       </Link>
       <FormContainer>
-        <h1>Edit Product</h1>
+        <h1>Edit Character</h1>
         {loadingUpdate && <Loader />}
         {isLoading ? (
           <Loader />
         ) : error ? (
           <Message variant='danger'>{error.data.message}</Message>
         ) : (
-          <Form onSubmit={submitHandler}>
+          <Form
+            onSubmit={submitHandler}
+            style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            <img
+              src={character.img}
+              alt={`avatar of your character`}
+              style={{ height: '70px', width: '70px' }}
+            />
+
             <Form.Group controlId='name'>
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -107,7 +116,6 @@ const CharacterEditScreen = () => {
                 className='select-race'
                 onChange={handleRaceSelected}
               >
-                <option value='--'>--</option>
                 {characterRaces.map((r, idx) => (
                   <option key={idx} value={r.name}>
                     {r.name}
@@ -124,14 +132,12 @@ const CharacterEditScreen = () => {
                 className='select-gender'
                 onChange={handleGenderSelected}
               >
-                <option value='--'>--</option>
                 {characterGenders.map((g, idx) => (
                   <option key={idx} value={g.type}>
-                    {ab.type}
+                    {g.type}
                   </option>
                 ))}
               </select>
-              {loadingUpload && <Loader />}
             </Form.Group>
 
             <Form.Group controlId='class'>
@@ -142,7 +148,6 @@ const CharacterEditScreen = () => {
                 className='select-classType'
                 onChange={handleClassTypeSelected}
               >
-                <option value='--'>--</option>
                 {characterClasses.map((ch, idx) => (
                   <option key={idx} value={ch.name}>
                     {ch.name}

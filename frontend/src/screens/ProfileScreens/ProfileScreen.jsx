@@ -47,7 +47,7 @@ const ProfileScreen = () => {
                   <td>
                     <Button
                       as={Link}
-                      to={`/character/${character._id}`}
+                      to={`/profile/character/${character._id}/edit`}
                       className='btn-sm'
                       variant='light'
                     >

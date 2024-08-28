@@ -41,14 +41,14 @@ export const backendCharactersApi = createApi({
     }),
     updateCharacter: builder.mutation({
       query: (character) => ({
-        url: `${CHARACTERS_URL}/${character.id}`,
+        url: `/api/characters/${character.id}`,
         method: 'PUT',
         body: { ...character },
       }),
     }),
     deleteCharacter: builder.mutation({
       query: (id) => ({
-        url: `${CHARACTERS_URL}/${id}`,
+        url: `/api/characters/${id}`,
         method: 'DELETE',
         body: { id },
       }),
@@ -61,8 +61,57 @@ export const backendUsersApi = createApi({
   reducerPath: 'backendUsersApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5005' }),
   endpoints: (builder) => ({
-    getBackendUsers: builder.query({
+    getUsers: builder.query({
       query: () => `/api/users`,
+      providesTags: ['User'],
+      keepUnusedDataFor: 5,
+    }),
+    login: builder.mutation({
+      query: (data) => ({
+        url: `/api/auth`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    register: builder.mutation({
+      query: (data) => ({
+        url: `/api/`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/logout`,
+        method: 'POST',
+      }),
+    }),
+    profile: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/profile`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: `${USERS_URL}/${userId}`,
+        method: 'DELETE',
+      }),
+    }),
+    getUserDetails: builder.query({
+      query: (id) => ({
+        url: `${USERS_URL}/${id}`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    updateUser: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/${data.userId}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['User'],
     }),
     keepUnusedDataFor: 5,
   }),
@@ -80,4 +129,14 @@ export const {
   useDeleteCharacterMutation,
 } = backendCharactersApi;
 
-export const { useGetBackendUsersQuery } = backendUsersApi;
+export const {
+  useGetBackendUsersQuery,
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+  useProfileMutation,
+  useGetUsersQuery,
+  useDeleteUserMutation,
+  useUpdateUserMutation,
+  useGetUserDetailsQuery,
+} = backendUsersApi;
