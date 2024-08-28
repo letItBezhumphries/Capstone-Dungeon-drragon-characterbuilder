@@ -23,6 +23,7 @@ export const backendCharactersApi = createApi({
       query: (id) => ({
         url: `/api/characters/${id}`,
       }),
+      keepUnusedDataFor: 5,
     }),
     createCharacter: builder.mutation({
       query: (character) => ({
@@ -41,10 +42,11 @@ export const backendCharactersApi = createApi({
     }),
     updateCharacter: builder.mutation({
       query: (character) => ({
-        url: `/api/characters/${character.id}`,
+        url: `/api/characters/update/${character._id}`,
         method: 'PUT',
         body: { ...character },
       }),
+      keepUnusedDataFor: 5,
     }),
     deleteCharacter: builder.mutation({
       query: (id) => ({
@@ -64,7 +66,6 @@ export const backendUsersApi = createApi({
     getUsers: builder.query({
       query: () => `/api/users`,
       providesTags: ['User'],
-      keepUnusedDataFor: 5,
     }),
     login: builder.mutation({
       query: (data) => ({

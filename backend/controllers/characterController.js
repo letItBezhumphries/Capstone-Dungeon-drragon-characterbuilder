@@ -1,5 +1,5 @@
 const { faker } = require('@faker-js/faker');
-
+const mongoose = require('mongoose');
 /* require in Character Model */
 const Character = require('../models/Character');
 
@@ -25,10 +25,14 @@ const getCharacters = async (req, res, next) => {
 // @desc     get character by id
 // @access   Public
 const getCharacterById = async (req, res, next) => {
+  console.log('req.params:', req.params);
   try {
     const { chrId } = req.params;
+    console.log('param chrId:', chrId);
 
     const character = await Character.findById(chrId).populate('userId');
+
+    console.log('This is the character characeter:', character);
 
     if (character) {
       res.status(200).json(character);
@@ -76,10 +80,12 @@ const createNewCharacter = async (req, res, next) => {
 // @desc     update a character
 // @access   Private
 const updateCharacter = async (req, res, next) => {
+  console.log('reqparams.id', req);
+  console.log('req.params.charId', req.params.chrId);
   try {
     const { chrId } = req.params;
-    const { name, gender, class_type, age, hit_points, img } = req.body;
-    const character = await Character.findById(chrId).populate('userId');
+    const { name, gender, class_type, age, hit_points, img, race } = req.body;
+    const character = await Character.findById(chrId);
     console.log('PUT route update character by id:', character);
     // check if character was found
     if (character) {
@@ -89,6 +95,7 @@ const updateCharacter = async (req, res, next) => {
       character.age = age;
       character.hit_points = hit_points;
       character.img = img;
+      character.race = race;
 
       const updatedCharacter = await character.save();
       res.status(203).json(updatedCharacter);

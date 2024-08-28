@@ -19,6 +19,8 @@ import {
 const CharacterEditScreen = () => {
   const { id: charId } = useParams();
 
+  // console.log('charId:', charId);
+
   const [name, setName] = useState('');
   const [gender, setGender] = useState(0);
   const [race, setRace] = useState('');
@@ -52,11 +54,12 @@ const CharacterEditScreen = () => {
     e.preventDefault();
     try {
       await updateCharacter({
-        charId,
+        charId: character._id,
+        _id: character._id,
         name,
         gender,
         race,
-        classType,
+        class_type: classType,
       }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
       toast.success('Character updated');
       refetch();
@@ -68,6 +71,7 @@ const CharacterEditScreen = () => {
 
   useEffect(() => {
     if (character) {
+      console.log('in CHAR EDIT -> character:', character);
       setName(character.name);
       setGender(character.gender);
       setRace(character.race);

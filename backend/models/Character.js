@@ -24,7 +24,6 @@ const CharacterSchema = new mongoose.Schema({
   },
   age: {
     type: Number,
-    required: true,
   },
   age_desc: {
     type: String,
@@ -293,11 +292,9 @@ const CharacterSchema = new mongoose.Schema({
   hit_points: {
     max: {
       type: Number,
-      required: true,
     },
     current: {
       type: Number,
-      required: true,
     },
   },
   hit_die: {
