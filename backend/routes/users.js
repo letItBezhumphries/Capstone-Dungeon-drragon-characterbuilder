@@ -3,6 +3,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 // need to require in any auth middleware
 const auth = require('../middleware/authMiddleware');
+const checkObjectId = require('../middleware/checkObjectId');
 
 /* controllers */
 
@@ -33,9 +34,11 @@ router.get('/login', (req, res, next) => {
 });
 
 // router.get('/profile/:id', getUserById);
-router.get('/profile/:id', getUserById);
+router.get('/profile/:id', checkObjectId, getUserById);
 
-router.put('/:id', updateUser).delete('/:id', deleteUser);
-// router.put('/:id', updateUser).delete('/:id', auth, deleteUser);
+router
+  .put('/:id', checkObjectId, updateUser)
+  .delete('/:id', checkObjectId, deleteUser);
+// router.put('/:id', auth, checkObjectId, updateUser).delete('/:id', auth, checkObjectId, deleteUser);
 
 module.exports = router;

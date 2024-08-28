@@ -10,13 +10,14 @@ const {
   deleteCharacter,
 } = require('../controllers/characterController');
 
+const checkObjectId = require('../middleware/checkObjectId');
 const auth = require('../middleware/authMiddleware.js');
 
 router.get('/', getCharacters);
 router
-  .get('/:chrId', getCharacterById)
-  .put('/:chrId', updateCharacter)
-  .delete('/:chrId', deleteCharacter);
-router.post('/new/:id', createNewCharacter);
+  .get('/:chrId', checkObjectId, getCharacterById)
+  .put('/:chrId', checkObjectId, updateCharacter)
+  .delete('/:chrId', checkObjectId, deleteCharacter);
+router.post('/new/:id', checkObjectId, createNewCharacter);
 
 module.exports = router;

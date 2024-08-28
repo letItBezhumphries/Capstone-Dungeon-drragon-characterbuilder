@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { backendApi } from './slices/backendApiSlice';
 import { open5eRaceApi } from './services/races';
 import { open5eClassApi } from './services/classes';
 import { open5eMonstersApi } from './services/monsters';
@@ -14,7 +13,6 @@ import formReducer from './slices/formSlice';
 import authSliceReducer from './slices/authSlice';
 
 const rootReducer = combineReducers({
-  [backendApi.reducerPath]: backendApi.reducer,
   [open5eMonstersApi.reducerPath]: open5eMonstersApi.reducer,
   [open5eClassApi.reducerPath]: open5eClassApi.reducer,
   [open5eRaceApi.reducerPath]: open5eRaceApi.reducer,
@@ -33,7 +31,6 @@ const store = configureStore({
       .concat(open5eRaceApi.middleware)
       .concat(open5eClassApi.middleware)
       .concat(open5eMonstersApi.middleware)
-      .concat(backendApi.middleware)
       .concat(backendMonstersApi.middleware)
       .concat(backendCharactersApi.middleware)
       .concat(backendUsersApi.middleware),

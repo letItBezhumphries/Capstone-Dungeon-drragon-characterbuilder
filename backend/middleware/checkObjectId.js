@@ -17,4 +17,4 @@ function checkObjectId(req, res, next) {
   next();
 }
 
-module.exports checkObjectId;
+module.exports = checkObjectId;
