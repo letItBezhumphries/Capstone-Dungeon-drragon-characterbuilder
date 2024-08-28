@@ -42,6 +42,7 @@ const PageContainer = ({
             selection={isRace ? raceSelection : classSelection}
             isLoading={isLoading}
             selectedRace={selectedRace}
+            selectedClass={selectedClass}
           />
           {/* SummaryList */}
           {isModal && isRace ? (
@@ -72,6 +73,7 @@ const PageContainer = ({
             selection={isRace ? raceSelection : classSelection}
             isLoading={isLoading}
             selectedRace={selectedRace}
+            selectedClass={selectedClass}
           />
         </>
       )}

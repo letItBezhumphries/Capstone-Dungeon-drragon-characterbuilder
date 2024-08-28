@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useGetBackendCharactersQuery } from '../services/backend';
+import { useGetBackendMonstersQuery } from '../services/backend';
 
 import StepFormControlWrapper from './CharacterBuilderScreens/StepFormWrapper';
 
 const HomeScreen = () => {
   // const { data, error, isLoading } = useGetClassDataQuery('barbarian');
 
-  const { data, isLoading, error } = useGetBackendCharactersQuery();
+  const { data, isLoading, error } = useGetBackendMonstersQuery();
   /** BRING IN THE CHARACTERS */
 
   useEffect(() => {

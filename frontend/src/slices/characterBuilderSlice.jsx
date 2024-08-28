@@ -29,7 +29,7 @@ const initialState = {
 };
 
 const characterBuilderSlice = createSlice({
-  name: 'character-builder',
+  name: 'character',
   initialState: initialState,
   reducers: {
     characterAddedToBuilder: (state, action) => {

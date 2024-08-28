@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { Container, Row } from 'react-bootstrap';
 import './StepFormWrapper.css';
 
@@ -20,7 +19,7 @@ function StepFormControlWrapper({ children, className, ...rest }) {
       </div>
       {children}
       <div className='step-next next-box'>
-        <button className='next-btn'>
+        <button className='next-btn' type='submit'>
           Next
           <i
             className='fa-solid fa-chevron-right fa-2xl'

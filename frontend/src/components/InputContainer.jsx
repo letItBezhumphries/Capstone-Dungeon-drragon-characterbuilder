@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import './InputContainer.css';
 
-const InputContainer = ({ query_num, label, value, classType }) => {
+const InputContainer = ({ label, value, classType, register }) => {
   const [inputVal, setInputVal] = useState(value);
 
   const handleInputChange = (e) => {
@@ -12,12 +12,13 @@ const InputContainer = ({ query_num, label, value, classType }) => {
   return (
     <div className='input-container'>
       <span className='form-input-label'>
-        <label htmlFor={`qry_${query_num}`}>{label}</label>
+        <label htmlFor={`name`}>{label}</label>
       </span>
       <span className='form-input-field'>
         <input
           type='text'
-          id={`qry_${query_num}`}
+          {...register('name')}
+          id='name'
           className={classType}
           onChange={handleInputChange}
           value={inputVal}

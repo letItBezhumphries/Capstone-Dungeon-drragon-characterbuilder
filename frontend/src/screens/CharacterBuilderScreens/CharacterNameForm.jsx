@@ -1,16 +1,27 @@
-import React from 'react';
 import { useState } from 'react';
-import FormContainer from '../../components/FormContainer';
-import InputContainer from '../../components/InputContainer';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { updateFormData } from '../../slices/formSlice';
 
 import './CharacterNameForm.css';
 
-const CharacterNameForm = ({ avatar }) => {
+const CharacterNameForm = ({ avatar, name }) => {
   const [hasAvatar, setHasAvatar] = useState(false);
+  const [inputVal, setInputVal] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('submited');
+  const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    setInputVal(e.target.value);
+  };
+
+  const onSubmit = (data) => {
+    console.log('submited', data);
+    dispatch(updateFormData(data));
+    navigate('/character/chrace');
   };
 
   return (
@@ -21,7 +32,7 @@ const CharacterNameForm = ({ avatar }) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className='character-name-container'>
         <div className='avatar-container'>
@@ -35,12 +46,28 @@ const CharacterNameForm = ({ avatar }) => {
             <img className='avatar' src='' alt='' />
           )}
         </div>
-        <InputContainer
-          query_num={3}
-          label={'Character Name'}
-          classType={'character-name-input'}
-          value={'Profile 123persons name'}
-        />
+        <div className='input-container'>
+          <span className='form-input-label'>
+            <label htmlFor={`name`}>Character Name:</label>
+          </span>
+          <span className='form-input-field'>
+            <input
+              type='text'
+              {...register('name')}
+              id={'name'}
+              className='character-name-input'
+              onChange={handleInputChange}
+              value={inputVal}
+              placeholder={
+                name !== undefined
+                  ? `${name}'s Character Name`
+                  : 'Choose Your Name Adventurer!'
+              }
+            />
+          </span>
+        </div>
+        {/* GET RID OF */}
+        <button type='submit'>NEXT</button>
       </div>
     </form>
   );

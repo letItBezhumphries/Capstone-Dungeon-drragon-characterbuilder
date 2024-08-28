@@ -2,27 +2,26 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useGetClassDataQuery } from '../services/classes';
-import PageContainer from './PageContainer';
-import Loader from './Loader';
-import { setFilteredClass } from '../slices/characterBuilderSlice';
+import { useGetClassDataQuery } from '../../../services/classes';
+import ChooseClassCard from './ChooseClassCard';
+import Loader from '../../../components/Loader';
+import { setFilteredClass } from '../../../slices/characterBuilderSlice';
 
-import './ConfirmationModal.css';
+import '../../../components/ConfirmationModal.css';
 
 function ChooseClassModal({
   show,
   onHide,
   handleClose,
-  isRace,
   selection,
+  selectedClass,
   onSelectionConfirm,
   onSelectionCancel,
 }) {
   const [queryData, setQueryData] = useState({});
   // const dispatch = useDispatch();
 
-  // console.log('in confirmationModal selection:', selection);
-  // console.log('data in ConfirmationModal:', data);
+  console.log('in confirmationModal selection:', selectedClass);
 
   const { data, isLoading, error } = useGetClassDataQuery(selection.index);
 
@@ -44,6 +43,13 @@ function ChooseClassModal({
       ...selection,
       ...queryData,
     };
+
+    console.log(
+      'in ChooseClassModal-> selection handleSelectionCLick:',
+      selection,
+      '\n and here is queryData:',
+      queryData
+    );
 
     onSelectionConfirm(selectionData);
   };
@@ -81,11 +87,11 @@ function ChooseClassModal({
           </Modal.Header>
           <Modal.Body className='modal-body'>
             {!isLoading ? (
-              <PageContainer
+              <ChooseClassCard
                 isModal={true}
-                isRace={isRace}
                 selection={{ ...selection, ...data }}
                 isLoading={isLoading}
+                selectedClass={selectedClass}
               />
             ) : (
               <Loader />

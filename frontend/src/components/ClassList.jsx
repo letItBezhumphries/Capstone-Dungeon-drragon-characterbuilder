@@ -1,39 +1,24 @@
+import { useState, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import CollapsibleList from './CollapsibleList';
 
-const PageList = ({
-  isRace,
-  isModal,
-  selection,
-  isLoading,
-  selectedRace,
-  selectedClass,
-}) => {
-  console.log(
-    'in PageLIst, selection:',
-    selection,
-    'selectedClass:',
-    selectedClass,
-    'selectedRace:',
-    selectedRace
-  );
-
-  let listItems;
-  if (isRace) {
-    listItems = selection.items;
-  } else {
-    listItems = selection.features;
+const ClassList = ({ isRace, isModal, selection, isLoading, selectedRace }) => {
+  let classItems;
+  if (!isLoading) {
+    classItems = selection.features;
   }
 
   return (
     <Row className='full-width-row'>
       <Col className='full-width-col'>
         {isModal ? (
-          <h3 className='secondary-title'>{`${selection.name} Traits`}</h3>
+          <h3 className='secondary-title'>
+            {isRace ? `${selection.name} Traits` : null}
+          </h3>
         ) : null}
 
         <div className='secondary-detailslist'>
-          {isModal ? (
+          {isRace && selection.traits.length > 0 ? (
             <CollapsibleList
               items={selection.traits}
               isModal={isModal}
@@ -43,7 +28,7 @@ const PageList = ({
             />
           ) : (
             <CollapsibleList
-              items={selectedRace.traits}
+              items={classItems}
               isModal={isModal}
               isLoading={isLoading}
               isRace={isRace}
@@ -56,4 +41,4 @@ const PageList = ({
   );
 };
 
-export default PageList;
+export default ClassList;

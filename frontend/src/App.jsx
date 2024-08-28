@@ -5,12 +5,14 @@ import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomeScreen from './screens/HomeScreen';
+import ProfileScreen from './screens/ProfileScreens/ProfileScreen';
 import MonstersScreen from './screens/MonstersScreen/MonstersScreen';
 import CharacterScreen from './screens/CharacterBuilderScreens/CharacterScreen';
 import ChooseRaceScreen from './screens/CharacterBuilderScreens/ChooseRace/ChooseRaceScreen';
 import ChooseClassScreen from './screens/CharacterBuilderScreens/ChooseClass/ChooseClassScreen';
 import ChooseAbilitiesScreen from './screens/CharacterBuilderScreens/ChooseAbilities/ChooseAbilitiesScreen';
-import CharacterDetailsScreen from './screens/CharacterDetailsScreen/CharacterDetailsScreen';
+import CharacterDetailsScreen from './screens/CharacterDetailsScreen/CharacterDetails';
+import CharacterEditScreen from './screens/admin/CharacterEditScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 
@@ -39,8 +41,14 @@ function App() {
             exact
           ></Route>
           <Route
-            path='/character/:chrId'
+            path='/character/:id'
             element={<CharacterDetailsScreen />}
+            exact
+          ></Route>
+          <Route path='/profile' element={<ProfileScreen />} exact></Route>
+          <Route
+            path='/profile/character/:id/edit'
+            element={<CharacterEditScreen />}
             exact
           ></Route>
           <Route path='/login' element={<LoginScreen />} exact></Route>

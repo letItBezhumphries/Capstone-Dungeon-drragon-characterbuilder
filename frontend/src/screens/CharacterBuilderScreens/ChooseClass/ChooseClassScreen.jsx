@@ -1,25 +1,33 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
+import { updateFormData } from '../../../slices/formSlice';
+import { useNavigate } from 'react-router-dom';
 import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
-import ChooseClassModal from '../../../components/ChooseClassModal';
+import ChooseClassModal from './ChooseClassModal';
 // import ConfirmationModal from '../../../components/ConfirmationModal';
 import FilterOptionItem from '../../../components/FilterOptionItem';
 import CharacterNameForm from '../CharacterNameForm';
 import PageContainer from '../../../components/PageContainer';
 import StepFormControlWrapper from '../StepFormWrapper';
+import ChooseClassCard from './ChooseClassCard';
 import { setFilteredClass } from '../../../slices/characterBuilderSlice';
 
 // import { useGetClassDataQuery } from '../../../services/classes';
 
 import { characterClasses } from '../../../data/selectors';
 
-const ChooseClassScreen = ({ classes }) => {
+const ChooseClassScreen = ({}) => {
+  const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const formData = useSelector((state) => state.form.formData);
+
+  console.log('in ChooseClassScreen -> formData:', formData);
+
   const [temporaryClass, setTemporaryClass] = useState({});
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
-  const dispatch = useDispatch();
 
   const handleClose = () => setShowConfirmationModal(false);
 
@@ -37,7 +45,7 @@ const ChooseClassScreen = ({ classes }) => {
 
   const handleConfirmSelection = (selection) => {
     // send the selection to the store selection for class
-    // console.log('in handleConfirmSelection:', selection);
+    console.log('in handleConfirmSelection:', selection);
     // set the selectedRace
     setSelectedClass({
       name: selection.name,
@@ -62,15 +70,11 @@ const ChooseClassScreen = ({ classes }) => {
     setShowConfirmationModal(false);
   };
 
-  // const { data, error, isLoading } = useGetClassDataQuery('bard');
+  const onSubmit = (data) => {
+    dispatch(updateFormData(data));
 
-  // if (!isLoading) {
-  //   // parseClassTable(data.table);
-  //   let selection = parseClassData(data);
-  //   console.log('selection will look like:', selection);
-  // }
-
-  // console.log('in home - data:', data);
+    //  navigate('/character/chabilities');
+  };
 
   return (
     <div id='chclass'>
@@ -85,13 +89,22 @@ const ChooseClassScreen = ({ classes }) => {
         <CharacterNameForm />
       </div>
       {selectedClass?.name && !showConfirmationModal ? (
-        <StepFormControlWrapper>
-          <PageContainer
-            isModal={false}
-            isRace={false}
-            selection={selectedClass}
-          />
-        </StepFormControlWrapper>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <StepFormControlWrapper>
+            <input
+              value={JSON.stringify(selectedRace)}
+              name='race'
+              {...register('race')}
+              style={{ display: 'none' }}
+            ></input>
+            <ChooseClassCard
+              isModal={false}
+              isRace={false}
+              selectedClass={selectedClass}
+              selection={temporaryClass}
+            />
+          </StepFormControlWrapper>
+        </form>
       ) : (
         <StepFormControlWrapper>
           <div className='filtering-container'>
@@ -127,3 +140,11 @@ const ChooseClassScreen = ({ classes }) => {
 };
 
 export default ChooseClassScreen;
+
+// <StepFormControlWrapper>
+// <PageContainer
+//   isModal={false}
+//   isRace={false}
+//   selection={selectedClass}
+// />
+// </StepFormControlWrapper>

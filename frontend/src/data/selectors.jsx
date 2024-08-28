@@ -120,3 +120,16 @@ export const characterClasses = [
     imgSrc: '/src/assets/classes/wizard.jpeg',
   },
 ];
+
+export const characterGenders = [
+  { index: 1, type: 'Gender variant' },
+  { index: 2, type: 'male' },
+  { index: 3, type: 'female' },
+  { index: 4, type: 'Trigender' },
+  { index: 5, type: 'Cis female' },
+  { index: 6, type: 'Gender nonconforming' },
+  { index: 7, type: 'Woman' },
+  { index: 8, type: 'Transexual man' },
+  { index: 9, type: 'Demi-woman' },
+  { index: 10, type: 'Gender fluid' },
+];

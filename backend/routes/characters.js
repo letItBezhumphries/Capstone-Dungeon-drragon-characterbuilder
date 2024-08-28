@@ -18,9 +18,5 @@ router
   .put('/:chrId', updateCharacter)
   .delete('/:chrId', deleteCharacter);
 router.post('/new/:id', createNewCharacter);
-// .put('/:chrId', updateCharacter)
-// .delete('/:chrId', deleteCharacter);
-// router.post('/new/:id', createNewCharacter);
-//
 
 module.exports = router;

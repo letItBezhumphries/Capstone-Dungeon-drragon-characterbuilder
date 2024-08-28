@@ -1,16 +1,16 @@
 import React from 'react';
 import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
 import CharacterNameForm from '../CharacterNameForm';
-import StepFormControlWrapper from '../StepFormWrapper';
+import StepFormWrapper from '../StepFormWrapper';
 import './CharacterBuilder.css';
 
 const CharacterBuilder = () => {
   return (
     <>
       <CharacterBuilderStepMenu step0 />
-      <StepFormControlWrapper>
+      <StepFormWrapper>
         <CharacterNameForm />
-      </StepFormControlWrapper>
+      </StepFormWrapper>
     </>
   );
 };

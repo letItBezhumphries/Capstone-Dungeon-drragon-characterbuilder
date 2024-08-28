@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useGetDataForRaceQuery } from '../services/races';
-import PageContainer from './PageContainer';
-import { parseRaceData } from '../utility/parseRaceData';
-import { getTableSelectOptions } from '../utility/parseTableString';
-import Loader from './Loader';
-import { setFilteredRace } from '../slices/characterBuilderSlice';
+import { useGetDataForRaceQuery } from '../../../services/races';
+import PageContainer from '../../../components/PageContainer';
+import { parseRaceData } from '../../../utility/parseRaceData';
+import { getTableSelectOptions } from '../../../utility/parseTableString';
+import Loader from '../../../components/Loader';
+import { setFilteredRace } from '../../../slices/characterBuilderSlice';
 
-import './ConfirmationModal.css';
+import '../../../components/ConfirmationModal.css';
 
 function ChooseRaceModal({
   show,
@@ -120,6 +120,7 @@ function ChooseRaceModal({
     );
 
     const selectionData = {
+      ...selection,
       ...raceData,
     };
 

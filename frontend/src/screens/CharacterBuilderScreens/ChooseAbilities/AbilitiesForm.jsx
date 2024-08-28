@@ -5,16 +5,6 @@ import FormContainer from '../../../components/FormContainer';
 import './AbilitiesForm.css';
 
 const AbilitiesForm = () => {
-  const selectorRef = useRef();
-  const [currentSelectValue, setCurrentSelectValue] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [strength, setStrength] = useState(0);
-  const [constitution, setConstitution] = useState(0);
-  const [intelligence, setIntelligence] = useState(0);
-  const [wisdom, setWisdom] = useState(0);
-  const [dexterity, setDexterity] = useState(0);
-  const [charisma, setCharisma] = useState(0);
-
   const abilityRolls = [8, 10, 12, 13, 14, 15];
   const [remainingAbilityRolls, setRemainingAbilityRolls] = useState(
     abilityRolls.slice()
@@ -30,7 +20,7 @@ const AbilitiesForm = () => {
       'is at index',
       currentIndex
     );
-    setRemainingAbilityRolls();
+    // setRemainingAbilityRolls([...]);
   }, [usedAbilityScores, currentIndex]);
 
   const abilities = [
