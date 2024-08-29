@@ -76,39 +76,39 @@ export const backendUsersApi = createApi({
     }),
     register: builder.mutation({
       query: (data) => ({
-        url: `/api/`,
+        url: `/api/users`,
         method: 'POST',
         body: data,
       }),
     }),
     logout: builder.mutation({
       query: () => ({
-        url: `${USERS_URL}/logout`,
+        url: `/api/users/logout`,
         method: 'POST',
       }),
     }),
     profile: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/profile`,
+        url: `/api/users/profile`,
         method: 'PUT',
         body: data,
       }),
     }),
     deleteUser: builder.mutation({
       query: (userId) => ({
-        url: `${USERS_URL}/${userId}`,
+        url: `/api/users/${userId}`,
         method: 'DELETE',
       }),
     }),
     getUserDetails: builder.query({
       query: (id) => ({
-        url: `${USERS_URL}/${id}`,
+        url: `/api/users/${id}`,
       }),
       keepUnusedDataFor: 5,
     }),
     updateUser: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/${data.userId}`,
+        url: `/api/users/${data.userId}`,
         method: 'PUT',
         body: data,
       }),

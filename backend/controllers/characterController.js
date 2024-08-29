@@ -80,13 +80,10 @@ const createNewCharacter = async (req, res, next) => {
 // @desc     update a character
 // @access   Private
 const updateCharacter = async (req, res, next) => {
-  console.log('reqparams.id', req);
-  console.log('req.params.charId', req.params.chrId);
   try {
     const { chrId } = req.params;
     const { name, gender, class_type, age, hit_points, img, race } = req.body;
     const character = await Character.findById(chrId);
-    console.log('PUT route update character by id:', character);
     // check if character was found
     if (character) {
       character.name = name;
