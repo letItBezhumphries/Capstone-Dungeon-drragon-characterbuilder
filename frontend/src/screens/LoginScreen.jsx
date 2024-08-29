@@ -41,14 +41,13 @@ const LoginScreen = () => {
       navigate(redirect);
     } catch (err) {
       // put question marks just in case we get errors because these properties are undefined
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || err);
     }
   };
 
   return (
     <FormContainer>
       <h1>Sign In</h1>
-      {error && <Message variant='danger'>{error}</Message>}
       {isLoading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId='email'>
