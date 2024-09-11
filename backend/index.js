@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-// const bodyParser = require('body-parser');
 require('dotenv').config();
 const PORT = process.env.PORT;
+const cookieParser = require('cookie-parser');
 const app = express();
 const morgan = require('morgan');
 
@@ -15,7 +15,6 @@ connectDB();
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 /** define Routes */
-const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const characterRoutes = require('./routes/characters');
 const dungeonRoutes = require('./routes/dungeons');
@@ -26,6 +25,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// set up middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: (origin, cb) => cb(null, true),
@@ -44,18 +47,11 @@ app.use(
   })
 );
 
-// parse application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: false }));
-// parse application/json
-app.use(express.json());
-
 /** Wiring in route handlers and mounting routes */
-app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/characters', characterRoutes);
 app.use('/api/dungeons', dungeonRoutes);
 app.use('/api/monsters', monsterRoutes);
-// set up middleware
 
 // serve static files
 // app.use('public', express.static(PUBLIC_DIR));

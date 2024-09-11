@@ -1,133 +1,126 @@
+const asyncHandler = require('../middleware/asyncHandler');
 const { faker } = require('@faker-js/faker');
-const mongoose = require('mongoose');
 /* require in Character Model */
 const Character = require('../models/Character');
 
 // @route    GET /api/characters
 // @desc     get all characters
 // @access   Public
-const getCharacters = async (req, res, next) => {
-  try {
-    const characters = await Character.find({}).populate('userId');
-    console.log('GET all characters:', characters);
-
-    if (characters) {
-      res.status(200).json(characters);
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.log('error', error);
-  }
-};
+const getCharacters = asyncHandler(async (req, res) => {
+  const characters = await Character.find({}).populate('userId');
+  console.log('GET all characters:', characters);
+  res.status(200).json(characters);
+});
 
 // @route    GET /api/characters/:chrId
 // @desc     get character by id
 // @access   Public
-const getCharacterById = async (req, res, next) => {
-  console.log('req.params:', req.params);
-  try {
-    const { chrId } = req.params;
-    console.log('param chrId:', chrId);
+const getCharacterById = asyncHandler(async (req, res) => {
+  const { chrId } = req.params;
+  console.log('param chrId:', chrId);
 
-    const character = await Character.findById(chrId).populate('userId');
+  const character = await Character.findById(chrId).populate('userId');
 
-    console.log('This is the character characeter:', character);
+  console.log('This is the character characeter:', character);
 
-    if (character) {
-      res.status(200).json(character);
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.log('error', error);
+  if (character) {
+    res.status(200).json(character);
+  } else {
+    res.status(404);
+    throw new Error('Character not found');
   }
-};
+});
+
+// @desc    Create a character
+// @route   POST /api/characters
+// @access  Private/Admin
+const createCharacter = asyncHandler(async (req, res) => {
+  const character = new Character({
+    name: 'Sample name',
+    userId: req.user._id,
+    img: '/frontend/src/assets/stock/iStock-458649605.jpg',
+  });
+
+  const createdCharacter = await character.save();
+  res.status(201).json(createdCharacter);
+});
 
 // @route    POST /api/characters/new/:id
 // @desc     creates a new character
 // @access   private
-const createNewCharacter = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    // console.log('req.body:', req.body);
-    const { name, gender, class_type, age, hit_points } = req.body;
+const createNewCharacter = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // console.log('req.body:', req.body);
+  const { name, gender, class_type, age, hit_points } = req.body;
 
-    let newCharacter = new Character({
-      img: faker.image.urlLoremFlickr({ category: class_type }),
-      userId: id,
-      name: name,
-      gender: gender,
-      class_type: class_type,
-      age: age,
-      hit_points: hit_points,
-    });
+  let newCharacter = new Character({
+    img: faker.image.urlLoremFlickr({ category: class_type }),
+    userId: id,
+    name: name,
+    gender: gender,
+    class_type: class_type,
+    age: age,
+    hit_points: hit_points,
+  });
 
-    const createdCharacter = await newCharacter.save();
+  const createdCharacter = await newCharacter.save();
 
-    if (createdCharacter) {
-      res.status(201).json(newCharacter);
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.log('error', error);
+  if (createdCharacter) {
+    res.status(201).json(newCharacter);
+  } else {
+    res.status(404);
+    throw new Error('Error creating new Character');
   }
-};
+});
 
 // Update route - update a character by id
 // @route    PUT /api/characters/:id
 // @desc     update a character
 // @access   Private
-const updateCharacter = async (req, res, next) => {
-  try {
-    const { chrId } = req.params;
-    const { name, gender, class_type, age, hit_points, img, race } = req.body;
-    const character = await Character.findById(chrId);
-    // check if character was found
-    if (character) {
-      character.name = name;
-      character.gender = gender;
-      character.class_type = class_type;
-      character.age = age;
-      character.hit_points = hit_points;
-      character.img = img;
-      character.race = race;
+const updateCharacter = asyncHandler(async (req, res) => {
+  const { chrId } = req.params;
+  const { name, gender, class_type, age, hit_points, img, race } = req.body;
+  const character = await Character.findById(chrId);
+  // check if character was found
+  if (character) {
+    character.name = name;
+    character.gender = gender;
+    character.class_type = class_type;
+    character.age = age;
+    character.hit_points = hit_points;
+    character.img = img;
+    character.race = race;
 
-      const updatedCharacter = await character.save();
-      res.status(203).json(updatedCharacter);
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.log('error', error);
+    const updatedCharacter = await character.save();
+    res.json(updatedCharacter);
+  } else {
+    res.status(404);
+    throw new Error('Character not found');
   }
-};
+});
 
 // @route    DELETE /api/characters/:chrId
 // @desc     Delete character by id
 // @access   Private
-const deleteCharacter = async (req, res, next) => {
-  try {
-    const { chrId } = req.params;
+const deleteCharacter = asyncHandler(async (req, res) => {
+  const { chrId } = req.params;
 
-    const character = await Character.findById(chrId).populate('userId');
+  const character = await Character.findById(chrId).populate('userId');
 
-    if (character) {
-      await character.remove();
+  if (character) {
+    await character.remove();
 
-      res.status(204).json(character);
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.log('error', error);
+    res.json(character);
+  } else {
+    res.status(404);
+    throw new Error('Character not found');
   }
-};
+});
 
 module.exports = {
   getCharacters,
   getCharacterById,
+  createCharacter,
   createNewCharacter,
   updateCharacter,
   deleteCharacter,

@@ -10,13 +10,14 @@ const {
   deleteDungeon,
 } = require('../controllers/dungeonController');
 
-const auth = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
+const checkObjectId = require('../middleware/checkObjectId');
 
 router.get('/', getDungeons);
 router
-  .get('/:dgId', getDungeonById)
-  .put('/:dgId', updateDungeon)
-  .delete('/:dgId', deleteDungeon);
-router.post('/new/:id', createNewDungeon);
+  .get('/:dgId', checkObjectId, getDungeonById)
+  .put('/:dgId', protect, updateDungeon)
+  .delete('/:dgId', protect, deleteDungeon);
+router.post('/new/:id', protect, createNewDungeon);
 
 module.exports = router;

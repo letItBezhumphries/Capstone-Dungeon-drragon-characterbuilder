@@ -33,33 +33,34 @@ const RowSchema = new mongoose.Schema({
   },
 });
 
-const DungeonSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  dungeon_name: {
-    type: String,
-    required: true,
-  },
-  size: {
-    type: Number,
-    required: true,
-  },
-  monsters: [
-    {
+const DungeonSchema = new mongoose.Schema(
+  {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Monster',
+      ref: 'User',
     },
-  ],
-  // board: {
-  //   type: [RowSchema],
-  //   required: true,
-  // },
-  date: {
-    type: Date,
-    default: Date.now,
+    dungeon_name: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: Number,
+      required: true,
+    },
+    monsters: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Monster',
+      },
+    ],
+    // board: {
+    //   type: [RowSchema],
+    //   required: true,
+    // },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = Dungeon = mongoose.model('Dungeon', DungeonSchema);

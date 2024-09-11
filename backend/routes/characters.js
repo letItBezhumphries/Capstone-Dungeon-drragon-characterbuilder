@@ -6,23 +6,22 @@ const {
   getCharacters,
   getCharacterById,
   createNewCharacter,
+  createCharacter,
   updateCharacter,
   deleteCharacter,
 } = require('../controllers/characterController');
 
+const { protect } = require('../middleware/authMiddleware');
 const checkObjectId = require('../middleware/checkObjectId');
-const auth = require('../middleware/authMiddleware.js');
 
-router.get('/', getCharacters);
-// router
-//   .get('/:chrId', checkObjectId, getCharacterById)
-//   .put('/:chrId', checkObjectId, updateCharacter)
-//   .delete('/:chrId', checkObjectId, deleteCharacter);
-// router.post('/new/:id', checkObjectId, createNewCharacter);
+router.route('/').get(getCharacters).post(protect, createCharacter);
 
-router.get('/:chrId', getCharacterById);
-router.put('/update/:chrId', updateCharacter);
-router.delete('/:chrId', deleteCharacter);
-router.post('/new/:id', createNewCharacter);
+router
+  .route('/:chrId')
+  .get(checkObjectId, getCharacterById)
+  .delete(checkObjectId, protect, deleteCharacter)
+  .put(checkObjectId, protect, updateCharacter);
+router.put('/update/:chrId', protect, updateCharacter);
+router.post('/new/:id', protect, createNewCharacter);
 
 module.exports = router;
