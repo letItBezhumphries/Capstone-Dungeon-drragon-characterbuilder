@@ -28,7 +28,7 @@ const App = () => {
       <ToastContainer />
       <Navbar />
       <main className='main'>
-        <Container>
+        <Container style={{ margin: '0 0', padding: '0 0' }} fluid>
           <Outlet />
         </Container>
       </main>

@@ -1,7 +1,14 @@
+.name-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .character-name-container {
   display: flex;
   align-items: center;
   width: 100%;
+  height: 100%;
   gap: 0.5rem;
   margin-top: 40px;
   border-bottom: 1px solid #f1f1f1;
@@ -17,4 +24,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.input-container {
+  height: 5.5rem;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container label {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 10px 0;
+}
+
+.form-input-field input {
+  width: 96%;
+  border-radius: 4px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
 }

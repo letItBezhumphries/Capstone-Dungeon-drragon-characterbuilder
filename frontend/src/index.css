@@ -1,6 +1,6 @@
 * {
-  margin: 0;
-  padding: 0;
+  margin: 0 0;
+  padding: 0 0;
   box-sizing: border-box;
 }
 
@@ -45,6 +45,7 @@ body,
   padding: 0 0;
   /* display: flex;
   flex-direction: column; */
+  /* background-color: brown; */
 }
 
 #app {
@@ -53,6 +54,7 @@ body,
   justify-content: flex-start;
   height: 100%;
   width: 100%;
+  /* background-color: brown; */
 }
 
 nav {
@@ -121,7 +123,7 @@ nav ul {
 character page 
 */
 
-.character-view {
+/* .character-view {
   background-color: beige;
   width: 80%;
   display: flex;
@@ -214,4 +216,4 @@ td select {
 
 .filtering-container {
   width: 80%;
-}
+} */

@@ -97,7 +97,7 @@ const parseRaceTraits = (traitsStr, race) => {
   const selectedRaceTraits = [];
 
   console.log(
-    'in parseRaceTraits function - passed in traitsStr',
+    '1. in parseRaceTraits function - passed in traitsStr',
     traitsStr,
     'race:',
     race
@@ -107,11 +107,11 @@ const parseRaceTraits = (traitsStr, race) => {
     .split(/\*\*\_/)
     .filter((str) => str.length > 0);
 
-  console.log('parsedTraits:', parsedTraitsArray);
+  console.log('2. parsedTraits:', parsedTraitsArray);
 
-  // iterateover the  parsedTraitsArray
+  // iterate over the  parsedTraitsArray
   parsedTraitsArray.forEach((str, index) => {
-    if (race === 'dragonborn') {
+    if (race === 'Dragonborn') {
       if (index > 0) {
         if (index === 1) {
           let name = str.split('._**')[0];

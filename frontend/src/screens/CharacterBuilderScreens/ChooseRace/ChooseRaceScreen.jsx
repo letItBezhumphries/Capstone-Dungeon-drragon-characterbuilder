@@ -8,7 +8,8 @@ import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
 import FilterOptionItem from '../../../components/FilterOptionItem';
 import CharacterNameForm from '../CharacterNameForm';
 import PageContainer from '../../../components/PageContainer';
-import StepFormControlWrapper from '../StepFormWrapper';
+// import StepFormControlWrapper from '../StepFormWrapper';
+import StepFormWrapper from '../StepFormWrapper';
 import ChooseRaceModal from './ChooseRaceModal';
 
 import { characterRaces } from '../../../data/selectors';
@@ -67,22 +68,16 @@ const ChooseRaceScreen = () => {
   return (
     <div id='chrace'>
       <CharacterBuilderStepMenu step0 step1></CharacterBuilderStepMenu>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <StepFormWrapper>
         <CharacterNameForm />
-      </div>
+      </StepFormWrapper>
 
       {/* if there is a selectedRace.name property and we're not showing the confirmation modal then Return the PageContainer
         which includes the SHOWS THE FINAL RACE FORM
        */}
       {selectedRace?.name && !showConfirmationModal ? (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <StepFormControlWrapper>
+          <StepFormWrapper>
             <input
               value={JSON.stringify(selectedRace)}
               name='race'
@@ -94,25 +89,23 @@ const ChooseRaceScreen = () => {
               isRace={true}
               selectedRace={selectedRace}
             />
-          </StepFormControlWrapper>
+          </StepFormWrapper>
         </form>
       ) : (
-        <StepFormControlWrapper>
-          <div className='filtering-container'>
-            {characterRaces.map((race, idx) => (
-              <FilterOptionItem
-                key={idx}
-                name={race.name}
-                index={race.index}
-                imgsrc={race.imgSrc}
-                onSelectOption={handleRaceFilter}
-                showConfirmationModal={showConfirmationModal}
-                optionSelected={temporaryRace}
-                isRace={true}
-              />
-            ))}
-          </div>
-        </StepFormControlWrapper>
+        <div className='filtering-container'>
+          {characterRaces.map((race, idx) => (
+            <FilterOptionItem
+              key={idx}
+              name={race.name}
+              index={race.index}
+              imgsrc={race.imgSrc}
+              onSelectOption={handleRaceFilter}
+              showConfirmationModal={showConfirmationModal}
+              optionSelected={temporaryRace}
+              isRace={true}
+            />
+          ))}
+        </div>
       )}
 
       {showConfirmationModal ? (

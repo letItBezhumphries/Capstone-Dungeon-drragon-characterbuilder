@@ -35,6 +35,7 @@ const router = createBrowserRouter(
       {/* Registered users */}
       <Route path='' element={<PrivateRoute />}>
         <Route path='/character' element={<CharacterScreen />}></Route>
+        <Route path='/profile' element={<ProfileScreen />} exact></Route>
         <Route
           path='/character/chrace'
           element={<ChooseRaceScreen />}

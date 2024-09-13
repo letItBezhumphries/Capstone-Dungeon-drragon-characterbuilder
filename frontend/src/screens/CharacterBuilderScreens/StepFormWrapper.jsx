@@ -6,9 +6,9 @@ function StepFormControlWrapper({ children, className, ...rest }) {
   // const finalClassNames = classNames('step-form-controls-wrapper', className);
 
   return (
-    <Container {...rest} className={'stepper-container'}>
+    <Container {...rest} className={'stepper-container'} fluid>
       {/* <Row className='justify-content-md-center'> */}
-      <div className='step-iconbox prev-box'>
+      <div className='step-btn-container prev-step'>
         <button className='prev-btn'>
           Prev
           <i
@@ -18,7 +18,7 @@ function StepFormControlWrapper({ children, className, ...rest }) {
         </button>
       </div>
       {children}
-      <div className='step-next next-box'>
+      <div className='step-btn-container next-step'>
         <button className='next-btn' type='submit'>
           Next
           <i

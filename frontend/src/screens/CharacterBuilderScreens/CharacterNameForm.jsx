@@ -25,15 +25,7 @@ const CharacterNameForm = ({ avatar, name }) => {
   };
 
   return (
-    <form
-      style={{
-        display: 'flex',
-        // backgroundColor: 'green',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form className='name-form' onSubmit={handleSubmit(onSubmit)}>
       <div className='character-name-container'>
         <div className='avatar-container'>
           {!hasAvatar ? (
@@ -47,10 +39,10 @@ const CharacterNameForm = ({ avatar, name }) => {
           )}
         </div>
         <div className='input-container'>
-          <span className='form-input-label'>
+          <div className='form-input-label'>
             <label htmlFor={`name`}>Character Name:</label>
-          </span>
-          <span className='form-input-field'>
+          </div>
+          <div className='form-input-field'>
             <input
               type='text'
               {...register('name')}
@@ -61,10 +53,10 @@ const CharacterNameForm = ({ avatar, name }) => {
               placeholder={
                 name !== undefined
                   ? `${name}'s Character Name`
-                  : 'Choose Your Name Adventurer!'
+                  : 'Name your Adventurer!'
               }
             />
-          </span>
+          </div>
         </div>
         {/* GET RID OF */}
         <button type='submit'>NEXT</button>

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -39,7 +40,12 @@ const RegisterScreen = () => {
       toast.error('Passwords do not match');
     } else {
       try {
-        const res = await register({ name, email, password }).unwrap();
+        const res = await register({
+          name,
+          username,
+          email,
+          password,
+        }).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate(redirect);
       } catch (err) {
@@ -59,6 +65,16 @@ const RegisterScreen = () => {
             placeholder='Enter name'
             value={name}
             onChange={(e) => setName(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className='my-2' controlId='username'>
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type='username'
+            placeholder='Enter a Username for your profile'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
