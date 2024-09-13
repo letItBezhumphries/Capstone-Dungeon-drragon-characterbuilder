@@ -93,15 +93,6 @@ const PageIntro = ({
                     <span>{selection.proficiencies.saving_throws}</span>
                   </p>
                 </>
-              ) : isModal ? (
-                <p>
-                  Race Traits:
-                  <span>
-                    {isRace && selection.traitNames.length > 0
-                      ? `${selection.traitNames.join(', ')}`
-                      : null}
-                  </span>
-                </p>
               ) : null}
             </div>
           </Col>

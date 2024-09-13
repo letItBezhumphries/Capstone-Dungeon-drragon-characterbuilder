@@ -1,3 +1,4 @@
+// import { useSelector } from 'react-redux';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -18,16 +19,21 @@ const PageContainer = ({
   // console.log('is race:', isRace, 'selection:', selection);
   let classSelection;
   let raceSelection;
-  if (!isLoading && !isRace) {
+  if (!isRace) {
     classSelection = parseClassData(selection);
     classSelection.imgSrc = selection.imgSrc;
     classSelection.index = selection.index;
     console.log('in PAGECONT classSelection:', classSelection);
   } else {
-    if (isRace && !selectedRace) {
-      raceSelection = parseRaceData(selection);
-      console.log('in PAGECONT raceSelection:', raceSelection);
+    if (!isModal) {
+      raceSelection = selectedRace;
+    } else {
+      raceSelection = selection;
     }
+    // if (isRace && !selectedRace) {
+    //   raceSelection = parseRaceData(selection);
+    //   console.log('in PAGECONT raceSelection:', raceSelection);
+    // }
   }
 
   return (

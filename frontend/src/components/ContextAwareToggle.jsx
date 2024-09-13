@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
-import { Badge } from 'react-bootstrap';
 
 function ContextAwareToggle({ children, eventKey, callback, item, isModal }) {
   const { activeEventKey } = useContext(AccordionContext);
@@ -17,11 +16,6 @@ function ContextAwareToggle({ children, eventKey, callback, item, isModal }) {
 
   return (
     <>
-      {!isModal && item.choices ? (
-        <Badge className='select-alert-badge' bg='primary'>
-          !
-        </Badge>
-      ) : null}
       <button
         type='button'
         className='collapse-button'

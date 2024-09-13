@@ -24,8 +24,8 @@ const initialState = {
   },
   ability_score_bonuses: [],
   spells: [],
-  selected_race: {},
-  selected_class: {},
+  race_filter: {},
+  class_filter: {},
 };
 
 const characterBuilderSlice = createSlice({
@@ -168,22 +168,22 @@ const characterBuilderSlice = createSlice({
       state.charisma = state.charisma + charisma;
     },
     setFilteredRace: (state, action) => {
-      state.selected_race = {
-        ...state.selected_race,
+      state.race_filter = {
+        ...state.race_filter,
         ...action.payload,
       };
     },
     setFilteredClass: (state, action) => {
-      state.selected_class = {
-        ...state.selected_class,
+      state.class_filter = {
+        ...state.class_filter,
         ...action.payload,
       };
     },
     clearFilteredRace: (state) => {
-      state.selected_race = initialState.selected_race;
+      state.race_filter = initialState.race_filter;
     },
     clearFilteredClass: (state) => {
-      state.selected_class = initialState.selected_class;
+      state.class_filter = initialState.class_filter;
     },
   },
 });

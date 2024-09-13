@@ -6,12 +6,12 @@ import PageList from '../../../components/PageList';
 import Loader from '../../../components/Loader';
 import { parseRaceData } from '../../../utility/parseRaceData';
 
-const ChooseRaceForm = ({ selection, isLoading, selectedRace }) => {
+const RaceForm = ({ selection, isLoading, selectedRace }) => {
   // console.log('is race:', isRace, 'selection:', selection);
   let raceSelection;
   if (!isLoading && !selectedRace) {
     raceSelection = parseRaceData(selection);
-    console.log('in chooseRaceForm:', raceSelection);
+    console.log('in RaceForm:', raceSelection);
   }
 
   return (
@@ -21,4 +21,4 @@ const ChooseRaceForm = ({ selection, isLoading, selectedRace }) => {
   );
 };
 
-export default ChooseRaceForm;
+export default RaceForm;

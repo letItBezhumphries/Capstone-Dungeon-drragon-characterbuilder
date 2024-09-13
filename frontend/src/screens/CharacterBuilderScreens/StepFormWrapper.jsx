@@ -7,7 +7,6 @@ function StepFormControlWrapper({ children, className, ...rest }) {
 
   return (
     <Container {...rest} className={'stepper-container'} fluid>
-      {/* <Row className='justify-content-md-center'> */}
       <div className='step-btn-container prev-step'>
         <button className='prev-btn'>
           Prev
@@ -27,7 +26,6 @@ function StepFormControlWrapper({ children, className, ...rest }) {
           ></i>
         </button>
       </div>
-      {/* </Row> */}
     </Container>
   );
 }

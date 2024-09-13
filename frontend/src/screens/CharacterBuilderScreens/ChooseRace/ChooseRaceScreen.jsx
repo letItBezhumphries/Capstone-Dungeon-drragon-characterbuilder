@@ -8,7 +8,6 @@ import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
 import FilterOptionItem from '../../../components/FilterOptionItem';
 import CharacterNameForm from '../CharacterNameForm';
 import PageContainer from '../../../components/PageContainer';
-// import StepFormControlWrapper from '../StepFormWrapper';
 import StepFormWrapper from '../StepFormWrapper';
 import ChooseRaceModal from './ChooseRaceModal';
 
@@ -18,9 +17,11 @@ import './ChooseRaceScreen.css';
 const ChooseRaceScreen = () => {
   const { register, handleSubmit } = useForm();
   const formData = useSelector((state) => state.form.formData);
+  const selectedRace = useSelector((state) => state.character.race_filter);
+
   const [temporaryRace, setTemporaryRace] = useState({});
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [selectedRace, setSelectedRace] = useState({});
+  const [showSelectionForm, setShowSelectionForm] = useState(false);
   const dispatch = useDispatch();
 
   console.log('state:', formData);
@@ -28,9 +29,11 @@ const ChooseRaceScreen = () => {
   // closes the modal
   const handleClose = () => setShowConfirmationModal(false);
 
-  /* sets up the ConfirmationModal to open with the race selected to view as a search filter of sorts */
+  /* sets up the ConfirmationModal to open with the race selected to view as a search filter of sorts 
+  the state setter setTemporaryR
+  */
   const handleRaceFilter = (race) => {
-    console.log('in handleRaceFilter -> race:', race);
+    // console.log('in handleRaceFilter -> race:', race);
     let raceObj = characterRaces.find((r) => r.index === race);
     setTemporaryRace({
       name: raceObj.name,
@@ -42,16 +45,10 @@ const ChooseRaceScreen = () => {
 
   const handleConfirmSelection = (selection) => {
     // send the selection to the store selection for race
-    // console.log('in handleConfirmSelection:', selection);
-    // set the selectedRace
-    console.log('in handle FINAL Selection:', selection);
 
-    setSelectedRace({
-      name: selection.name,
-      index: selection.index,
-      imgSrc: selection.imgSrc,
-      ...selection,
-    });
+    console.log('FINAL Selection passed to eventhandler:', selection);
+
+    setShowSelectionForm(true);
     // close the Confirmation Model
     handleClose();
   };
@@ -75,7 +72,16 @@ const ChooseRaceScreen = () => {
       {/* if there is a selectedRace.name property and we're not showing the confirmation modal then Return the PageContainer
         which includes the SHOWS THE FINAL RACE FORM
        */}
-      {selectedRace?.name && !showConfirmationModal ? (
+
+      {showConfirmationModal ? (
+        <ChooseRaceModal
+          show={showConfirmationModal}
+          onHide={handleClose}
+          selection={temporaryRace}
+          onSelectionConfirm={handleConfirmSelection}
+          onSelectionCancel={handleCancelSelection}
+        />
+      ) : showSelectionForm && selectedRace?.name ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <StepFormWrapper>
             <input
@@ -107,19 +113,41 @@ const ChooseRaceScreen = () => {
           ))}
         </div>
       )}
-
-      {showConfirmationModal ? (
-        <ChooseRaceModal
-          show={showConfirmationModal}
-          onHide={handleClose}
-          isRace={true}
-          selection={temporaryRace}
-          onSelectionConfirm={handleConfirmSelection}
-          onSelectionCancel={handleCancelSelection}
-        />
-      ) : null}
     </div>
   );
 };
 
 export default ChooseRaceScreen;
+
+// {selectedRace?.name && !showConfirmationModal ? (
+//   <form onSubmit={handleSubmit(onSubmit)}>
+//       <StepFormWrapper>
+//         <input
+//           value={JSON.stringify(selectedRace)}
+//           name='race'
+//           {...register('race')}
+//           style={{ display: 'none' }}
+//         ></input>
+//         <PageContainer
+//           isModal={false}
+//           isRace={true}
+//           selectedRace={selectedRace}
+//         />
+//       </StepFormWrapper>
+//     </form>
+// ) : (
+//   <div className='filtering-container'>
+//     {characterRaces.map((race, idx) => (
+//       <FilterOptionItem
+//         key={idx}
+//         name={race.name}
+//         index={race.index}
+//         imgsrc={race.imgSrc}
+//         onSelectOption={handleRaceFilter}
+//         showConfirmationModal={showConfirmationModal}
+//         optionSelected={temporaryRace}
+//         isRace={true}
+//       />
+//     ))}
+//   </div>
+// )}

@@ -59,14 +59,14 @@ export const getTableSelectOptions = (tableStr) => {
 export const parseRaceData = (data) => {
   // includes the selection object
   console.log('in parseRaceData: -> data passed in', data);
-
-  let raceData = parseRaceTraits(data.traits, data.name);
+  let raceData;
+  if (data.name === 'Human') {
+    raceData = parseRaceTraits(data.languages + data.asi_desc, data.name);
+  } else {
+    raceData = parseRaceTraits(data.vision + data.traits, data.name);
+  }
 
   let description = data.desc.split('\n')[1];
-
-  // let ability_score_desc = data.ability_score_desc.split(
-  //   '**_Ability Score Increase._**'
-  // )[0];
 
   const finalRaceData = {
     ...raceData,
@@ -96,18 +96,18 @@ const parseRaceTraits = (traitsStr, race) => {
   const raceTraitNames = [];
   const selectedRaceTraits = [];
 
-  console.log(
-    '1. in parseRaceTraits function - passed in traitsStr',
-    traitsStr,
-    'race:',
-    race
-  );
+  // console.log(
+  //   '1. in parseRaceTraits function - passed in traitsStr',
+  //   traitsStr,
+  //   'race:',
+  //   race
+  // );
 
   let parsedTraitsArray = traitsStr
     .split(/\*\*\_/)
     .filter((str) => str.length > 0);
 
-  console.log('2. parsedTraits:', parsedTraitsArray);
+  // console.log('2. parsedTraits:', parsedTraitsArray);
 
   // iterate over the  parsedTraitsArray
   parsedTraitsArray.forEach((str, index) => {
@@ -150,7 +150,7 @@ const parseRaceTraits = (traitsStr, race) => {
       if (!raceTraitNames.includes(name)) {
         raceTraitNames.push(name);
         // if the word 'choice' is found in the description then we need to set up choices to select in the overview page
-        console.log("description.split(' '):", description.split(' '));
+        // console.log("4. description.split(' '):", description.split(' '));
         if (description.split(' ').indexOf('choice:') !== -1) {
           let choices = description
             .split(':')[1]

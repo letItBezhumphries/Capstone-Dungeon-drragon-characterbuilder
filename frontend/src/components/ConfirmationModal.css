@@ -1,9 +1,14 @@
+.modal-open .modal {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
 .modal-body {
-  background-color: aqua;
-  padding: 0 0;
+  /* background-color: aqua; */
+  padding: 0 10px;
   margin: 0 0;
   /* border: none; */
   width: 100%;
+  height: auto;
 }
 
 .confirmation-header {
@@ -108,10 +113,11 @@
 }
 
 .modal-content {
-  /* background-color: beige; */
+  background-color: green;
   width: 100%;
   padding: 0 0;
   margin: 0 0;
+  border: none;
 }
 
 .overview-container {
