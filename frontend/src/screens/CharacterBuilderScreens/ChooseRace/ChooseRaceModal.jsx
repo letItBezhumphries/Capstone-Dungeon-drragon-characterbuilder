@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useGetDataForRaceQuery } from '../../../services/races';
 import PageContainer from '../../../components/PageContainer';
+import ConfirmRace from './ConfirmRace';
 import { parseRaceData } from '../../../utility/parseRaceData';
 import Loader from '../../../components/Loader';
 import { setFilteredRace } from '../../../slices/characterBuilderSlice';
@@ -19,11 +20,18 @@ function ChooseRaceModal({
 }) {
   const dispatch = useDispatch();
 
+  // console.log('RaceModal:', selection);
+
   const { data, isLoading, error } = useGetDataForRaceQuery(selection.index);
 
+  /* 
+    eventhandler that is fired when user clicks the confirm button in RaceModal 
+    which 1. will parse the result of the rtk hook with the selected race passed to it.
+    2. dispatch the setFilteredRace action to update the character slice state
+    3. invokes the eventhandler passed down from parent ChooseRaceScreen component 
+    onSelectionConfirmation and passes in the parsed data as an argument
+  */
   const handleSelectionClick = () => {
-    // create a new object with all properties included
-    /*  !! NEED TO HANDLE DIFFERENT SELECTION DEPENDING ON IF isRace is true or not */
     /* ! ALSO NEED to add redux action here to store selection in state */
 
     const raceData = parseRaceData({ ...selection, ...data });
@@ -34,8 +42,8 @@ function ChooseRaceModal({
     onSelectionConfirm(raceData);
   };
 
-  const handleCancelClick = (selection) => {
-    onSelectionCancel(selection);
+  const handleCancelClick = () => {
+    onSelectionCancel();
   };
 
   return (
@@ -50,7 +58,6 @@ function ChooseRaceModal({
           onHide={() => handleClose()}
           close={handleClose}
           fullscreen={true}
-          // make fullscreen
         >
           <Modal.Header className='confirmation-header'>
             <Modal.Title className='confirmation-title'>
@@ -65,7 +72,7 @@ function ChooseRaceModal({
           </Modal.Header>
           <Modal.Body>
             {!isLoading ? (
-              <PageContainer
+              <ConfirmRace
                 isModal={true}
                 isRace={true}
                 selection={parseRaceData({ ...selection, ...data })}

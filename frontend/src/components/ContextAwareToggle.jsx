@@ -18,11 +18,9 @@ function ContextAwareToggle({ children, eventKey, callback, item, isModal }) {
     <>
       <button
         type='button'
-        className='collapse-button'
-        style={{
-          backgroundColor: isCurrentEventKey ? 'yellow' : 'green',
-          color: isCurrentEventKey ? 'white' : 'black',
-        }}
+        className={
+          !isModal && item.choices ? 'collapse-button-todo' : 'collapse-button'
+        }
         onClick={decoratedOnClick}
       >
         {children}

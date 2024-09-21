@@ -1,7 +1,7 @@
 import React from 'react';
 
-const CardTable = ({ tableHead, tableCells, classType }) => {
-  console.log('tableHead:', tableHead, 'tableCells:', tableCells);
+const SelectionTable = ({ tableHead, tableCells, classType }) => {
+  // console.log('tableHead:', tableHead, 'tableCells:', tableCells);
   const renderTableRows = () => {
     return tableCells.map((cell, idx) => (
       <tr key={idx} className={`table-row${idx}`}>
@@ -30,4 +30,4 @@ const CardTable = ({ tableHead, tableCells, classType }) => {
   );
 };
 
-export default CardTable;
+export default SelectionTable;

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Row, Col } from 'react-bootstrap';
+import FormContainer from './FormContainer';
+import { Row, Col, Container } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 // import { useNavigation } from 'react-router-dom';
 
 const PageIntro = ({
@@ -12,6 +14,24 @@ const PageIntro = ({
   selectedClass,
 }) => {
   const [raceData, setRaceData] = useState({});
+  const filteredRace = useSelector((state) => state.character.race_filter);
+  const filteredClass = useSelector((state) => state.character.class_filter);
+
+  let introData;
+  if (isRace) {
+    if (isModal) {
+      introData = selection;
+    } else {
+      introData = filteredRace;
+    }
+  } else {
+    if (isModal) {
+      introData = selection;
+    } else {
+      introData = filteredClass;
+    }
+  }
+
   // console.log('in PageIntro -> selection:', selection);
   useEffect(() => {
     if (selectedRace?.name && !isModal) {
@@ -21,6 +41,17 @@ const PageIntro = ({
       setRaceData({ ...selectedClass });
     }
   }, [selectedRace]);
+
+  useEffect(() => {
+    console.log(
+      `PageIntro - isRace is ${isRace} - is in Modal:${isModal} - introData:`,
+      introData,
+      '\nraceData:',
+      raceData,
+      '\nselectedClass:',
+      selectedClass
+    );
+  }, [raceData]);
 
   return (
     <>
@@ -42,7 +73,7 @@ const PageIntro = ({
           </p>
           {!isModal ? (
             <p className='traitlist'>
-              <strong>{isRace ? `Race Traits:` : null}</strong>
+              <strong>{isRace ? `Racial Traits:` : null}</strong>
               <span>
                 {selectedRace && selectedRace.traitNames.length > 0
                   ? `${selectedRace.traitNames.join(', ')}`

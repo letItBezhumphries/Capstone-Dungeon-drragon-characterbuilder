@@ -9,7 +9,6 @@
 }
 
 .step-btn-container {
-  /* background-color: yellow; */
   width: 10%;
   height: 40px;
   display: flex;
@@ -19,7 +18,7 @@
 
 .step-btn-container button {
   border: none;
-  background-color: none;
+  background-color: #1c9aef;
   width: 80%;
   height: 100%;
   border-radius: 4px;

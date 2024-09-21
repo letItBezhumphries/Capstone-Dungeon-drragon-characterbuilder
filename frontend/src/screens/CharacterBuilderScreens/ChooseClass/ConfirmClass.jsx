@@ -3,15 +3,33 @@ import Container from 'react-bootstrap/Container';
 import PageIntro from '../../../components/PageIntro';
 import PageList from '../../../components/PageList';
 import Loader from '../../../components/Loader';
+import SelectionOverview from '../../../components/SelectionOverview';
 import { parseClassData } from '../../../utility/parseClassData';
 
-const ChooseClassCard = ({ isModal, selection, isLoading, selectedClass }) => {
+const ConfirmClass = ({
+  isModal,
+  selection,
+  isLoading,
+  selectedClass,
+  register,
+}) => {
   let classSelection;
-  if (!isLoading) {
+  if (isModal) {
     classSelection = parseClassData(selection);
     classSelection.imgSrc = selection.imgSrc;
     classSelection.index = selection.index;
-    console.log('in CLASS CARD classSelection:', classSelection);
+    // console.log(
+    //   `in ConfirmClass when the Modal is ${isModal} - classSelection:`,
+    //   classSelection
+    // );
+  } else {
+    classSelection = parseClassData(selectedClass);
+    classSelection.imgSrc = selection.imgSrc;
+    classSelection.index = selection.index;
+    // console.log(
+    //   `in ConfirmClass when the Modal is ${isModal} - classSelection:`,
+    //   classSelection
+    // );
   }
 
   return (
@@ -20,26 +38,26 @@ const ChooseClassCard = ({ isModal, selection, isLoading, selectedClass }) => {
         <Loader></Loader>
       ) : (
         <>
-          <PageIntro
+          <SelectionOverview
             isRace={false}
             isModal={isModal}
             selection={classSelection}
             isLoading={isLoading}
             selectedClass={selectedClass}
           />
-          {/* SummaryList */}
 
-          <PageList
+          {/* <PageList
             isRace={false}
             isModal={isModal}
             selection={classSelection}
             isLoading={isLoading}
             selectedClass={selectedClass}
-          />
+            register={register}
+          /> */}
         </>
       )}
     </Container>
   );
 };
 
-export default ChooseClassCard;
+export default ConfirmClass;

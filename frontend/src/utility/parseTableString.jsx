@@ -1,15 +1,15 @@
 const getTableSelectOptions = (tableStr) => {
   let tableHeadCells = getTableHeadVals(tableStr);
-  console.log('in utils/ tableHead', tableHeadCells);
+  // console.log('in utils/ tableHead', tableHeadCells);
 
   let tableCells = getTableCellValues(tableStr);
-  console.log('in utils/ tableCells:', tableCells);
+  // console.log('in utils/ tableCells:', tableCells);
 
   const output = [];
 
   let fixedTitle = tableHeadCells[0];
 
-  console.log('in utils/ fixedTitle:', fixedTitle);
+  // console.log('in utils/ fixedTitle:', fixedTitle);
 
   // iterate over the tableCells
   tableCells.forEach((cell, idx) => {

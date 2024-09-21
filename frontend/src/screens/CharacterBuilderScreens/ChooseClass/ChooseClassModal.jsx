@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useGetClassDataQuery } from '../../../services/classes';
-import ChooseClassCard from './ChooseClassCard';
+import ConfirmClass from './ConfirmClass';
 import Loader from '../../../components/Loader';
+import { parseClassData } from '../../../utility/parseClassData';
 import { setFilteredClass } from '../../../slices/characterBuilderSlice';
-
 import '../../../components/ConfirmationModal.css';
 
 function ChooseClassModal({
@@ -19,17 +19,17 @@ function ChooseClassModal({
   onSelectionCancel,
 }) {
   const [queryData, setQueryData] = useState({});
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  console.log('in confirmationModal selection:', selectedClass);
+  // console.log('in ClassModal selectedClass:', selectedClass);
 
   const { data, isLoading, error } = useGetClassDataQuery(selection.index);
 
   useEffect(() => {
     if (selection?.name && !isLoading) {
-      console.log('MODAL -> querydata:', data);
+      // console.log('MODAL -> querydata:', data);
 
-      console.log('in useEffect ConfirmModal - class data:', data);
+      // console.log('in useEffect ConfirmModal - class data:', data);
       setQueryData(data);
     }
   }, [isLoading, data]);
@@ -39,6 +39,8 @@ function ChooseClassModal({
     /*  !! NEED TO HANDLE DIFFERENT SELECTION DEPENDING ON IF isRace is true or not */
     /* ! ALSO NEED to add redux action here to store selection in state */
 
+    const classData = parseClassData({ ...selection, ...queryData });
+
     const selectionData = {
       ...selection,
       ...queryData,
@@ -47,15 +49,17 @@ function ChooseClassModal({
     console.log(
       'in ChooseClassModal-> selection handleSelectionCLick:',
       selection,
-      '\n and here is queryData:',
-      queryData
+      '\n and here is classData:',
+      classData
     );
+
+    dispatch(setFilteredClass({ ...selection, ...classData }));
 
     onSelectionConfirm(selectionData);
   };
 
-  const handleCancelClick = (selection) => {
-    onSelectionCancel(selection);
+  const handleCancelClick = () => {
+    onSelectionCancel();
   };
 
   return (
@@ -66,13 +70,11 @@ function ChooseClassModal({
         <Modal
           backdrop='static'
           backdropClassName={'confirmation-backdrop'}
-          scrollable={true}
           keyboard={false}
           show={show}
           onHide={() => handleClose()}
           close={handleClose}
           fullscreen={true}
-          // make fullscreen
         >
           <Modal.Header className='confirmation-header'>
             <Modal.Title className='confirmation-title'>
@@ -87,7 +89,7 @@ function ChooseClassModal({
           </Modal.Header>
           <Modal.Body className='modal-body'>
             {!isLoading ? (
-              <ChooseClassCard
+              <ConfirmClass
                 isModal={true}
                 selection={{ ...selection, ...data }}
                 isLoading={isLoading}

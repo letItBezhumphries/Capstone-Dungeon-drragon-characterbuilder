@@ -2,11 +2,11 @@ import { Row, Col } from 'react-bootstrap';
 import CollapsibleList from './CollapsibleList';
 import { useSelector } from 'react-redux';
 
-const PageList = ({ isRace, isModal, selection, isLoading, register }) => {
+const SelectionList = ({ isRace, isModal, selection, isLoading, register }) => {
   const filteredRace = useSelector((state) => state.character.race_filter);
   const filteredClass = useSelector((state) => state.character.class_filter);
 
-  // console.log(`in PageLIst, when Modal is ${isModal} - selection:`, selection);
+  // console.log(`in SelectionList, when Modal is ${isModal} - selection:`, selection);
 
   let listItems;
   if (isRace) {
@@ -32,7 +32,7 @@ const PageList = ({ isRace, isModal, selection, isLoading, register }) => {
       }
 
       console.log(
-        'in PageList in Modal - listitems:',
+        'in SelectionList in Modal - listitems:',
         listItems,
         '\n selection:',
         selection
@@ -52,7 +52,7 @@ const PageList = ({ isRace, isModal, selection, isLoading, register }) => {
         listItems.push({ ...filteredClass.spellcasting, name: 'Spellcasting' });
       }
       console.log(
-        'in PageList NOT in Modal - listitems:',
+        'in SelectionList NOT in Modal - listitems:',
         listItems,
         '\n filteredClass:',
         filteredClass
@@ -60,7 +60,7 @@ const PageList = ({ isRace, isModal, selection, isLoading, register }) => {
     }
   }
 
-  console.log('in PageList - listitems:', listItems);
+  console.log('in SelectionList - listitems:', listItems);
 
   return (
     <Row className='full-width-row'>
@@ -90,4 +90,4 @@ const PageList = ({ isRace, isModal, selection, isLoading, register }) => {
   );
 };
 
-export default PageList;
+export default SelectionList;

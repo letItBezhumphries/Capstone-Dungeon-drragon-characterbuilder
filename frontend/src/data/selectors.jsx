@@ -47,30 +47,64 @@ export const characterRaces = [
     index: 'dragonborn',
     name: 'Dragonborn',
     imgSrc: '/src/assets/races/dragonborn.jpeg',
+    description:
+      'Dragonborn look very much like dragons standing erect in humanoid form, though they lack wings or a tail.',
   },
-  { index: 'dwarf', name: 'Dwarf', imgSrc: '/src/assets/races/dwarf.jpeg' },
-  { index: 'elf', name: 'Elf', imgSrc: '/src/assets/races/elf.jpeg' },
-  { index: 'gnome', name: 'Gnome', imgSrc: '/src/assets/races/gnome.jpeg' },
+  {
+    index: 'dwarf',
+    name: 'Dwarf',
+    imgSrc: '/src/assets/races/dwarf.jpeg',
+    description:
+      'Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal.',
+  },
+  {
+    index: 'elf',
+    name: 'Elf',
+    imgSrc: '/src/assets/races/elf.jpeg',
+    description:
+      'Elves are a magical people of otherworldly grace, living in the world but not entirely part of it.',
+  },
+  {
+    index: 'gnome',
+    name: 'Gnome',
+    imgSrc: '/src/assets/races/gnome.jpeg',
+    description:
+      'A gnome’s energy and enthusiasm for living shines through every inch of his or her tiny body.',
+  },
   {
     index: 'half-elf',
     name: 'Half-Elf',
     imgSrc: '/src/assets/races/half-elf.jpeg',
+    description:
+      'Half-elves combine what some say are the best qualities of their elf and human parents.',
   },
   {
     index: 'half-orc',
     name: 'Half-Orc',
     imgSrc: '/src/assets/races/half-orc.jpg',
+    description:
+      'Some half-orcs rise to become proud leaders of orc communities. Some venture into the world to prove their worth. Many of these become adventurers, achieving greatness for their mighty deeds.',
   },
   {
     index: 'halfling',
     name: 'Halfling',
     imgSrc: '/src/assets/races/halfling.jpeg',
+    description:
+      'The diminutive halflings survive in a world full of larger creatures by avoiding notice or, barring that, avoiding offense.',
   },
-  { index: 'human', name: 'Human', imgSrc: '/src/assets/races/human.jpeg' },
+  {
+    index: 'human',
+    name: 'Human',
+    imgSrc: '/src/assets/races/human.jpeg',
+    description:
+      'Humans are the most adaptable and ambitious people among the common races. Whatever drives them, humans are the innovators, the achievers, and the pioneers of the worlds.',
+  },
   {
     index: 'tiefling',
     name: 'Tiefling',
     imgSrc: '/src/assets/races/tiefling.jpeg',
+    description:
+      'To be greeted with stares and whispers, to suffer violence and insult on the street, to see mistrust and fear in every eye: this is the lot of the tiefling.',
   },
 ];
 
@@ -132,4 +166,78 @@ export const characterGenders = [
   { index: 8, type: 'Transexual man' },
   { index: 9, type: 'Demi-woman' },
   { index: 10, type: 'Gender fluid' },
+];
+
+export const characterSkills = [
+  'Acrobatics',
+  'Animal-handling',
+  'Arcana',
+  'Athletics',
+  'Deception',
+  'History',
+  'Insight',
+  'Intimidation',
+  'Investigation',
+  'Medicine',
+  'Nature',
+  'Perception',
+  'Performance',
+  'Persuasion',
+  'Religion',
+  'Sleight-of-hand',
+  'Stealth',
+  'Survival',
+];
+
+export const musicalInstruments = [
+  {
+    index: 'bagpipes',
+    name: 'Bagpipes',
+    url: '/api/equipment/bagpipes',
+  },
+  {
+    index: 'drum',
+    name: 'Drum',
+    url: '/api/equipment/drum',
+  },
+  {
+    index: 'dulcimer',
+    name: 'Dulcimer',
+    url: '/api/equipment/dulcimer',
+  },
+  {
+    index: 'flute',
+    name: 'Flute',
+    url: '/api/equipment/flute',
+  },
+  {
+    index: 'lute',
+    name: 'Lute',
+    url: '/api/equipment/lute',
+  },
+  {
+    index: 'lyre',
+    name: 'Lyre',
+    url: '/api/equipment/lyre',
+  },
+  {
+    index: 'horn',
+    name: 'Horn',
+    url: '/api/equipment/horn',
+  },
+  {
+    index: 'pan-flute',
+    name: 'Pan flute',
+    url: '/api/equipment/pan-flute',
+  },
+  {
+    index: 'shawm',
+    name: 'Shawm',
+    url: '/api/equipment/shawm',
+  },
+  {
+    index: 'viol',
+    name: 'Viol',
+    url: '/api/equipment/viol',
+  },
 ];

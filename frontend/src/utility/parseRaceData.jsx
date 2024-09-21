@@ -58,7 +58,7 @@ export const getTableSelectOptions = (tableStr) => {
 
 export const parseRaceData = (data) => {
   // includes the selection object
-  console.log('in parseRaceData: -> data passed in', data);
+  // console.log('in parseRaceData: -> data passed in', data);
   let raceData;
   if (data.name === 'Human') {
     raceData = parseRaceTraits(data.languages + data.asi_desc, data.name);
@@ -66,7 +66,7 @@ export const parseRaceData = (data) => {
     raceData = parseRaceTraits(data.vision + data.traits, data.name);
   }
 
-  let description = data.desc.split('\n')[1];
+  let description = data.description + ' ' + data.desc.split('\n')[1].trim();
 
   const finalRaceData = {
     ...raceData,
@@ -114,8 +114,8 @@ const parseRaceTraits = (traitsStr, race) => {
     if (race === 'Dragonborn') {
       if (index > 0) {
         if (index === 1) {
-          let name = str.split('._**')[0];
-          let description = str.split('._**')[1];
+          let name = str.split('._**')[0].trim();
+          let description = str.split('._**')[1].trim();
           let table = parsedTraitsArray[0].split('**')[2];
 
           let parsedTableStr = getTableSelectOptions(table);
@@ -160,9 +160,9 @@ const parseRaceTraits = (traitsStr, race) => {
           // console.log('description with choice:', choices.split(','));
           selectedRaceTraits.push({
             name: name,
-            desc: description,
+            desc: description.trim(),
             isChoice: true,
-            choices: choices.split(','),
+            choices: choices.split(',').map((ch) => ch.trim()),
           });
         } else {
           selectedRaceTraits.push({ name: name, desc: description });

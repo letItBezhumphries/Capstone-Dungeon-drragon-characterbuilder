@@ -1,20 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateFormData } from '../../../slices/formSlice';
 import { useNavigate } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
+import Button from '../../../components/Button';
 import ChooseClassModal from './ChooseClassModal';
-// import ConfirmationModal from '../../../components/ConfirmationModal';
 import FilterOptionItem from '../../../components/FilterOptionItem';
-import CharacterNameForm from '../CharacterNameForm';
-import PageContainer from '../../../components/PageContainer';
-import StepFormControlWrapper from '../StepFormWrapper';
-import ChooseClassCard from './ChooseClassCard';
-import { setFilteredClass } from '../../../slices/characterBuilderSlice';
-
-// import { useGetClassDataQuery } from '../../../services/classes';
-
+import CharacterName from '../CharacterName';
+import ConfirmClass from './ConfirmClass';
+import { updateFormData } from '../../../slices/formSlice';
+import {
+  setFilteredClass,
+  clearFilteredClass,
+} from '../../../slices/characterBuilderSlice';
 import { characterClasses } from '../../../data/selectors';
 
 const ChooseClassScreen = ({}) => {
@@ -28,12 +27,14 @@ const ChooseClassScreen = ({}) => {
   const [temporaryClass, setTemporaryClass] = useState({});
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
+  const [showSelectionForm, setShowSelectionForm] = useState(false);
 
+  // closes Modal
   const handleClose = () => setShowConfirmationModal(false);
 
-  /* sets up the ConfirmationModal to open with the race selected to view as a search filter of sorts */
+  /* manages state that reveals the class modal and sets the class filter state */
   const handleClassFilterSelect = (classType) => {
-    console.log('in handleClassFilterSelect -> class:', classType);
+    // console.log('in handleClassFilterSelect -> class:', classType);
     let classObj = characterClasses.find((c) => c.index === classType);
     setTemporaryClass({
       name: classObj.name,
@@ -43,6 +44,10 @@ const ChooseClassScreen = ({}) => {
     setShowConfirmationModal(true);
   };
 
+  /* event handler that is fired in the class confirm modal when user clicks the confirm button 
+    this handler accepts a selection argument which it pass to the setFilteredClass action from character slice
+    to set the confirmed class_type for the character, and then closes the modal
+  */
   const handleConfirmSelection = (selection) => {
     // send the selection to the store selection for class
     console.log('in handleConfirmSelection:', selection);
@@ -53,98 +58,112 @@ const ChooseClassScreen = ({}) => {
       imgSrc: selection.imgSrc,
       ...selection,
     });
-
-    dispatch(
-      setFilteredClass({
-        name: selection.name,
-        index: selection.index,
-        imgSrc: selection.imgSrc,
-        ...selection,
-      })
-    );
+    setShowSelectionForm(true);
     // close the Confirmation Model
     handleClose();
   };
 
   const handleCancelSelection = () => {
+    dispatch(clearFilteredClass());
     setShowConfirmationModal(false);
   };
 
-  const onSubmit = (data) => {
-    dispatch(updateFormData(data));
+  const onNextStepClick = (data) => {
+    console.log('class submited data:', data);
+    const classData = JSON.parse(data.class_type);
+    console.log('Class submited data:', classData);
 
-    //  navigate('/character/chabilities');
+    let targetFeatures = [];
+
+    for (let key in data) {
+      if (key !== 'name' && key !== 'class_type') {
+        targetFeatures.push(key);
+      }
+    }
+
+    console.log('targetFeatures:', targetFeatures);
+    targetFeatures.forEach((tr) => {
+      let matchingTraitIndex = classData.features.map((t, idx) => {
+        if (t.name === tr) {
+          classData.traits[idx].selected = data[tr];
+        }
+      });
+    });
+    console.log('after reassignment classData:', classData.features);
+    dispatch(setFilteredClass(classData));
+
+    dispatch(updateFormData({ class_type: classData }));
+    navigate('/character/chabilities');
   };
 
   return (
     <div id='chclass'>
       <CharacterBuilderStepMenu step0 step1 step2></CharacterBuilderStepMenu>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+      <form
+        className={'stepper-container'}
+        onSubmit={handleSubmit(onNextStepClick)}
       >
-        <CharacterNameForm />
-      </div>
-      {selectedClass?.name && !showConfirmationModal ? (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <StepFormControlWrapper>
-            <input
-              value={JSON.stringify(selectedRace)}
-              name='race'
-              {...register('race')}
-              style={{ display: 'none' }}
-            ></input>
-            <ChooseClassCard
-              isModal={false}
-              isRace={false}
-              selectedClass={selectedClass}
-              selection={temporaryClass}
-            />
-          </StepFormControlWrapper>
-        </form>
-      ) : (
-        <StepFormControlWrapper>
-          <div className='filtering-container'>
-            {characterClasses.map((cls, idx) => (
-              <FilterOptionItem
-                key={cls.index}
-                name={cls.name}
-                index={cls.index}
-                imgsrc={cls.imgSrc}
-                showConfirmationModal={showConfirmationModal}
-                onSelectOption={handleClassFilterSelect}
-                optionSelected={temporaryClass}
-                isRace={false}
-              />
-            ))}
-          </div>
-        </StepFormControlWrapper>
-      )}
-
-      {showConfirmationModal ? (
-        <ChooseClassModal
-          show={showConfirmationModal}
-          onHide={handleClose}
-          isRace={false}
-          // isClass={true}
-          selection={temporaryClass}
-          onSelectionConfirm={handleConfirmSelection}
-          onSelectionCancel={handleCancelSelection}
+        <Button
+          step='Prev'
+          text='Prev'
+          color='#74C0FC'
+          icon='fa-solid fa-chevron-left fa-2xl'
         />
-      ) : null}
+        <Container className='stepper-form-inner' fluid>
+          <CharacterName register={register} />
+          {!showConfirmationModal && selectedClass?.name ? (
+            <>
+              <ConfirmClass
+                isModal={false}
+                isRace={false}
+                selectedClass={selectedClass}
+                selection={temporaryClass}
+                register={register}
+              />
+              <input
+                value={JSON.stringify(selectedClass)}
+                name='class'
+                {...register('class_type')}
+                style={{ display: 'none' }}
+              ></input>
+            </>
+          ) : (
+            <div className='filtering-container'>
+              {characterClasses.map((cls, idx) => (
+                <FilterOptionItem
+                  key={cls.index}
+                  name={cls.name}
+                  index={cls.index}
+                  imgsrc={cls.imgSrc}
+                  showConfirmationModal={showConfirmationModal}
+                  onSelectOption={handleClassFilterSelect}
+                  optionSelected={temporaryClass}
+                  isRace={false}
+                />
+              ))}
+            </div>
+          )}
+        </Container>
+        <Button
+          step='Next'
+          text='Next'
+          color='#74C0FC'
+          icon='fa-solid fa-chevron-right fa-2xl'
+          type='submit'
+        />
+        {showConfirmationModal ? (
+          <ChooseClassModal
+            show={showConfirmationModal}
+            onHide={handleClose}
+            isRace={false}
+            selection={temporaryClass}
+            onSelectionConfirm={handleConfirmSelection}
+            onSelectionCancel={handleCancelSelection}
+          />
+        ) : null}
+      </form>
     </div>
   );
 };
 
 export default ChooseClassScreen;
-
-// <StepFormControlWrapper>
-// <PageContainer
-//   isModal={false}
-//   isRace={false}
-//   selection={selectedClass}
-// />
-// </StepFormControlWrapper>

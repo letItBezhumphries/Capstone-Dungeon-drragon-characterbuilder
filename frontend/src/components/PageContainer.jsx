@@ -5,8 +5,6 @@ import Row from 'react-bootstrap/Row';
 import PageIntro from './PageIntro';
 import PageList from './PageList';
 import Loader from './Loader';
-import { parseClassData } from '../utility/parseClassData';
-import { parseRaceData } from '../utility/parseRaceData';
 
 const PageContainer = ({
   isRace,
@@ -15,25 +13,16 @@ const PageContainer = ({
   isLoading,
   selectedRace,
   selectedClass,
+  register,
 }) => {
   // console.log('is race:', isRace, 'selection:', selection);
-  let classSelection;
   let raceSelection;
-  if (!isRace) {
-    classSelection = parseClassData(selection);
-    classSelection.imgSrc = selection.imgSrc;
-    classSelection.index = selection.index;
-    console.log('in PAGECONT classSelection:', classSelection);
-  } else {
+  if (isRace) {
     if (!isModal) {
       raceSelection = selectedRace;
     } else {
       raceSelection = selection;
     }
-    // if (isRace && !selectedRace) {
-    //   raceSelection = parseRaceData(selection);
-    //   console.log('in PAGECONT raceSelection:', raceSelection);
-    // }
   }
 
   return (
@@ -76,10 +65,10 @@ const PageContainer = ({
           <PageList
             isRace={isRace}
             isModal={isModal}
-            selection={isRace ? raceSelection : classSelection}
+            selection={raceSelection}
             isLoading={isLoading}
             selectedRace={selectedRace}
-            selectedClass={selectedClass}
+            register={register}
           />
         </>
       )}

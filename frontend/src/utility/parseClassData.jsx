@@ -1,6 +1,8 @@
+import { characterSkills, musicalInstruments } from '../data/selectors';
+
 /**
  * This just takes the table property and splits and filters away the unwanted parts of the string and
- * returns an array where the first element is the table table head cells. the rest of the array are the matching colunms
+ * returns an array where the first element is the table head cells. the rest of the array are the matching colunms
  *
  * @param {*} tableStr
  * @returns
@@ -187,7 +189,7 @@ export const parseEquipment = (equipment) => {
   output.level = 1;
 
   let choices = parsedEquipmentStr.slice(1).filter((str) => str !== ' ');
-  // console.log('options:', choices);
+  // console.log('parseEquipment - options:', choices);
 
   // iterate over the options
   choices.forEach((choice) => {
@@ -195,15 +197,16 @@ export const parseEquipment = (equipment) => {
       let splitChoices = choice
         .split(',')
         .map((ch) => ch.trim().split('*) ')[1]);
-      output.choices.push(splitChoices);
+
+      output.choices.push({ text: choice.trim(), options: [...splitChoices] });
     } else if (choice.split(' or').length === 1) {
       let splitChoices = choice.split('* ').slice(1);
-      output.choices.push(splitChoices);
+      output.choices.push({ text: choice.trim(), options: [...splitChoices] });
     } else {
       let splitChoices = choice
         .split(' or')
         .map((ch) => ch.trim().split('*) ')[1]);
-      output.choices.push(splitChoices);
+      output.choices.push({ text: choice.trim(), options: [...splitChoices] });
     }
   });
 
@@ -211,18 +214,70 @@ export const parseEquipment = (equipment) => {
   return output;
 };
 
+export const parseToolsStr = (str, class_type) => {
+  const output = {};
+  let total_choices;
+
+  if (class_type === 'Bard') {
+    total_choices = 3;
+    output.total_choices = total_choices;
+    output.options = musicalInstruments;
+    output.desc = str;
+    return output;
+  }
+};
+
+export const parseSkillsStr = (str, class_type) => {
+  const output = {};
+  output.desc = str;
+  const splitSkillsStr = str.split(' ');
+  // console.log('pasreSkillsStr split str:', splitSkillsStr);
+  let total_choices;
+  if (class_type === 'Bard') {
+    total_choices = 3;
+    output.total_choices = total_choices;
+    output.options = characterSkills;
+  } else {
+    if (splitSkillsStr[0] === 'Choose') {
+      let numberWord = splitSkillsStr[1];
+      if (numberWord === 'two') {
+        total_choices = 2;
+      } else if (numberWord === 'three') {
+        total_choices = 3;
+      } else if (numberWord === 'four') {
+        total_choices = 4;
+      }
+      let fromIndex = splitSkillsStr.indexOf('from');
+      let optionsStr = splitSkillsStr
+        .slice(fromIndex + 1)
+        .join(' ')
+        .replace('Animal,', 'Animal');
+
+      let optionsArr = optionsStr
+        .split(',')
+        .map((sk) => sk.replace(' and', '').trim());
+
+      output.total_choices = total_choices;
+      output.options = optionsArr;
+    }
+  }
+  return output;
+};
+
 export const parseProficiencies = (data) => {
+  console.log('parseProficiencies - data:', data);
   let output = {};
   output.level = 1;
-  output.armor =
-    data.prof_armor.split(',').length > 1
-      ? data.prof_armor.split(',')
-      : data.prof_armor;
-  output.weapons = data.prof_weapons.split(',');
-  output.tools = data.prof_tools;
+  output.armor = data.prof_armor;
+
+  output.weapons = data.prof_weapons;
+
+  let tools = parseToolsStr(data.prof_tools, data.name);
+  output.tools = tools;
+
   output.saving_throws = data.prof_saving_throws;
 
-  output.skills = data.prof_skills;
+  output.skills = parseSkillsStr(data.prof_skills, data.name);
   return output;
 };
 
@@ -320,7 +375,7 @@ const mergeFeaturesAndDescriptions = (features, descriptions) => {
     let matchingDescription = descriptions.find((d) => d.name === name);
 
     if (matchingDescription) {
-      console.log('match:', matchingDescription);
+      // console.log('match:', matchingDescription);
       output.push({ ...feat, desc: matchingDescription.description });
     }
   });

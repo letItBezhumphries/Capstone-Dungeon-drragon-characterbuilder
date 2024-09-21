@@ -1,0 +1,174 @@
+.collapsiblelist-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  padding: 0 15px;
+}
+
+.accordion > .card {
+  overflow: visible !important;
+}
+
+.card {
+  border: none !important;
+}
+
+.card,
+.card-header {
+  width: 100%;
+  padding: 0 0;
+  margin: 0 0;
+}
+
+.card-header {
+  background-color: #fff;
+  border: none;
+  width: 100%;
+  padding: 0 0 !important;
+  margin: 0 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.1;
+  background: url('../assets/backgroundColor.jpeg.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.card-header button {
+  display: flex;
+  width: 100%;
+  height: 65px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header button:focus {
+  outline: none;
+}
+
+.collapse-button {
+  margin-bottom: 15px;
+  background: url('../assets/backgroundColor.png');
+}
+
+.collapse-button-todo {
+  margin-bottom: 15px;
+  background: url('../assets/backgroundColor.png');
+  border: 2.5px solid dodgerblue;
+}
+
+.selection-todo {
+  /* border-top: 1.5px solid dodgerblue; */
+  /* box-shadow: 2px 4px 6px dodgerblue; */
+  /* overflow: visible; */
+}
+
+.select-todo-notification {
+  position: absolute;
+  top: -10px;
+  z-index: 10000;
+  left: -5px;
+  height: 25px;
+  width: 25px;
+  color: white;
+  background-color: dodgerblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.selection-item {
+  border: none;
+}
+
+.selection-item,
+.card {
+  border: none;
+}
+
+.select-container {
+  border: none;
+}
+
+.select-trait-option {
+  width: 100%;
+  height: 35px;
+}
+
+.card-body {
+  background-color: #fff;
+  /* border-left: 1px solid #ece9e9;
+  border-right: 1px solid #ece9e9; */
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 2px;
+  padding: 20px 15px;
+  min-height: 200px;
+  /* top: -10px; */
+}
+
+.card-body th {
+  background: #fff;
+  border: 1px solid #edeae8;
+  border-bottom: 2px solid #d0cac5;
+  color: #242527;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  padding: 10px 20px;
+  text-align: left;
+}
+
+.card-body tr:nth-child(odd) td {
+  background-color: #faf8f7;
+}
+
+.card-body td {
+  background-color: #fff;
+  border: 1px solid #edeae8;
+  line-height: 1.3;
+  padding: 8px 20px;
+}
+
+.card-body p {
+  margin: 0 0 25px;
+}
+
+.card-body h5 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.card-body table {
+  border: 1px solid #edeae8;
+  border-collapse: collapse;
+  margin: 20px 0;
+  width: 100%;
+  border-spacing: 0;
+}
+
+.accordion-colllapse {
+  border: none;
+}
+
+.collapse {
+  border: none;
+}
+
+.accordion-colllapse,
+.collapse,
+.show {
+  border: none;
+}
+
+.card-body select {
+  border: 1px solid dodgerblue;
+}
