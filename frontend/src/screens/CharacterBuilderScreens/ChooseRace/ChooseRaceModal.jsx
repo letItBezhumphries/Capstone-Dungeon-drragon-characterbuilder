@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useGetDataForRaceQuery } from '../../../services/races';
-import PageContainer from '../../../components/PageContainer';
-import ConfirmRace from './ConfirmRace';
+import { Container } from 'react-bootstrap';
 import { parseRaceData } from '../../../utility/parseRaceData';
 import Loader from '../../../components/Loader';
 import { setFilteredRace } from '../../../slices/characterBuilderSlice';
+import ModalSelectionIntro from '../../../components/ModalSelectionIntro';
+import ModalSelectionList from '../../../components/ModalSelectionList';
 import '../../../components/ConfirmationModal.css';
 
 function ChooseRaceModal({
@@ -17,10 +17,11 @@ function ChooseRaceModal({
   selection,
   onSelectionConfirm,
   onSelectionCancel,
+  register,
 }) {
   const dispatch = useDispatch();
 
-  // console.log('RaceModal:', selection);
+  // console.log('ConfirmRace in Modal = true:', selection);
 
   const { data, isLoading, error } = useGetDataForRaceQuery(selection.index);
 
@@ -35,6 +36,11 @@ function ChooseRaceModal({
     /* ! ALSO NEED to add redux action here to store selection in state */
 
     const raceData = parseRaceData({ ...selection, ...data });
+
+    // console.log(
+    //   'ChooseRaceModal.jsx - click event handler - raceData:',
+    //   raceData
+    // );
 
     // set filtered race in state
     dispatch(setFilteredRace(raceData));
@@ -52,7 +58,6 @@ function ChooseRaceModal({
         <Modal
           backdrop='static'
           backdropClassName={'confirmation-backdrop'}
-          // scrollable={true}
           keyboard={false}
           show={show}
           onHide={() => handleClose()}
@@ -72,12 +77,17 @@ function ChooseRaceModal({
           </Modal.Header>
           <Modal.Body>
             {!isLoading ? (
-              <ConfirmRace
-                isModal={true}
-                isRace={true}
-                selection={parseRaceData({ ...selection, ...data })}
-                isLoading={isLoading}
-              />
+              <Container className='modal-content'>
+                <ModalSelectionIntro
+                  isModal={true}
+                  selection={parseRaceData({ ...selection, ...data })}
+                />
+                <ModalSelectionList
+                  isModal={true}
+                  selection={parseRaceData({ ...selection, ...data })}
+                  register={register}
+                />
+              </Container>
             ) : (
               <Loader />
             )}

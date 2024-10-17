@@ -1,0 +1,78 @@
+.accordion-collapse,
+.collapse,
+.show {
+  width: 100%;
+}
+
+.collapse-modal-button {
+  margin-bottom: 5px;
+  /* background: url('../assets/modal-selector-700.png') no-repeat; */
+  background: url('../assets/collapsible-480.png') no-repeat;
+  background-size: 100% 65px;
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+  height: 65px;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  transition: background-image 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  z-index: 2;
+}
+
+.collapse-modal-button:hover {
+  background: url('../assets/collapsible-480-hover.png') no-repeat;
+  background-size: 100% 65px;
+}
+
+.collapse-button-todo {
+  margin-bottom: 15px;
+  background: url('../assets/collapsible-700-highlight.png') no-repeat;
+  background-size: 100% 65px;
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+  height: 65px;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  transition: background-image 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  z-index: 2;
+}
+
+.collapse-button-todo:hover {
+  background: url('../assets/collapsible-700-hover-highlight.png') no-repeat;
+  background-size: 100% 65px;
+}
+
+.collapse-button {
+  margin-bottom: 15px;
+  background: url('../assets/collapsible-700.png') no-repeat;
+  background-size: 100% 65px;
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+  height: 65px;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  transition: background-image 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  z-index: 2;
+}
+
+.collapse-button:hover {
+  background: url('../assets/collapsible-700-hover.png');
+  background-size: 100% 65px;
+}
+
+.collapse-icon-box {
+  height: 100%;
+  width: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-body p {
+  margin: 0 0;
+}

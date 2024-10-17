@@ -1,60 +1,11 @@
-const getTableHeadVals = (tableStr) => {
-  let splitTable = tableStr
-    .split('|')
-    .filter((str) => str.indexOf('-') === -1)
-    .filter((str) => str.indexOf('\n') === -1);
+import {
+  characterSkills,
+  characterAbilities,
+  commonLanguages,
+  keenSenseSkill,
+} from '../data/selectors';
 
-  let tableHeadCells = splitTable.slice(0, 3).map((str) => str.trim());
-  return tableHeadCells;
-};
-
-const getTableCellValues = (tableStr) => {
-  const output = [];
-  let splitTable = tableStr
-    .split('|')
-    .filter((str) => str.indexOf('-') === -1)
-    .filter((str) => str.indexOf('\n') === -1);
-
-  let tableCells = splitTable.slice(3).map((str) => str.trim());
-  let lastCellIndex = tableCells.length - 1;
-
-  let first = 0;
-  let last = 3;
-  while (last <= lastCellIndex) {
-    let currentRow = tableCells.slice(first, last);
-    output.push(currentRow);
-    first += 3;
-    last += 3;
-  }
-
-  return output;
-};
-
-export const getTableSelectOptions = (tableStr) => {
-  let tableHeadCells = getTableHeadVals(tableStr);
-  // console.log('in utils/ tableHead', tableHeadCells);
-
-  let tableCells = getTableCellValues(tableStr);
-  // console.log('in utils/ tableCells:', tableCells);
-
-  const output = [];
-
-  let fixedTitle = tableHeadCells[0];
-
-  // console.log('in utils/ fixedTitle:', fixedTitle);
-
-  // iterate over the tableCells
-  tableCells.forEach((cell, idx) => {
-    // grab the first index of each cell
-    output.push(cell[0] + ' ' + fixedTitle);
-  });
-
-  return {
-    headCells: tableHeadCells,
-    tableCells: tableCells,
-    tableOptions: output,
-  };
-};
+import { getTableSelectOptions } from './parseTableString';
 
 export const parseRaceData = (data) => {
   // includes the selection object
@@ -62,9 +13,17 @@ export const parseRaceData = (data) => {
   let raceData;
   if (data.name === 'Human') {
     raceData = parseRaceTraits(data.languages + data.asi_desc, data.name);
+  } else if (data.name === 'Half-Elf') {
+    raceData = parseRaceTraits(
+      data.vision + '\n' + data.asi_desc + '\n' + data.languages + data.traits,
+      data.name,
+      data.asi
+    );
   } else {
     raceData = parseRaceTraits(data.vision + data.traits, data.name);
   }
+
+  // console.log('in parseRaceData -> raceData:', raceData);
 
   let description = data.description + ' ' + data.desc.split('\n')[1].trim();
 
@@ -84,6 +43,7 @@ export const parseRaceData = (data) => {
     speed: data.speed,
     speed_desc: data.speed_desc,
     vision: data.vision,
+    subraces: data.subraces,
   };
 
   // console.log('finalRaceData:', finalRaceData);
@@ -91,7 +51,7 @@ export const parseRaceData = (data) => {
   return finalRaceData;
 };
 
-const parseRaceTraits = (traitsStr, race) => {
+const parseRaceTraits = (traitsStr, race, asi) => {
   const output = {};
   const raceTraitNames = [];
   const selectedRaceTraits = [];
@@ -128,6 +88,7 @@ const parseRaceTraits = (traitsStr, race) => {
               desc: description,
               table: table,
               isChoice: true,
+              total_choices: 1,
               choices: parsedTableStr.tableOptions,
               headCells: parsedTableStr.headCells,
               tableCells: parsedTableStr.tableCells,
@@ -147,11 +108,70 @@ const parseRaceTraits = (traitsStr, race) => {
       // otherwise its not a dragonborn and you can push the name and trait obj
       let name = str.split('._**')[0];
       let description = str.split('._**')[1];
+      // console.log(
+      //   `in parseRaceData - forEach -> this ${race} has a trait - name:`,
+      //   name,
+      //   '\ndescription:',
+      //   description
+      // );
+
       if (!raceTraitNames.includes(name)) {
         raceTraitNames.push(name);
         // if the word 'choice' is found in the description then we need to set up choices to select in the overview page
         // console.log("4. description.split(' '):", description.split(' '));
-        if (description.split(' ').indexOf('choice:') !== -1) {
+        // if (description.match(/choice:|choice./g)) {
+        //   console.log(
+        //     `!!!This ${race} has a trait ${name} that has a choice to make:`,
+        //     description
+        //   );
+        // }
+        if (name === 'Languages') {
+          // console.log(`This ${race} has a languages trait!`);
+          selectedRaceTraits.push({
+            name: name,
+            desc: description.trim(),
+            isChoice: true,
+            total_choices: 1,
+            choices:
+              race === 'Half-Elf'
+                ? commonLanguages.filter((lang) => lang !== 'Elvish')
+                : commonLanguages,
+            selected: [],
+          });
+        } else if (name === 'Skill Versatility') {
+          // console.log(`This ${race} has a Skill Proficiency`);
+          selectedRaceTraits.push({
+            name: name,
+            desc: description.trim(),
+            isChoice: true,
+            total_choices: 2,
+            choices: characterSkills,
+            selected: [],
+          });
+        } else if (name === 'Ability Score Increase' && race === 'Half-Elf') {
+          selectedRaceTraits.push({
+            name: name,
+            desc: description.trim(),
+            isChoice: true,
+            total_choices: 2,
+            choices: characterAbilities.filter(
+              (ab) => ab !== asi[0].attributes[0]
+            ),
+            // choices: characterAbilities.filter(
+            //   (ab) => ab !== asi[0].attributes[0]
+            // ).map((ability) => {
+            //   return {
+            //     index: ability,
+            //     value: 1
+            //   }
+            // }),
+            selected: [],
+          });
+        } else if (description.split(' ').indexOf('choice:') !== -1) {
+          // console.log(
+          //   `!!!This ${race} has a trait ${name} that has a choice to make:`,
+          //   description
+          // );
           let choices = description
             .split(':')[1]
             .split(/,|or/g)
@@ -162,7 +182,12 @@ const parseRaceTraits = (traitsStr, race) => {
             name: name,
             desc: description.trim(),
             isChoice: true,
-            choices: choices.split(',').map((ch) => ch.trim()),
+            total_choices: 1,
+            choices: choices
+              .split(',')
+              .map((ch) => ch.trim())
+              .map((c) => c[0].toUpperCase() + c.slice(1)),
+            selected: [],
           });
         } else {
           selectedRaceTraits.push({ name: name, desc: description });
@@ -172,6 +197,8 @@ const parseRaceTraits = (traitsStr, race) => {
   });
 
   output.traits = selectedRaceTraits;
+
+  // output.traits.push(asi);
   output.traitNames = raceTraitNames;
   return output;
 };

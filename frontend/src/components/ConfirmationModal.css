@@ -18,6 +18,9 @@
   padding: 0 0;
   margin: 0 0;
   border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Confirmation-Modal */
@@ -27,6 +30,7 @@
   background-color: #262e37;
   display: flex;
   height: 60px;
+  width: 100%;
   padding: 15px;
   justify-content: space-between;
   color: #fff !important;
@@ -60,9 +64,11 @@ h4 {
   margin-top: 0;
   font-size: 24px;
   line-height: 1.2;
+  font-family: 'Roboto';
   text-align: left;
   color: black !important;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  font-weight: 400;
 }
 
 .confirmation-info .description {
@@ -75,6 +81,7 @@ h4 {
 }
 
 .traitlist strong {
+  margin-right: 5px;
   font-size: 12.5px;
   color: black;
   font-weight: 700;
@@ -155,9 +162,6 @@ h4 {
   flex-direction: column;
 }
 
-.secondary-listitem {
-}
-
 .overview-container {
   width: 100%;
   padding: 0 0;
@@ -218,17 +222,18 @@ h4 {
   border: none;
 }
 
-.full-width-row {
+.full-width-row,
+.modal-row {
   /* background-color: yellow; */
   width: 100% !important;
-  /* margin-right: 0px !important;
-  margin-left: 0px !important; */
+  margin: 0 0 !important;
   padding: 0 0 !important;
 }
 
 .full-width-col {
   width: 100%;
   margin: 0 0 !important;
+  padding: 0 0 !important;
 }
 
 .full-width-col h3 {
@@ -236,32 +241,38 @@ h4 {
   font-weight: 700;
   line-height: 1.5;
   letter-spacing: normal;
-  margin: 17px 0 5px;
+  margin: 5px 0 5px;
 }
 
 .secondary-title {
   padding: 0 15px;
 }
 
-.confirmation-footer {
+.modal-footer {
+  flex-wrap: nowrap;
+  display: flex;
+  padding: 0 0;
+}
+
+.confirmation-footer,
+.modal-footer {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-
-  align-items: center;
-  background-color: bisque;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0 0;
 }
 
 .cancel-btn {
-  width: 45%;
-  height: 1fr;
+  width: 50%;
+  height: 100%;
   background-color: #fff;
-  color: gray;
+  color: rgb(117, 131, 139);
 }
 
 .choose-btn {
-  width: 45%;
-  height: 1fr;
+  width: 50%;
+  height: 100%;
   background-color: #96bf6b;
   color: #fff;
 }

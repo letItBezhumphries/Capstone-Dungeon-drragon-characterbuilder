@@ -1,4 +1,8 @@
 import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
+import {
+  FormContainerInner,
+  FormContainerOuter,
+} from '../../../components/FormContainer';
 import CharacterName from '../CharacterName';
 import { Container, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
@@ -23,25 +27,27 @@ const CharacterBuilder = () => {
     <div id='character'>
       <CharacterBuilderStepMenu step0 />
       <form
-        className={'stepper-container'}
+        className='character-stepper-form'
         onSubmit={handleSubmit(onNextClickSubmit)}
       >
-        <Button
-          step='Prev'
-          text='Prev'
-          color='#74C0FC'
-          icon='fa-solid fa-chevron-left fa-2xl'
-        />
-        <Container className='stepper-form-inner' fluid>
-          <CharacterName register={register} />
-        </Container>
-        <Button
-          step='Next'
-          text='Next'
-          color='#74C0FC'
-          icon='fa-solid fa-chevron-right fa-2xl'
-          type='submit'
-        />
+        <FormContainerOuter>
+          <Button
+            step='Prev'
+            text='Prev'
+            color='#74C0FC'
+            icon='fa-solid fa-chevron-left fa-2xl'
+          />
+          <FormContainerInner>
+            <CharacterName register={register} />
+          </FormContainerInner>
+          <Button
+            step='Next'
+            text='Next'
+            color='#74C0FC'
+            icon='fa-solid fa-chevron-right fa-2xl'
+            type='submit'
+          />
+        </FormContainerOuter>
       </form>
     </div>
   );

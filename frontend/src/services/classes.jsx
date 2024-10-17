@@ -8,10 +8,20 @@ export const open5eClassApi = createApi({
     getClassData: builder.query({
       query: (classType) => `classes/${classType}`,
     }),
+    getSpellsForClass: builder.query({
+      query: (classType) =>
+        `spells/?limit=1000&search=${classType}&document__slug=wotc-srd`,
+    }),
     keepUnusedDataFor: 5,
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetClassDataQuery } = open5eClassApi;
+export const {
+  useGetClassDataQuery,
+  useGetA5ESpellsForClassQuery,
+  useGetSpellsForClassQuery,
+} = open5eClassApi;
+
+// spells/?search=${classType}?limit=1000&spell_level=${level}

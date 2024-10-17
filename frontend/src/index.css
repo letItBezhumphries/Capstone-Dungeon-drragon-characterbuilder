@@ -38,14 +38,11 @@ h6 {
 
 body,
 #root {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
   width: 100vw;
   height: 100vh;
   margin: 0 0;
   padding: 0 0;
-  /* display: flex;
-  flex-direction: column; */
-  /* background-color: brown; */
 }
 
 #app {
@@ -54,20 +51,6 @@ body,
   justify-content: flex-start;
   height: 100%;
   width: 100%;
-  /* background-color: brown; */
-}
-
-nav {
-  width: 100%;
-  height: 15%;
-  color: var(--davys-gray);
-  margin: 0 auto;
-  margin-left: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  overflow-x: hidden;
 }
 
 /* the homepage link */
@@ -78,24 +61,6 @@ nav a {
 
 nav a:hover {
   text-decoration: none;
-}
-
-nav ul {
-  list-style-type: none;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 40px;
-  margin-right: 60px;
-  max-width: 60%;
-}
-
-.nav-header {
-  font-size: 20px;
-  height: 100%;
-  display: flex;
-  align-items: center;
 }
 
 .nav-link a {
@@ -118,102 +83,3 @@ nav ul {
   display: flex;
   justify-content: space-between;
 }
-
-/* 
-character page 
-*/
-
-/* .character-view {
-  background-color: beige;
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-}
-
-.character-vitals {
-  height: 100px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
-.left {
-  width: 30%;
-  height: 100%;
-}
-
-.left input {
-  width: 100%;
-  height: 80%;
-}
-
-.right {
-  width: 70%;
-  height: 100%;
-}
-
-.right table {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: space-evenly;
-  align-items: center;
-  background-color: aqua;
-  padding: 0 0;
-  margin: 0 0;
-}
-
-.right tbody {
-  width: 100%;
-  height: 100%;
-}
-
-.right tr {
-  width: 100%;
-  height: 25%;
-  background-color: aliceblue;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-td select {
-  border: none;
-}
-
-.character-main {
-  background-color: burlywood;
-}
-
-.current-room-view {
-  background-color: var(--davys-gray);
-  width: 70%;
-  height: 40%;
-}
-
-.current-room-view tbody {
-  background-color: var(--davys-gray);
-}
-
-.dungeon-row {
-  border: 0.8px solid var(--jet);
-}
-
-.dungeon-square {
-  border: 0.8px solid dodgerblue;
-  background-color: antiquewhite;
-}
-
-.form-page-header {
-  font-size: 24px;
-  line-height: 1.2;
-  margin-top: 5px;
-  margin-bottom: 25px;
-}
-
-.confirmation-backdrop {
-}
-
-.filtering-container {
-  width: 80%;
-} */

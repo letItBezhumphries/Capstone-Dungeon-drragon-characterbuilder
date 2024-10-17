@@ -2,6 +2,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { open5eRaceApi } from './services/races';
 import { open5eClassApi } from './services/classes';
 import { open5eMonstersApi } from './services/monsters';
+import { open5eSRDSpellsApi } from './services/spells';
+
 // import { buildCharacterSliceReducer } from './slices/builderCharacterSlice';
 import { characterBuilderSliceReducer } from './slices/characterBuilderSlice';
 import {
@@ -16,6 +18,7 @@ const rootReducer = combineReducers({
   [open5eMonstersApi.reducerPath]: open5eMonstersApi.reducer,
   [open5eClassApi.reducerPath]: open5eClassApi.reducer,
   [open5eRaceApi.reducerPath]: open5eRaceApi.reducer,
+  [open5eSRDSpellsApi.reducerPath]: open5eSRDSpellsApi.reducer,
   [backendMonstersApi.reducerPath]: backendMonstersApi.reducer,
   [backendCharactersApi.reducerPath]: backendCharactersApi.reducer,
   [backendUsersApi.reducerPath]: backendUsersApi.reducer,
@@ -31,6 +34,7 @@ const store = configureStore({
       .concat(open5eRaceApi.middleware)
       .concat(open5eClassApi.middleware)
       .concat(open5eMonstersApi.middleware)
+      .concat(open5eSRDSpellsApi.middleware)
       .concat(backendMonstersApi.middleware)
       .concat(backendCharactersApi.middleware)
       .concat(backendUsersApi.middleware),

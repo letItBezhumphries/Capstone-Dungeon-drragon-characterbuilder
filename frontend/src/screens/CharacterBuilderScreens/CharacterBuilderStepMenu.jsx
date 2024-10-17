@@ -1,71 +1,120 @@
 import React from 'react';
+import { styled } from 'styled-components';
 import { Nav } from 'react-bootstrap';
+import * as pallete from '../../constants/variables';
 import { LinkContainer } from 'react-router-bootstrap';
-import './CharacterBuilderStepMenu.css';
+
+const CharacterBuilderNav = styled(Nav)`
+  background-color: rgba(0, 0, 0, 0.8);
+  font-family: 'Roboto Condensed', 'sans-serif';
+  margin: 0 0 20px 0;
+  padding: 10px 0;
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  color: whitesmoke;
+  justify-content: center;
+  align-items: center;
+
+  & span {
+    font-weight: 700;
+    font-size: 30px;
+    margin-right: 30px;
+  }
+`;
+
+const MenuLink = styled(Nav.Link)`
+  font-family: 'Roboto Condensed', 'sans-serif';
+  font-weight: 700;
+  color: white;
+
+  &:after {
+    border-bottom: 3px solid transparent;
+    content: '';
+    display: block;
+    margin-top: 2px;
+  }
+
+  &:hover {
+    color: white;
+  }
+
+  ${
+    '' /* &:active {
+    color: ${pallete.COLOR_MAGENTA_PANTONE}
+  } */
+  }
+
+  &:after:active {
+    border-color: #1c9aef;
+  }
+
+  &:hover:after {
+    border-color: #1c9aef;
+  }
+`;
 
 const CharacterBuilderStepMenu = ({ step0, step1, step2, step3, step4 }) => {
   return (
-    <Nav className='character-builder-nav'>
+    <CharacterBuilderNav>
       <span>Character Builder</span>
       <Nav.Item>
         {step0 ? (
           <LinkContainer to='/character'>
-            <Nav.Link className='character-builder-menulink'>
+            <MenuLink>
               <i className='fa-solid fa-gear'></i> HOME
-            </Nav.Link>
+            </MenuLink>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>
+          <MenuLink disabled>
             <i className='fa-solid fa-gear'></i> HOME
-          </Nav.Link>
+          </MenuLink>
         )}
       </Nav.Item>
       <Nav.Item>
         {step0 ? (
           <LinkContainer to='/character/chrace'>
-            <Nav.Link className='character-builder-menulink'>1. RACE</Nav.Link>
+            <MenuLink>1. RACE</MenuLink>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>RACE</Nav.Link>
+          <MenuLink disabled>RACE</MenuLink>
         )}
       </Nav.Item>
       <Nav.Item>
         {step0 ? (
           <LinkContainer to='/character/chclass'>
-            <Nav.Link className='character-builder-menulink'>2. CLASS</Nav.Link>
+            <MenuLink>2. CLASS</MenuLink>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>2. CLASS</Nav.Link>
+          <MenuLink disabled>2. CLASS</MenuLink>
         )}
       </Nav.Item>
       <Nav.Item>
         {/*  REMEMEMBER NEED TO CHANGE THIS BACK TO PROPER STEPS NEEDED TO HIT ROUTE */}
         {step0 ? (
           <LinkContainer to='/character/chabilities'>
-            <Nav.Link className='character-builder-menulink'>
-              3. ABILITES
-            </Nav.Link>
+            <MenuLink>3. ABILITES</MenuLink>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>3. ABILITIES</Nav.Link>
+          <MenuLink disabled>3. ABILITIES</MenuLink>
         )}
       </Nav.Item>
       <Nav.Item>
         {step4 ? (
           <LinkContainer to='/chfinal'>
-            <Nav.Link className='character-builder-menulink'>
+            <MenuLink>
               <i className='fa-solid fa-address-card'></i>
-            </Nav.Link>
+            </MenuLink>
           </LinkContainer>
         ) : (
           <LinkContainer to='/chfinal'>
-            <Nav.Link className='character-builder-menulink'>
+            <MenuLink>
               <i className='fa-solid fa-address-card'></i>
-            </Nav.Link>
+            </MenuLink>
           </LinkContainer>
         )}
       </Nav.Item>
-    </Nav>
+    </CharacterBuilderNav>
   );
 };
 

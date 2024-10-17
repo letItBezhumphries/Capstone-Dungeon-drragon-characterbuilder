@@ -1,0 +1,13 @@
+export const COLOR_JET = 'rgba(51, 51, 51, 1)';
+export const COLOR_DAVYS_GRAY = 'rgba(78, 78, 78, 1)';
+export const COLOR_RAISIN_BLACK = '#29292bff';
+export const COLOR_EERIE_BLACK = '#1e2124ff';
+export const COLOR_NIGHT = '#0f0e10ff';
+export const COLOR_DRAB_DARK_BROWN = '#554733ff';
+export const COLOR_BATTLESHIP_GRAY = 'rgba(156, 156, 156, 1)';
+export const COLOR_SILVER = 'rgba(167, 167, 167, 1)';
+export const COLOR_COOL_GRAY = '#8695b2ff';
+export const COLOR_BATTLESHIP_GRAY2 = 'rgba(134, 134, 134, 1)';
+export const COLOR_MAGENTA_PANTONE = '#c8427bff';
+export const COLOR_RED_MUNSELL = '#ec193cff';
+export const COLOR_BURNT_SIENNA = '#eb6739ff';

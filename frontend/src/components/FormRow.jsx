@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 
 const ClassFormRow = styled(Row)`
   width: 100%;
-  padding: 0 0;
+  padding: 0px 0px;
   margin: 20px 0 20px 0;
   display: flex;
   justify-content: space-evenly;

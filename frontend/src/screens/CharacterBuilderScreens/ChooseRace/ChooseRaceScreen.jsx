@@ -1,4 +1,7 @@
-import { Container } from 'react-bootstrap';
+import {
+  FormContainerInner,
+  FormContainerOuter,
+} from '../../../components/FormContainer';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +25,7 @@ const ChooseRaceScreen = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
-  const selectedRace = useSelector((state) => state.character.race_filter);
+  const race = useSelector((state) => state.character.selected_race);
 
   const [temporaryRace, setTemporaryRace] = useState({});
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -61,30 +64,56 @@ const ChooseRaceScreen = () => {
     handleClose();
   };
 
+  const onPrevStepClick = (data) => {
+    navigate('/character');
+  };
+
+  // click handler for the next button
   const onNextStepClick = (data) => {
     // need to parse the stringified JSON
     // find the matching trait choice
-    console.log('Race submited data:', data);
+    console.log('these are the inputs captured data:', data);
+    // store the parsed race data
     const raceData = JSON.parse(data.race);
-    console.log('Race submited data:', raceData);
-    let targetTraits = [];
+    console.log('Race data submitted by form:', raceData);
+    // create a cache object
+    const targetCache = {};
+    // loop over the keys in data and only target keys that aren't 'name', and 'race'
     for (let key in data) {
       if (key !== 'name' && key !== 'race') {
-        targetTraits.push(key);
+        // for the multiple select traits target only the keys that end with a 1 or 0
+        if (key[key.length - 1] === '0' || key[key.length - 1] === '1') {
+          // store the matching trait name by getting rid of index added to name
+          let newKey = key.split('-')[0];
+          // check if newKey exists on cache
+          if (!targetCache[newKey]) {
+            // it doesn't so just assign it to array literal with the value of the key as the only element
+            targetCache[newKey] = [data[key]];
+          } else {
+            // it does exist therefore need to add the value for the key to the cache
+            targetCache[newKey].push(data[key]);
+          }
+        } else {
+          // here it is not a trait that has multple options so just assign the cache[key] to the value of the key in data
+          targetCache[key] = data[key];
+        }
       }
     }
 
-    console.log('targetTraits:', targetTraits);
-    targetTraits.forEach((tr) => {
-      let matchingTraitIndex = raceData.traits.map((t, idx) => {
-        if (t.name === tr) {
-          raceData.traits[idx].selected = data[tr];
+    console.log('targetCache:', targetCache);
+    for (let key in targetCache) {
+      raceData.traits.map((tr, idx) => {
+        if (tr.name === key) {
+          raceData.traits[idx].selected = targetCache[key];
         }
       });
-    });
-    console.log('after reassignment raceData:', raceData.traits);
+    }
+
+    console.log(
+      'ChooseRaceScreen - after raceData onNextStep click:',
+      raceData.traits
+    );
     dispatch(setFilteredRace(raceData));
-    /* setFormReady ? or */
     dispatch(updateFormData({ race: raceData }));
     navigate('/character/chclass');
   };
@@ -98,57 +127,60 @@ const ChooseRaceScreen = () => {
     <div id='chrace'>
       <CharacterBuilderStepMenu step0 step1></CharacterBuilderStepMenu>
       <form
-        className={'stepper-container'}
+        className={'character-stepper-form'}
         onSubmit={handleSubmit(onNextStepClick)}
       >
-        <Button
-          step='Prev'
-          text='Prev'
-          color='#74C0FC'
-          icon='fa-solid fa-chevron-left fa-2xl'
-        />
-        <Container className='stepper-form-inner' fluid>
-          <CharacterName register={register} />
-          {showSelectionForm && selectedRace?.name ? (
-            <>
-              <ConfirmRace
-                isModal={false}
-                isRace={true}
-                selectedRace={selectedRace}
-                register={register}
-                onFormReady={handleLastSelections}
-              />
-              <input
-                value={JSON.stringify(selectedRace)}
-                name='race'
-                {...register('race')}
-                style={{ display: 'none' }}
-              ></input>
-            </>
-          ) : (
-            <div className='filtering-container'>
-              {characterRaces.map((race, idx) => (
-                <FilterOptionItem
-                  key={idx}
-                  name={race.name}
-                  index={race.index}
-                  imgsrc={race.imgSrc}
-                  onSelectOption={handleRaceFilter}
-                  showConfirmationModal={showConfirmationModal}
-                  optionSelected={temporaryRace}
-                  isRace={true}
+        <FormContainerOuter>
+          <Button
+            step='Prev'
+            text='Prev'
+            color='#74C0FC'
+            icon='fa-solid fa-chevron-left fa-2xl'
+            click={onPrevStepClick}
+          />
+          <FormContainerInner>
+            <CharacterName register={register} />
+            {showSelectionForm && race?.name ? (
+              <>
+                <ConfirmRace
+                  isModal={false}
+                  race={race}
+                  register={register}
+                  onFormReady={handleLastSelections}
                 />
-              ))}
-            </div>
-          )}
-        </Container>
-        <Button
-          step='Next'
-          text='Next'
-          color='#74C0FC'
-          icon='fa-solid fa-chevron-right fa-2xl'
-          type='submit'
-        />
+                <input
+                  value={JSON.stringify(race)}
+                  name='race'
+                  {...register('race')}
+                  style={{ display: 'none' }}
+                ></input>
+              </>
+            ) : (
+              <div className='filtering-container'>
+                {characterRaces.map((race, idx) => (
+                  <FilterOptionItem
+                    key={idx}
+                    name={race.name}
+                    index={race.index}
+                    imgsrc={race.imgSrc}
+                    onSelectOption={handleRaceFilter}
+                    showConfirmationModal={showConfirmationModal}
+                    optionSelected={temporaryRace}
+                    isRace={true}
+                  />
+                ))}
+              </div>
+            )}
+          </FormContainerInner>
+          <Button
+            step='Next'
+            text='Next'
+            color='#74C0FC'
+            icon='fa-solid fa-chevron-right fa-2xl'
+            type='submit'
+          />
+        </FormContainerOuter>
+
         {showConfirmationModal ? (
           <ChooseRaceModal
             show={showConfirmationModal}
@@ -156,6 +188,7 @@ const ChooseRaceScreen = () => {
             selection={temporaryRace}
             onSelectionConfirm={handleConfirmSelection}
             onSelectionCancel={handleCancelSelection}
+            register={register}
           />
         ) : null}
       </form>

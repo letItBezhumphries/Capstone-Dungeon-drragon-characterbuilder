@@ -1,8 +1,8 @@
 import React from 'react';
 import { Accordion, Card } from 'react-bootstrap';
-import Select from './Select';
-import SelectList from './SelectList';
+import { SelectRaceTrait, SelectRaceTraitGroup } from './SelectRaceTrait';
 import ContextAwareToggle from './ContextAwareToggle';
+
 import SelectionTable from './SelectionTable';
 import './CollapsibleList.css';
 
@@ -14,9 +14,12 @@ const CollapsibleList = ({
   register,
   onFormReady,
 }) => {
-  console.log(`in CollapsibleList - when Modal is ${isModal} - ITEMS`, items);
-
-  /* NEED TO Check for isChoice: true for whether to add the selection style and Badge */
+  // console.log(
+  //   `in CollapsibleList - when Modal is ${isModal} - ITEMS`,
+  //   items,
+  //   'isRace:',
+  //   isRace
+  // );
 
   const renderList = () => {
     if (isRace) {
@@ -24,45 +27,69 @@ const CollapsibleList = ({
         <Card
           key={idx}
           className={
-            !isModal && item.choices ? 'selection-todo' : 'selection-item'
+            !isModal && item.choices === undefined
+              ? 'selection-item'
+              : !isModal && item.choices
+              ? 'selection-item-todo'
+              : 'modal-selection-item'
           }
         >
-          {!isModal && item.choices ? (
-            <span className='select-todo-notification'>!</span>
-          ) : null}
-          <Card.Header className='select-container'>
-            <ContextAwareToggle eventKey={idx} item={item} register={register}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Card.Header className='selection-header'>
+            <ContextAwareToggle
+              eventKey={idx}
+              item={item}
+              register={register}
+              isModal={isModal}
+              isOpen={{ icon: 'fa-solid fa-chevron-up', color: 'purple' }}
+              isClosed={{ icon: 'fa-solid fa-chevron-down', color: 'purple' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
                 <span>{item.name}</span>
               </div>
             </ContextAwareToggle>
           </Card.Header>
           <Accordion.Collapse eventKey={idx}>
             <Card.Body>
-              <p>{item.desc}</p>
-              {item.table ? (
-                <>
-                  <p></p>
-                  <h5>{item.name}</h5>
-                  <SelectionTable
-                    tableHead={item.headCells}
-                    tableCells={item.tableCells}
-                  />
-                </>
-              ) : null}
-              <>
-                {!isModal && item.choices ? (
-                  <div className='selection-container'>
-                    <Select
-                      item={item}
-                      selection={selection}
-                      register={register}
-                      isRace={true}
-                      onFormReady={onFormReady}
+              <div className='collapsible-content-container'>
+                <p>{item.desc}</p>
+                {item.table ? (
+                  <>
+                    <h5 style={{ marginTop: '30px', marginBottom: '20px' }}>
+                      {item.name}
+                    </h5>
+                    <SelectionTable
+                      tableHead={item.headCells}
+                      tableCells={item.tableCells}
                     />
-                  </div>
+                  </>
                 ) : null}
-              </>
+                <>
+                  {!isModal && item.total_choices > 1 ? (
+                    <div className='selection-container'>
+                      <SelectRaceTraitGroup
+                        item={item}
+                        selection={selection}
+                        register={register}
+                        onFormReady={onFormReady}
+                      />
+                    </div>
+                  ) : !isModal && item.total_choices === 1 ? (
+                    <div className='selection-container'>
+                      <SelectRaceTrait
+                        item={item}
+                        selection={selection}
+                        register={register}
+                        onFormReady={onFormReady}
+                      />
+                    </div>
+                  ) : null}
+                </>
+              </div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -71,7 +98,14 @@ const CollapsibleList = ({
       return items.map((item, idx) => (
         <Card key={idx}>
           <Card.Header>
-            <ContextAwareToggle eventKey={idx} item={item} register={register}>
+            <ContextAwareToggle
+              eventKey={idx}
+              item={item}
+              register={register}
+              isModal={isModal}
+              isOpen={{ icon: 'fa-solid fa-chevron-up', color: 'purple' }}
+              isClosed={{ icon: 'fa-solid fa-chevron-down', color: 'purple' }}
+            >
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>{item.name}</span>
                 <span style={{ fontSize: '12px' }}>
@@ -152,25 +186,7 @@ const CollapsibleList = ({
                   />
                 </>
               ) : null}
-              <div>
-                {!isModal && item.name === 'Proficiencies' ? (
-                  <SelectList
-                    item={item}
-                    selection={selection}
-                    register={register}
-                    isRace={false}
-                    onFormReady={onFormReady}
-                  />
-                ) : !isModal && item.choices ? (
-                  <Select
-                    item={item}
-                    selection={selection}
-                    register={register}
-                    isRace={false}
-                    onFormReady={onFormReady}
-                  />
-                ) : null}
-              </div>
+              <div></div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -179,11 +195,7 @@ const CollapsibleList = ({
   };
 
   return (
-    <Accordion
-      flush={true}
-      className='collapsiblelist-container'
-      alwaysOpen={true}
-    >
+    <Accordion flush={true} className='collapsiblelist-container' alwaysOpen>
       {renderList()}
     </Accordion>
   );

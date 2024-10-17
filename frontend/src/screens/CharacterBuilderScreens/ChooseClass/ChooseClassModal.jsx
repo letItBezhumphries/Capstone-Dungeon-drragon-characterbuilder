@@ -17,6 +17,7 @@ function ChooseClassModal({
   selectedClass,
   onSelectionConfirm,
   onSelectionCancel,
+  register,
 }) {
   const [queryData, setQueryData] = useState({});
   const dispatch = useDispatch();
@@ -46,12 +47,18 @@ function ChooseClassModal({
       ...queryData,
     };
 
-    console.log(
-      'in ChooseClassModal-> selection handleSelectionCLick:',
-      selection,
-      '\n and here is classData:',
-      classData
-    );
+    // console.log(
+    //   'in ChooseClassModal-> selection handleSelectionCLick:',
+    //   selection,
+    //   '\n and here is classData:',
+    //   classData
+    //   // '\nis it same as selectionData:',
+    //   // selectionData,
+    //   // '\nqueryData:',
+    //   // queryData,
+    //   // '\n?selectedClass:',
+    //   // selectedClass
+    // );
 
     dispatch(setFilteredClass({ ...selection, ...classData }));
 
@@ -94,6 +101,7 @@ function ChooseClassModal({
                 selection={{ ...selection, ...data }}
                 isLoading={isLoading}
                 selectedClass={selectedClass}
+                register={register}
               />
             ) : (
               <Loader />

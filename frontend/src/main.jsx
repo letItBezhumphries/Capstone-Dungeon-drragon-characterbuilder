@@ -14,7 +14,7 @@ import { Provider } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import HomeScreen from './screens/HomeScreen';
 import MonstersScreen from './screens/MonstersScreen/MonstersScreen';
-import CharacterScreen from './screens/CharacterBuilderScreens/CharacterScreen';
+import CharacterBuilder from './screens/CharacterBuilderScreens/CharacterBuilder/CharacterBuilder';
 import ChooseRaceScreen from './screens/CharacterBuilderScreens/ChooseRace/ChooseRaceScreen';
 import ChooseClassScreen from './screens/CharacterBuilderScreens/ChooseClass/ChooseClassScreen';
 import ChooseAbilitiesScreen from './screens/CharacterBuilderScreens/ChooseAbilities/ChooseAbilitiesScreen';
@@ -34,7 +34,7 @@ const router = createBrowserRouter(
       <Route path='/register' element={<RegisterScreen />} />
       {/* Registered users */}
       <Route path='' element={<PrivateRoute />}>
-        <Route path='/character' element={<CharacterScreen />}></Route>
+        <Route path='/character' element={<CharacterBuilder />}></Route>
         <Route path='/profile' element={<ProfileScreen />} exact></Route>
         <Route
           path='/character/chrace'

@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
+import {
+  FormContainerInner,
+  FormContainerOuter,
+} from '../../../components/FormContainer';
 import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
 import Button from '../../../components/Button';
 import ChooseClassModal from './ChooseClassModal';
@@ -50,7 +53,7 @@ const ChooseClassScreen = ({}) => {
   */
   const handleConfirmSelection = (selection) => {
     // send the selection to the store selection for class
-    console.log('in handleConfirmSelection:', selection);
+    // console.log('in handleConfirmSelection:', selection);
     // set the selectedRace
     setSelectedClass({
       name: selection.name,
@@ -68,27 +71,59 @@ const ChooseClassScreen = ({}) => {
     setShowConfirmationModal(false);
   };
 
-  const onNextStepClick = (data) => {
-    console.log('class submited data:', data);
-    const classData = JSON.parse(data.class_type);
-    console.log('Class submited data:', classData);
+  const onPrevStepClick = (data) => {
+    navigate('/character/chrace');
+  };
 
-    let targetFeatures = [];
+  const onNextStepClick = (data) => {
+    console.log('captured inputs from the form:', data);
+    const classData = JSON.parse(data.class_type);
+    console.log(
+      'parsed class data submited data:',
+      classData,
+      'selectedClass:',
+      selectedClass
+    );
+
+    let targetCache = {};
 
     for (let key in data) {
       if (key !== 'name' && key !== 'class_type') {
-        targetFeatures.push(key);
+        if (
+          key[key.length - 1] === '0' ||
+          key[key.length - 1] === '1' ||
+          key[key.length - 1] === '2' ||
+          key[key.length - 1] === '3'
+        ) {
+          let newKey = key.split('-')[0];
+          if (!targetCache[newKey]) {
+            targetCache[newKey] = [data[key]];
+          } else {
+            targetCache[newKey].push(data[key]);
+          }
+        } else {
+          targetCache[key] = data[key];
+        }
       }
     }
 
-    console.log('targetFeatures:', targetFeatures);
-    targetFeatures.forEach((tr) => {
-      let matchingTraitIndex = classData.features.map((t, idx) => {
-        if (t.name === tr) {
-          classData.traits[idx].selected = data[tr];
+    console.log('targetCache:', targetCache);
+
+    for (let key in targetCache) {
+      classData.features.map((feat, idx) => {
+        if (feat.name === key) {
+          classData.features[idx].selected = targetCache[key];
         }
       });
-    });
+    }
+
+    // targetFeatures.forEach((tr) => {
+    //   let matchingTraitIndex = classData.features.map((t, idx) => {
+    //     if (t.name === tr) {
+    //       classData.traits[idx].selected = data[tr];
+    //     }
+    //   });
+    // });
     console.log('after reassignment classData:', classData.features);
     dispatch(setFilteredClass(classData));
 
@@ -100,63 +135,69 @@ const ChooseClassScreen = ({}) => {
     <div id='chclass'>
       <CharacterBuilderStepMenu step0 step1 step2></CharacterBuilderStepMenu>
       <form
-        className={'stepper-container'}
+        className={'character-stepper-form'}
         onSubmit={handleSubmit(onNextStepClick)}
       >
-        <Button
-          step='Prev'
-          text='Prev'
-          color='#74C0FC'
-          icon='fa-solid fa-chevron-left fa-2xl'
-        />
-        <Container className='stepper-form-inner' fluid>
-          <CharacterName register={register} />
-          {!showConfirmationModal && selectedClass?.name ? (
-            <>
-              <ConfirmClass
-                isModal={false}
-                isRace={false}
-                selectedClass={selectedClass}
-                selection={temporaryClass}
-                register={register}
-              />
-              <input
-                value={JSON.stringify(selectedClass)}
-                name='class'
-                {...register('class_type')}
-                style={{ display: 'none' }}
-              ></input>
-            </>
-          ) : (
-            <div className='filtering-container'>
-              {characterClasses.map((cls, idx) => (
-                <FilterOptionItem
-                  key={cls.index}
-                  name={cls.name}
-                  index={cls.index}
-                  imgsrc={cls.imgSrc}
-                  showConfirmationModal={showConfirmationModal}
-                  onSelectOption={handleClassFilterSelect}
-                  optionSelected={temporaryClass}
+        <FormContainerOuter>
+          <Button
+            step='Prev'
+            text='Prev'
+            color='#74C0FC'
+            icon='fa-solid fa-chevron-left fa-2xl'
+            click={onPrevStepClick}
+          />
+
+          <FormContainerInner>
+            <CharacterName register={register} />
+            {!showConfirmationModal && selectedClass?.name ? (
+              <>
+                <ConfirmClass
+                  isModal={false}
                   isRace={false}
+                  selectedClass={selectedClass}
+                  selection={temporaryClass}
+                  register={register}
                 />
-              ))}
-            </div>
-          )}
-        </Container>
-        <Button
-          step='Next'
-          text='Next'
-          color='#74C0FC'
-          icon='fa-solid fa-chevron-right fa-2xl'
-          type='submit'
-        />
+                {/* <input
+                  value={JSON.stringify(selectedClass)}
+                  name='class'
+                  {...register('class_type')}
+                  style={{ display: 'none' }}
+                ></input> */}
+              </>
+            ) : (
+              <div className='filtering-container'>
+                {characterClasses.map((cls, idx) => (
+                  <FilterOptionItem
+                    key={cls.index}
+                    name={cls.name}
+                    index={cls.index}
+                    imgsrc={cls.imgSrc}
+                    showConfirmationModal={showConfirmationModal}
+                    onSelectOption={handleClassFilterSelect}
+                    optionSelected={temporaryClass}
+                    isRace={false}
+                  />
+                ))}
+              </div>
+            )}
+          </FormContainerInner>
+          <Button
+            step='Next'
+            text='Next'
+            color='#74C0FC'
+            icon='fa-solid fa-chevron-right fa-2xl'
+            type='submit'
+          />
+        </FormContainerOuter>
+
         {showConfirmationModal ? (
           <ChooseClassModal
             show={showConfirmationModal}
             onHide={handleClose}
             isRace={false}
             selection={temporaryClass}
+            register={register}
             onSelectionConfirm={handleConfirmSelection}
             onSelectionCancel={handleCancelSelection}
           />

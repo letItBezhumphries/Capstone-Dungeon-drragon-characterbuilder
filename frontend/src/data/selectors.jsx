@@ -56,6 +56,15 @@ export const characterRaces = [
     imgSrc: '/src/assets/races/dwarf.jpeg',
     description:
       'Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal.',
+    subraces: [
+      {
+        index: 'hill-dwarf',
+        name: 'Hill-Dwarf',
+        imgSrc: '',
+        description:
+          'As a hill dwarf, you have keen senses, deep intuition, and remarkable resilience. The gold dwarves of Faerûn in their mighty southern kingdom are hill dwarves, as are the exiled Neidar and the debased Klar of Krynn in the Dragonlance setting.',
+      },
+    ],
   },
   {
     index: 'elf',
@@ -63,6 +72,16 @@ export const characterRaces = [
     imgSrc: '/src/assets/races/elf.jpeg',
     description:
       'Elves are a magical people of otherworldly grace, living in the world but not entirely part of it.',
+    subraces: [
+      {
+        index: 'high-elf',
+        name: 'High-Elf',
+        imgSrc: '',
+        description: `As a high elf, you have a keen mind and a mastery of at least the basics of magic. In many of the worlds of D&D, there are two kinds of high elves. One type (which includes the gray elves and valley elves of Greyhawk, the Silvanesti of Dragonlance, and the sun elves of the Forgotten Realms) is haughty and reclusive, believing themselves to be superior to non-elves and even other elves. The other type (including the high elves of Greyhawk, the Qualinesti of Dragonlance, and the moon elves of the Forgotten Realms) are more common and more friendly, and often encountered among humans and other races.
+
+        The sun elves of Faerûn (also called gold elves or sunrise elves) have bronze skin and hair of copper, black, or golden blond. Their eyes are golden, silver, or black. Moon elves (also called silver elves or gray elves) are much paler, with alabaster skin sometimes tinged with blue. They often have hair of silver-white, black, or blue, but various shades of blond, brown, and red are not uncommon. Their eyes are blue or green and flecked with gold.`,
+      },
+    ],
   },
   {
     index: 'gnome',
@@ -70,6 +89,15 @@ export const characterRaces = [
     imgSrc: '/src/assets/races/gnome.jpeg',
     description:
       'A gnome’s energy and enthusiasm for living shines through every inch of his or her tiny body.',
+    subraces: [
+      {
+        index: 'rock-gnome',
+        name: 'Rock-Gnome',
+        imgSrc: '',
+        description:
+          'As a rock gnome, you have a natural inventiveness and hardiness beyond that of other gnomes. Most gnomes in the worlds of D&D are rock gnomes, including the tinker gnomes of the Dragonlance setting.',
+      },
+    ],
   },
   {
     index: 'half-elf',
@@ -91,6 +119,16 @@ export const characterRaces = [
     imgSrc: '/src/assets/races/halfling.jpeg',
     description:
       'The diminutive halflings survive in a world full of larger creatures by avoiding notice or, barring that, avoiding offense.',
+    subraces: [
+      {
+        index: 'lightfoot-halfling',
+        name: 'Lightfoot-Hafling',
+        imgSrc: '',
+        description: `As a lightfoot halfling, you can easily hide from notice, even using other people as cover. You’re inclined to be affable and get along well with others. In the Forgotten Realms, lightfoot halflings have spread the farthest and thus are the most common variety.
+        
+        Lightfoots are more prone to wanderlust than other halflings, and often dwell alongside other races or take up a nomadic life. In the world of Greyhawk, these halflings are called hairfeet or tallfellows.`,
+      },
+    ],
   },
   {
     index: 'human',
@@ -189,55 +227,91 @@ export const characterSkills = [
   'Survival',
 ];
 
+export const thievesSkills = [
+  'Acrobatics',
+  'Athletics',
+  'Deception',
+  'Insight',
+  'Intimidation',
+  'Investigation',
+  'Perception',
+  'Performance',
+  'Persuasion',
+  'Sleight of Hand',
+  'Stealth',
+];
+
 export const musicalInstruments = [
-  {
-    index: 'bagpipes',
-    name: 'Bagpipes',
-    url: '/api/equipment/bagpipes',
-  },
-  {
-    index: 'drum',
-    name: 'Drum',
-    url: '/api/equipment/drum',
-  },
-  {
-    index: 'dulcimer',
-    name: 'Dulcimer',
-    url: '/api/equipment/dulcimer',
-  },
-  {
-    index: 'flute',
-    name: 'Flute',
-    url: '/api/equipment/flute',
-  },
-  {
-    index: 'lute',
-    name: 'Lute',
-    url: '/api/equipment/lute',
-  },
-  {
-    index: 'lyre',
-    name: 'Lyre',
-    url: '/api/equipment/lyre',
-  },
-  {
-    index: 'horn',
-    name: 'Horn',
-    url: '/api/equipment/horn',
-  },
-  {
-    index: 'pan-flute',
-    name: 'Pan flute',
-    url: '/api/equipment/pan-flute',
-  },
-  {
-    index: 'shawm',
-    name: 'Shawm',
-    url: '/api/equipment/shawm',
-  },
-  {
-    index: 'viol',
-    name: 'Viol',
-    url: '/api/equipment/viol',
-  },
+  'Bagpipes',
+  'Drum',
+  'Dulcimer',
+  'Flute',
+  'Lute',
+  'Lyre',
+  'Horn',
+  'Pan flute',
+  'Shawm',
+  'Viol',
+];
+
+export const characterAbilities = [
+  'Strength',
+  'Constitution',
+  'Intelligence',
+  'Wisdom',
+  'Dexterity',
+  'Charisma',
+];
+
+export const characterFeats = ['Grappling', 'Svirfnelbin Magic'];
+
+export const terrainTypes = [
+  'Arctic',
+  'Coast',
+  'Desert',
+  'Forest',
+  'Grassland',
+  'Mountain',
+  'Swamp',
+];
+
+export const enemyTypes = [
+  'Aberrations',
+  'Beasts',
+  'Celestials',
+  'Constructs',
+  'Dragons',
+  'Elementals',
+  'Fey',
+  'Fiends',
+  'Giants',
+  'Monstrosities',
+  'Oozes',
+  'Plants',
+  'Undead',
+  'Humanoids (2 choices such as Gnolls, Orcs)',
+];
+
+export const commonLanguages = [
+  'Draconic',
+  'Dwarvish',
+  'Elvish',
+  'Gnomish',
+  'Giant',
+  'Goblin',
+  'Halfling',
+  'Orc',
+];
+
+export const keenSenseSkill = ['Perception', 'Survival', 'Insight'];
+
+export const spellSchoolIcons = [
+  { name: 'Abjuration', imgSrc: '/src/assets/spells/abjuration.png' },
+  { name: 'Conjuration', imgSrc: '/src/assets/spells/conjuration.png' },
+  { name: 'Divination', imgSrc: '/src/assets/spells/divination.png' },
+  { name: 'Enchantment', imgSrc: '/src/assets/spells/enchantment.png' },
+  { name: 'Evocation', imgSrc: '/src/assets/spells/evocation.png' },
+  { name: 'Illusion', imgSrc: '/src/assets/spells/illusion.png' },
+  { name: 'Necromancy', imgSrc: '/src/assets/spells/necromancy.png' },
+  { name: 'Transmutation', imgSrc: '/src/assets/spells/transmutation.png' },
 ];

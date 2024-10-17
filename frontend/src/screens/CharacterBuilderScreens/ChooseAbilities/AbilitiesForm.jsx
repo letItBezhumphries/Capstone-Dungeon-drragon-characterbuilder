@@ -1,57 +1,97 @@
+import { styled } from 'styled-components';
 import React, { useEffect } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
 import { useState, useRef } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import FormContainer from '../../../components/FormContainer';
-import './AbilitiesForm.css';
+// import { autoAbilityRollsUpdated } from '../../../slices/characterBuilderSlice';
+import { characterAbilities } from '../../../data/selectors';
+import SelectAbilityScore from './SelectAbilityScore';
+import AbilityScoreCalculations from './AbilityScoreCalculations';
 
-const AbilitiesForm = () => {
-  const abilityRolls = [8, 10, 12, 13, 14, 15];
-  const [remainingAbilityRolls, setRemainingAbilityRolls] = useState(
-    abilityRolls.slice()
-  );
+// import './AbilitiesForm.css';
 
-  const [abilityScoresUsed, setAbilityScoresUsed] = useState([]);
-  let usedAbilityScores = abilityScoresUsed.length;
+const AbilitiesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 0;
+  padding: 0 0;
+  height: 100%;
+`;
 
-  useEffect(() => {
-    console.log(
-      'the current selected value:',
-      currentSelectValue,
-      'is at index',
-      currentIndex
-    );
-    // setRemainingAbilityRolls([...]);
-  }, [usedAbilityScores, currentIndex]);
+const AbilitiesInnerContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 0;
 
-  const abilities = [
-    'Strength',
-    'Constitution',
-    'Intelligence',
-    'Wisdom',
-    'Dexterity',
-    'Charisma',
-  ];
+  & h3 {
+    margin-bottom: 20px;
+    font-family: 'Roboto' 'sans-serif';
+    font-size: 24px;
+    font-weight: 400;
+  }
+`;
 
-  const setters = [
-    setStrength,
-    setConstitution,
-    setIntelligence,
-    setWisdom,
-    setDexterity,
-    setCharisma,
-  ];
+const RollManagerContainer = styled.div`
+  margin-bottom: 20px;
+`;
 
-  useEffect(() => {
-    console.log(
-      'charisma:',
-      charisma,
-      strength,
-      dexterity,
-      intelligence,
-      wisdom,
-      constitution
-    );
-  }, [charisma, strength, dexterity, intelligence, wisdom, constitution]);
+const AbilityScoresBoard = styled.div`
+  background-color: yellow;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+`;
+
+const AbilityManagerSelect = styled.select`
+  display: block;
+  max-width: 100%;
+  width: 400px;
+  max-width: 50%;
+  height: 40px;
+`;
+
+const ManagerOption = styled.option``;
+
+const AbilitiesForm = ({ register }) => {
+  const managerRef = useRef();
+  // const dispatch = useDispatch();
+
+  // const remainingAbilityRolls = useSelector(
+  //   (state) => state.character.ability_autorolls_available
+  // );
+
+  // const [rollOptions, setRollOptions] = useState(remainingAbilityRolls);
+  // const [strength, setStrength] = useState(0);
+  // const [constitution, setConstitution] = useState(0);
+  // const [intelligence, setIntelligence] = useState(0);
+  // const [wisdom, setWisdom] = useState(0);
+  // const [dexterity, setDexterity] = useState(0);
+  // const [charisma, setCharisma] = useState(0);
+
+  // const values = [
+  //   strength,
+  //   constitution,
+  //   intelligence,
+  //   wisdom,
+  //   dexterity,
+  //   charisma,
+  // ];
+
+  // const setters = [
+  //   setStrength,
+  //   setConstitution,
+  //   setIntelligence,
+  //   setWisdom,
+  //   setDexterity,
+  //   setCharisma,
+  // ];
 
   const [abilityRollType, setAbilityRollType] = useState('standard');
 
@@ -60,96 +100,80 @@ const AbilitiesForm = () => {
     setAbilityRollType(e.target.value);
   };
 
-  const handleAbilityScoreAdded = (e, index) => {
-    // e.preventDefault();
-    console.log('target element:', e.target, 'index of select el:', index);
-    // call the matching index from abilities to set the correct value for the ability
-    setters[index](parseInt(e.target.value));
+  // const handleAbilityScoreAdded = (e, index) => {
+  //   console.log(
+  //     'handleAbilityScoreAdded - target:',
+  //     typeof parseInt(e.target.value),
+  //     'index:',
+  //     index
+  //   );
+  //   setters[index](parseInt(e.target.value));
 
-    console.log('selectRef:', selectorRef);
-    setCurrentSelectValue(parseInt(e.target.value));
-    setCurrentIndex(index);
-    setAbilityScoresUsed(parseInt(e.target.value));
-    // setCurrentIndex(remainingAbilityRolls.indexOf())
-    // console.log('in handleAbilityScoreAdded:', selectedRoll);
-    // let remainingRolls = remainingAbilityRolls.filter((roll) => {
-    //   return roll !== parseInt(selectedRoll);
-    // });
+  //   dispatch(
+  //     autoAbilityRollsUpdated(
+  //       parseInt({ ability: values[index], roll: parseInt(e.target.value) })
+  //     )
+  //   );
+  // };
 
-    // console.log('remainingRolls:', remainingRolls);
-    // setRemainingAbilityRolls([...remainingRolls]);
-  };
+  // useEffect(() => {
+  //   if (strength > 0) {
+  //     setRollOptions();
+  //   }
 
-  const handleResettingRolls = function (e) {
-    e.preventDefault();
-    let remainingRolls = remainingAbilityRolls.filter((roll) => {
-      return roll !== parseInt(e.target.value);
-    });
+  //   console.log(
+  //     'in AbilitiesForm.jsx -> remainingAbilityRolls:',
+  //     remainingAbilityRolls,
+  //     'strength:',
+  //     strength,
+  //     'intelligence:',
+  //     intelligence,
+  //     'constitution:',
+  //     constitution,
+  //     'wisdom:',
+  //     wisdom,
+  //     'charisma:',
+  //     charisma,
+  //     'dexterity:',
+  //     dexterity
+  //   );
+  //   setRollOptions(remainingAbilityRolls);
+  // }, [remainingAbilityRolls, strength]);
 
-    setRemainingAbilityRolls([...remainingRolls]);
-  };
-
-  // console.log('abilityRollType:', abilityRollType);
+  console.log('abilityRollType:', abilityRollType);
 
   return (
-    // <FormContainer width={'80%'}>
-    <form className='abilities-form'>
-      <div className='abilities-inner-container'>
+    <AbilitiesContainer>
+      <AbilitiesInnerContainer>
         <h3>Ability Scores</h3>
 
-        <div style={{ marginBottom: '20px' }}>
-          <select
-            ref={selectorRef}
+        <RollManagerContainer>
+          <AbilityManagerSelect
+            ref={managerRef}
             name='ability'
             id='ability'
             onChange={handleRollTypeSelect}
-            className='select-ability'
           >
             <option value='standard'>Standard Array</option>
             <option value='manual'>Manual Rolled</option>
-          </select>
-        </div>
+          </AbilityManagerSelect>
+        </RollManagerContainer>
 
-        <div className='ability-scores-board'>
-          {abilities.map((ability, idx) => {
+        <AbilityScoresBoard>
+          {characterAbilities.map((ability, idx) => {
             return (
-              <div className='ability-score-stat' key={idx}>
-                <span className='ability-labelbox'>
-                  <label
-                    htmlFor={`qry_${ability}`}
-                    className='ability-score-label'
-                  >
-                    {ability}
-                  </label>
-                </span>
-                <span className='ability-score'>
-                  <select
-                    name='ability-score'
-                    id={ability}
-                    data-select-ability={ability}
-                    className='select-ability'
-                    onChange={(e) => {
-                      handleAbilityScoreAdded(e, idx);
-                      // handleResettingRolls(e);
-                    }}
-                  >
-                    <option value='--'>--</option>
-                    {remainingAbilityRolls.map((ab, idx) => (
-                      <option key={idx} value={ab}>
-                        {ab}
-                      </option>
-                    ))}
-                  </select>
-                </span>
-                <div className='ability-score-total'>Total: </div>
-              </div>
+              <SelectAbilityScore
+                key={idx}
+                ability={ability}
+                index={idx}
+                register={register}
+              />
             );
           })}
-        </div>
-      </div>
-    </form>
-
-    // </FormContainer>
+        </AbilityScoresBoard>
+      </AbilitiesInnerContainer>
+      <AbilityScoreCalculations />
+    </AbilitiesContainer>
   );
 };
 

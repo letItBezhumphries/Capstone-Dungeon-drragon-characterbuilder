@@ -52,3 +52,21 @@ ability_score_bonuses: {},
 // features: [],
 // spells: [],
 };
+
+<ConfirmRace>
+   |        \
+<PageIntro> <PageList>
+                |
+            <CollapsibleList>
+                |         \
+            <Select>   <ContextAwareToggle>
+
+<ClassModal>
+  |               \
+<ConfirmClass>  <PageList>
+  |                      \
+  |                      <CollapsibleList>
+  |                            |         \
+<SelectionOverview>          <Select>   <ContextAwareToggle>
+  |
+<CollapsibleMenu>!isModal

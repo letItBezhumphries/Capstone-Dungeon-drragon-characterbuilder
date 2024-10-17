@@ -2,7 +2,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
+  margin-top: 15px;
   padding: 0 15px;
 }
 
@@ -14,15 +14,24 @@
   border: none !important;
 }
 
+.card:not(:first-of-type) {
+  margin-top: 5px;
+}
+
+.card:last-of-type {
+  margin-bottom: 30px;
+}
+
 .card,
 .card-header {
   width: 100%;
   padding: 0 0;
   margin: 0 0;
+  padding: 0 0;
 }
 
+.selection-header,
 .card-header {
-  background-color: #fff;
   border: none;
   width: 100%;
   padding: 0 0 !important;
@@ -30,9 +39,15 @@
   font-size: 15px;
   font-weight: 500;
   line-height: 1.1;
-  background: url('../assets/backgroundColor.jpeg.png');
-  background-repeat: no-repeat;
-  background-size: contain;
+}
+
+.accordion > .card > .card-header {
+  margin-bottom: 0;
+}
+
+.card-header {
+  background-color: transparent;
+  padding: 0 0;
 }
 
 .card-header button {
@@ -49,48 +64,44 @@
   outline: none;
 }
 
-.collapse-button {
-  margin-bottom: 15px;
-  background: url('../assets/backgroundColor.png');
-}
-
-.collapse-button-todo {
-  margin-bottom: 15px;
-  background: url('../assets/backgroundColor.png');
-  border: 2.5px solid dodgerblue;
-}
-
-.selection-todo {
-  /* border-top: 1.5px solid dodgerblue; */
-  /* box-shadow: 2px 4px 6px dodgerblue; */
-  /* overflow: visible; */
-}
-
-.select-todo-notification {
-  position: absolute;
-  top: -10px;
-  z-index: 10000;
-  left: -5px;
-  height: 25px;
-  width: 25px;
-  color: white;
-  background-color: dodgerblue;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
 .selection-item {
   border: none;
 }
 
-.selection-item,
+.selection-item-todo {
+  border: none;
+  position: relative;
+}
+
+.selection-item-todo::before {
+  align-items: center;
+  background: #1c9aef;
+  border-radius: 50%;
+  color: #fff;
+  content: '!';
+  display: flex;
+  font-weight: 700;
+  height: 20px;
+  justify-content: center;
+  left: -4px;
+  position: absolute;
+  top: 0;
+  width: 20px;
+  z-index: 3000;
+}
+
+.modal-selection-item,
 .card {
   border: none;
+  align-items: center;
+
+  border-color: transparent;
+  cursor: pointer;
+  display: flex;
+  font-size: 0.938rem;
+  font-weight: 500;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .select-container {
@@ -102,16 +113,40 @@
   height: 35px;
 }
 
+/* 
+  Collapsible content 
+*/
+
 .card-body {
   background-color: #fff;
-  /* border-left: 1px solid #ece9e9;
-  border-right: 1px solid #ece9e9; */
+  border-left: 1px solid #ece9e9;
+  border-right: 1px solid #ece9e9;
   font-size: 14px;
   line-height: 1.7;
   margin: 0 2px;
-  padding: 20px 15px;
-  min-height: 200px;
-  /* top: -10px; */
+  padding: 20px 15px 32px;
+  position: relative;
+  /* min-height: 200px; */
+  top: -20px;
+}
+
+.card-body::after {
+  content: '';
+  background: center 0 transparent
+    url('../assets/collapsible-bottom-border-700.png') no-repeat;
+  background-size: 105% 28px;
+  bottom: -4px;
+  display: block;
+  height: 28px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.collapsible-content-container {
+  width: 100%;
+  padding: 0 0;
+  margin: 0 0;
 }
 
 .card-body th {
@@ -171,4 +206,12 @@
 
 .card-body select {
   border: 1px solid dodgerblue;
+}
+
+.card-body select:not(:first-of-type) {
+  margin-top: 20px;
+}
+
+.selection-container {
+  margin-top: 20px;
 }

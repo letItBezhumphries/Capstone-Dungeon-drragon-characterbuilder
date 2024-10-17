@@ -1,19 +1,13 @@
-.name-form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .character-name-container {
   display: flex;
   align-items: center;
   width: 100%;
   height: 100%;
   gap: 0.5rem;
-  margin-top: 40px;
-  border-bottom: 1px solid #f1f1f1;
+  margin-top: 10px;
   margin-bottom: 20px;
   padding-bottom: 20px;
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .avatar-container {
