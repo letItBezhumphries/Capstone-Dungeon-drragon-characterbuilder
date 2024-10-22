@@ -5,7 +5,10 @@ import { useGetDataForRaceQuery } from '../../../services/races';
 import { Container } from 'react-bootstrap';
 import { parseRaceData } from '../../../utility/parseRaceData';
 import Loader from '../../../components/Loader';
-import { setFilteredRace } from '../../../slices/characterBuilderSlice';
+import {
+  setFilteredRace,
+  raceAdded,
+} from '../../../slices/characterBuilderSlice';
 import ModalSelectionIntro from '../../../components/ModalSelectionIntro';
 import ModalSelectionList from '../../../components/ModalSelectionList';
 import '../../../components/ConfirmationModal.css';
@@ -34,6 +37,7 @@ function ChooseRaceModal({
   */
   const handleSelectionClick = () => {
     /* ! ALSO NEED to add redux action here to store selection in state */
+    console.log('race data from api:', data);
 
     const raceData = parseRaceData({ ...selection, ...data });
 
@@ -44,6 +48,8 @@ function ChooseRaceModal({
 
     // set filtered race in state
     dispatch(setFilteredRace(raceData));
+
+    dispatch(raceAdded(raceData));
 
     onSelectionConfirm(raceData);
   };

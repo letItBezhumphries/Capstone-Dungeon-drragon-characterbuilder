@@ -5,8 +5,8 @@ import { useGetClassDataQuery } from '../services/classes';
 import { useGetSpellsForClassQuery } from '../services/classes';
 
 const HomeScreen = () => {
-  // const { data, error, isLoading } = useGetClassDataQuery('barbarian');
-  const { data, error, isLoading } = useGetSpellsForClassQuery('wizard');
+  const { data, error, isLoading } = useGetClassDataQuery('bard');
+  // const { data, error, isLoading } = useGetSpellsForClassQuery('wizard');
 
   // const { data, isLoading, error } = useGetBackendMonstersQuery();
   // const { data, isLoading, error } = useGetDataForRaceQuery('dragonborn');

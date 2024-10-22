@@ -1,5 +1,10 @@
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Button } from './SpellSelector';
+import { Button, RemoveButton } from './SpellSelector';
+import {
+  SpellAddedToast,
+  SpellRemovedToast,
+} from '../../../../components/Toast';
 
 const SpellDetailsHeader = styled.div`
   font-style: italic;
@@ -27,7 +32,6 @@ const PropertyLabel = styled.p`
   font-size: 0.813rem;
   line-height: 1.3;
   opacity: 0.9;
-  flex-wrap: no-wrap;
 `;
 
 const PropertyValue = styled.p`
@@ -41,22 +45,17 @@ const PropertyValue = styled.p`
   }
 `;
 
-const SpellDescription = styled.div`
+const DescriptionSection = styled.div`
   border-top: 1px solid #eaeaea;
   margin-top: 10px;
   padding-top: 10px;
-
-  & ${SpellInfoItem} {
-    margin-top: 10px;
-  }
 `;
 
-// const SpellTags = styled.div`
-//   border-top: 1px solid #eaeaea;
-//   display: flex;
-//   margin-top: 10px;
-//   padding-top: 10px;
-// `;
+const Description = styled.p`
+  & strong {
+    margin-right: 10px;
+  }
+`;
 
 const SpellActions = styled.div`
   border-top: 1px solid #f1f1f1;
@@ -66,57 +65,87 @@ const SpellActions = styled.div`
   padding-top: 10px;
 `;
 
-const SpellCard = ({ item, register, characterLevel, eventKey, selection }) => {
+const SpellCard = ({
+  spell,
+  register,
+  characterLevel,
+  eventKey,
+  selection,
+  learnClick,
+  removeClick,
+  hasBeenSelected,
+  handleSelection,
+}) => {
+  const onLearnBtnClick = () => {
+    learnClick(spell);
+    handleSelection(hasBeenSelected);
+    SpellAddedToast(spell.name, selection.name);
+  };
+
+  const onRemoveBtnClick = () => {
+    removeClick(spell);
+    handleSelection(hasBeenSelected);
+    SpellRemovedToast(spell.name, selection.name);
+  };
+
   return (
     <div>
       <SpellDetailsHeader>
-        {item.school} &#8226; {item.level}
+        {spell.school} {spell.level}
       </SpellDetailsHeader>
       <SpellPropertiesContainer>
         <SpellInfoItem>
           <PropertyLabel>Casting Time:</PropertyLabel>
-          <PropertyValue>{item.casting_time}</PropertyValue>
+          <PropertyValue>{spell.casting_time}</PropertyValue>
         </SpellInfoItem>
         <SpellInfoItem>
           <PropertyLabel>Range/Area:</PropertyLabel>
-          <PropertyValue>{item.range}</PropertyValue>
+          <PropertyValue>{spell.range}</PropertyValue>
         </SpellInfoItem>
         <SpellInfoItem>
           <PropertyLabel>Components:</PropertyLabel>
           <PropertyValue>
-            {item.components}
-            {item.material.length > 0 ? <span> ({item.material})</span> : null}
+            {spell.components}
+            {spell.material.length > 0 ? (
+              <span> ({spell.material})</span>
+            ) : null}
           </PropertyValue>
         </SpellInfoItem>
         <SpellInfoItem>
           <PropertyLabel>Duration:</PropertyLabel>
           <PropertyValue>
-            {item.requires_concentration ? 'Concentration, ' : null}
-            {item.duration}
+            {spell.requires_concentration ? 'Concentration, ' : null}
+            {spell.duration}
           </PropertyValue>
         </SpellInfoItem>
         <SpellInfoItem>
           <PropertyLabel>Source:</PropertyLabel>
           <PropertyValue>
             <span>Player's Handbook (2014), </span>
-            pg {item.page.split(' ')[1]}
+            pg {spell.page.split(' ')[1]}
           </PropertyValue>
         </SpellInfoItem>
-        <SpellDescription>
-          {item.desc}
-          {item.higher_level ? (
-            <SpellInfoItem>
-              <PropertyLabel>At Higher Levels:</PropertyLabel>
-              <PropertyValue>{item.higher_level}</PropertyValue>
-            </SpellInfoItem>
+        <DescriptionSection>
+          <Description>{spell.desc}</Description>
+          {spell.higher_level ? (
+            <Description>
+              <em>
+                <strong>At Higher Levels:</strong>
+              </em>
+              {spell.higher_level}
+            </Description>
           ) : null}
-        </SpellDescription>
-        {/* <SpellTags>
-          <div>Tags:</div>
-        </SpellTags> */}
+        </DescriptionSection>
       </SpellPropertiesContainer>
       <SpellActions>
-        <Button>LEARN</Button>
+        {hasBeenSelected ? (
+          <RemoveButton onClick={onRemoveBtnClick}>
+            <i className='fa-solid fa-x'></i>
+            Remove
+          </RemoveButton>
+        ) : (
+          <Button onClick={onLearnBtnClick}>LEARN</Button>
+        )}
       </SpellActions>
     </div>
   );

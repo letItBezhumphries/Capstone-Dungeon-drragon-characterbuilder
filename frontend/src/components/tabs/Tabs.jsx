@@ -28,9 +28,9 @@ const TabContent = styled(Container)`
   flex-direction: column;
 `;
 
-const Tabs = (props) => {
-  const { children } = props;
-  const [activeTab, setActiveTab] = useState(children[0].props.label);
+const Tabs = ({ children }) => {
+  console.log('in Tabs -> children:', children, 'children[0]:', children[0]);
+  const [activeTab, setActiveTab] = useState(children.props.label);
 
   const onClickTabItem = (tab) => {
     setActiveTab(tab);

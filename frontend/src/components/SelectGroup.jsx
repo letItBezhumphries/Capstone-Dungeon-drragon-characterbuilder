@@ -105,6 +105,7 @@ export const SelectClassFeatureGroup = ({ register, item, introData }) => {
       />
     ));
   }
+  // console.log('in Select ProficiencyGroup - selections:', selections);
 
   return <GroupContainer>{selections}</GroupContainer>;
 };

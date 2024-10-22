@@ -86,12 +86,12 @@ export const parseClassData = (data) => {
 
   let primary_info = getPrimaryInfo(data.slug, data, descriptions);
 
-  // output.hit_die = data.hit_dice;
-  // output.primary_ability =
   output.name = data.name;
   output.primary_ability = primary_info.primary_ability;
   output.primary_desc = primary_info.primary_desc;
-  // output.features_with_choices = primary_info.features_with_choices;
+  output.spellcasting = primary_info.spellcasting || {};
+  output.class_specific = primary_info.class_specific;
+
   let table = parseClassTable(data.table);
   // console.log('table:', table);
 
@@ -102,47 +102,115 @@ export const parseClassData = (data) => {
 
   let proficiencies = parseProficiencies(data);
 
-  const categories = table[0];
-
   // console.log('categories for characters class:', categories);
+  // let spellCasterClasses = [
+  //   'Bard',
+  //   'Cleric',
+  //   'Druid',
+  //   'Paladin',
+  //   'Ranger',
+  //   'Sorcerer',
+  //   'Warlock',
+  //   'Wizard',
+  // ];
 
-  if (categories.indexOf('Spells Known') !== -1) {
-    output.spellcasting = {
-      name: 'Spellcasting',
-    };
-    output.spells = {};
-  }
+  // if (spellCasterClasses.includes(data.name)) {
+  //   output.spellcasting = {
+  //     name: 'Spellcasting',
+  //   };
+  // }
 
-  let spellsKnownIndex = table[0].indexOf('Spells Known');
-  let cantripsKnownIndex = table[0].indexOf('Cantrips Known');
-  let level1SpellsIndex = table[0].indexOf('1st');
-  let level2SpellsIndex = table[0].indexOf('2nd');
+  // let sorceryPointsIndex = table[0].indexOf('Sorcery Points');
+  // let spellsKnownIndex = table[0].indexOf('Spells Known');
+  // let cantripsKnownIndex = table[0].indexOf('Cantrips Known');
+  // let invocationsKnownIndex = table[0].indexOf('Invocations Known');
+  // let spellSlotsIndex = table[0].indexOf('Spell Slots');
+  // let slotLevelIndex = table[0].indexOf('Slot Level');
+  // let level1SpellsIndex = table[0].indexOf('1st');
+  // let level2SpellsIndex = table[0].indexOf('2nd');
 
   let featuresIdx = table[0].indexOf('Features');
 
-  // check if class has spells known for level1 by storing the index of 'Spells Known' from the header cells
-  if (spellsKnownIndex > -1) {
-    output.spellsKnown = parseInt(table[1][spellsKnownIndex]);
-  }
+  // // check if class has spells known for level1 by storing the index of 'Spells Known' from the header cells
+  // if (spellsKnownIndex > -1) {
+  //   if (table[1][spellsKnownIndex] === '-') {
+  //     output.spellcasting.spells_known = 0;
+  //   } else {
+  //     output.spellcasting.spells_known = parseInt(table[1][spellsKnownIndex]);
+  //   }
+  // }
 
-  // check if class has cantrips known for level1 by storing the indexof 'Cantrips known' from the header cells
-  if (cantripsKnownIndex > -1) {
-    output.cantripsKnown = parseInt(table[1][cantripsKnownIndex]);
-  }
+  // // check if class has cantrips known for level1 by storing the indexof 'Cantrips known' from the header cells
+  // if (cantripsKnownIndex > -1) {
+  //   if (table[1][cantripsKnownIndex] === '-') {
+  //     output.spellcasting.cantrips_total = 0;
+  //     // console.log('cantripsKnown = -:', table[1][cantripsKnownIndex]);
+  //   } else {
+  //     // console.log('cantripsKnown:', parseInt(table[1][cantripsKnownIndex]));
+  //     output.spellcasting.cantrips_total = parseInt(
+  //       table[1][cantripsKnownIndex]
+  //     );
+  //   }
+  // }
 
-  // check if the class has 1st level spells
-  if (level1SpellsIndex > -1) {
-    output.level1Spells = parseInt(table[1][level1SpellsIndex]);
-  }
+  // // check if the class has 1st level spells
+  // if (level1SpellsIndex > -1) {
+  //   if (table[1][level1SpellsIndex] === '-') {
+  //     output.spellcasting.level_1_total = 0;
+  //     output.spellcasting.level_1_spells = [];
+  //   } else {
+  //     output.spellcasting.level_1_total = parseInt(table[1][level1SpellsIndex]);
+  //     output.spellcasting.level_1_spells = [];
+  //   }
+  // }
 
-  // check if the class has 2nd level spells
-  if (level2SpellsIndex > -1) {
-    if (table[1][level2SpellsIndex] === '-') {
-      output.level2Spells = 0;
-    } else {
-      output.level2Spells = parseInt(table[1][level2SpellsIndex]);
-    }
-  }
+  // // check if the class has 2nd level spells
+  // if (level2SpellsIndex > -1) {
+  //   if (table[1][level2SpellsIndex] === '-') {
+  //     output.spellcasting.level_2_total = 0;
+  //     output.spellcasting.level_2_spells = [];
+  //   } else {
+  //     output.spellcasting.level_2_total = parseInt(table[1][level2SpellsIndex]);
+  //     output.spellcasting.level_2_spells = [];
+  //   }
+  // }
+
+  // if (invocationsKnownIndex > -1) {
+  //   if (table[1][invocationsKnownIndex] === '-') {
+  //     output.spellcasting.invocations_total = 0;
+  //     output.spellcasting.invocations = [];
+  //   } else {
+  //     output.spellcasting.invocations_total = parseInt(
+  //       table[1][invocationsKnownIndex]
+  //     );
+  //     output.spellcasting.invocations = [];
+  //   }
+  // }
+  // if (sorceryPointsIndex > -1) {
+  //   if (table[1][sorceryPointsIndex] === '-') {
+  //     output.spellcasting.sorcery_points = 0;
+  //   } else {
+  //     output.spellcasting.sorcery_points = parseInt(
+  //       table[1][sorceryPointsIndex]
+  //     );
+  //   }
+  // }
+  // if (spellSlotsIndex > -1) {
+  //   if (table[1][spellSlotsIndex] === '-') {
+  //     output.spellcasting.spell_slots_total = 0;
+  //   } else {
+  //     output.spellcasting.spell_slots_total = parseInt(
+  //       table[1][spellSlotsIndex]
+  //     );
+  //   }
+  // }
+  // if (slotLevelIndex > -1) {
+  //   if (table[1][slotLevelIndex] === '-') {
+  //     output.spellcasting.spell_slot_level = 0;
+  //   } else {
+  //     output.spellcasting.spell_slot_level = parseInt(table[1][slotLevelIndex]);
+  //   }
+  // }
 
   let featuresList = getFeaturesList(table.slice(1), featuresIdx);
   // console.log('parseClassData - featuresList:', featuresList);
@@ -448,6 +516,11 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        class_specific: {
+          rage_count: 2,
+          rage_damage_bonus: 2,
+          brutal_critical_dice: 0,
+        },
       };
     case 'cleric':
       return {
@@ -464,6 +537,22 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          cantrips_known: 3,
+          spell_slots_level_1: 2,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+          spell_slots_level_6: 0,
+          spell_slots_level_7: 0,
+          spell_slots_level_8: 0,
+          spell_slots_level_9: 0,
+        },
+        class_specific: {
+          channel_divinity_charges: 0,
+          destroy_undead_cr: 0,
+        },
       };
     case 'druid':
       return {
@@ -480,6 +569,23 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          cantrips_known: 2,
+          spell_slots_level_1: 2,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+          spell_slots_level_6: 0,
+          spell_slots_level_7: 0,
+          spell_slots_level_8: 0,
+          spell_slots_level_9: 0,
+        },
+        class_specific: {
+          wild_shape_max_cr: 0,
+          wild_shape_swim: false,
+          wild_shape_fly: false,
+        },
       };
     case 'fighter':
       return {
@@ -502,6 +608,11 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        class_specific: {
+          action_surges: 0,
+          indomitable_uses: 0,
+          extra_attacks: 0,
+        },
       };
     case 'monk':
       return {
@@ -518,6 +629,14 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        class_specific: {
+          martial_arts: {
+            dice_count: 1,
+            dice_value: 4,
+          },
+          ki_points: 0,
+          unarmored_movement: 0,
+        },
       };
     case 'paladin':
       return {
@@ -539,6 +658,16 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          spell_slots_level_1: 0,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+        },
+        class_specific: {
+          aura_range: 0,
+        },
       };
     case 'ranger':
       return {
@@ -568,6 +697,18 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          spells_known: 0,
+          spell_slots_level_1: 0,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+        },
+        class_specific: {
+          favored_enemies: 1,
+          favored_terrain: 1,
+        },
       };
     case 'rogue':
       return {
@@ -591,6 +732,12 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        class_specific: {
+          sneak_attack: {
+            dice_count: 1,
+            dice_value: 6,
+          },
+        },
       };
     case 'wizard':
       return {
@@ -621,6 +768,21 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          cantrips_known: 3,
+          spell_slots_level_1: 2,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+          spell_slots_level_6: 0,
+          spell_slots_level_7: 0,
+          spell_slots_level_8: 0,
+          spell_slots_level_9: 0,
+        },
+        class_specific: {
+          arcane_recovery_levels: 1,
+        },
       };
     case 'bard':
       return {
@@ -651,6 +813,26 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          cantrips_known: 2,
+          spells_known: 4,
+          spell_slots_level_1: 2,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+          spell_slots_level_6: 0,
+          spell_slots_level_7: 0,
+          spell_slots_level_8: 0,
+          spell_slots_level_9: 0,
+        },
+        class_specific: {
+          bardic_inspiration_die: 6,
+          song_of_rest_die: 0,
+          magical_secrets_max_5: 0,
+          magical_secrets_max_7: 0,
+          magical_secrets_max_9: 0,
+        },
       };
     case 'warlock':
       return {
@@ -692,6 +874,26 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          cantrips_known: 2,
+          spells_known: 2,
+          spell_slots_level_1: 1,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+          spell_slots_level_6: 0,
+          spell_slots_level_7: 0,
+          spell_slots_level_8: 0,
+          spell_slots_level_9: 0,
+        },
+        class_specific: {
+          invocations_known: 0,
+          mystic_arcanum_level_6: 0,
+          mystic_arcanum_level_7: 0,
+          mystic_arcanum_level_8: 0,
+          mystic_arcanum_level_9: 0,
+        },
       };
     default:
       return {
@@ -715,6 +917,24 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
         ],
         spellcasting_ability: data.spellcasting_ability || null,
         subtypes_name: data.subtypes_name || null,
+        spellcasting: {
+          cantrips_known: 4,
+          spells_known: 2,
+          spell_slots_level_1: 2,
+          spell_slots_level_2: 0,
+          spell_slots_level_3: 0,
+          spell_slots_level_4: 0,
+          spell_slots_level_5: 0,
+          spell_slots_level_6: 0,
+          spell_slots_level_7: 0,
+          spell_slots_level_8: 0,
+          spell_slots_level_9: 0,
+        },
+        class_specific: {
+          sorcery_points: 0,
+          metamagic_known: 0,
+          creating_spell_slots: [],
+        },
       };
   }
 };

@@ -137,17 +137,19 @@ export const SelectToolProficiency = ({
       setCurrentOptions(toolsAvailable);
     }
 
-    console.log(
-      `in ${selectName} - useEffect redux state -> selectedChoices:`,
-      selectedChoices,
-      'toolsAvailable:',
-      toolsAvailable,
-      'hasSelection:',
-      hasSelection,
-      'selectionValue:',
-      selectionValue
-    );
+    // console.log(
+    //   `in ${selectName} - useEffect redux state -> selectedChoices:`,
+    //   selectedChoices,
+    //   'toolsAvailable:',
+    //   toolsAvailable,
+    //   'hasSelection:',
+    //   hasSelection,
+    //   'selectionValue:',
+    //   selectionValue
+    // );
   }, [hasSelection, selectedChoices]);
+
+  console.log('in SelectToolProficiency:', currentOptions);
 
   return (
     <select
@@ -200,10 +202,10 @@ export const SelectClassFeatureOptions = ({
 
   const handleSelection = function (e) {
     const capturedValue = e.target.value;
-    console.log(
-      'in handleSelection of SelectClassFeatureOptions - capturedValue:',
-      capturedValue
-    );
+    // console.log(
+    //   'in handleSelection of SelectClassFeatureOptions - capturedValue:',
+    //   capturedValue
+    // );
     setSelectionValue(capturedValue);
     setHasSelection((prevState) => !prevState);
     onSelect(capturedValue);
@@ -239,6 +241,7 @@ export const SelectClassFeatureOptions = ({
       {...register(selectName)}
     >
       <option>{defaultOption}</option>
+      <option>another option</option>
       {/* {currentOptions.map((opt, idx) => {
         return (
           <option key={idx} index={idx} value={opt}>
@@ -253,9 +256,15 @@ export const SelectClassFeatureOptions = ({
 export const SelectClassFeature = ({ register, item, selection }) => {
   const dispatch = useDispatch();
 
-  console.log('in SelectClassFeature - item:', item, 'selection:', selection);
+  // console.log('in SelectClassFeature - item:', item, 'selection:', selection);
+  let options;
+  if (item.name === 'Fighting Style') {
+    options = item.choices.map((choice) => choice.name);
+  } else {
+    options = item.choices;
+  }
 
-  const [currentOptions, setCurrentOptions] = useState(item.choices);
+  const [currentOptions, setCurrentOptions] = useState(options);
   const [selectionValue, setSelectionValue] = useState('');
 
   const nameLength = item.name.length - 1;
@@ -271,12 +280,19 @@ export const SelectClassFeature = ({ register, item, selection }) => {
 
   const handleSelection = function (e) {
     const capturedValue = e.target.value;
-    console.log('in handleSelect of Select2.jsx:', capturedValue);
+    // console.log('in handleSelect of Select2.jsx:', capturedValue);
     setSelectionValue(capturedValue);
     dispatch(
       selectClassFeature({ featureName: item.name, selection: capturedValue })
     );
   };
+
+  console.log(
+    'in SelectClassFeature - item:',
+    item,
+    'currentOptions:',
+    currentOptions
+  );
 
   return (
     <select
@@ -332,7 +348,7 @@ export const SelectExpertiseSkills = ({
 
   const handleSelection = function (e) {
     const capturedValue = e.target.value;
-    console.log('in handleSelect of Select2.jsx:', capturedValue);
+    // console.log('in handleSelect of Select2.jsx:', capturedValue);
     setSelectionValue(capturedValue);
     setHasSelection((prevState) => !prevState);
     onSelect(capturedValue);
@@ -349,16 +365,16 @@ export const SelectExpertiseSkills = ({
       setCurrentOptions(optionsAvailable);
     }
 
-    console.log(
-      `in ${selectName} - useEffect redux state -> selectedChoices:`,
-      selectedChoices,
-      'optionsAvailable:',
-      optionsAvailable,
-      'hasSelection:',
-      hasSelection,
-      'selectionValue:',
-      selectionValue
-    );
+    // console.log(
+    //   `in ${selectName} - useEffect redux state -> selectedChoices:`,
+    //   selectedChoices,
+    //   'optionsAvailable:',
+    //   optionsAvailable,
+    //   'hasSelection:',
+    //   hasSelection,
+    //   'selectionValue:',
+    //   selectionValue
+    // );
   }, [hasSelection, selectedChoices]);
 
   return (
@@ -413,7 +429,7 @@ export const SelectAbilityScores = ({
 
   const handleSelection = function (e) {
     const capturedValue = e.target.value;
-    console.log('in handleSelect of Select2.jsx:', capturedValue);
+    // console.log('in handleSelect of Select2.jsx:', capturedValue);
     setSelectionValue(capturedValue);
     setHasSelection((prevState) => !prevState);
     onSelect(capturedValue);
@@ -430,16 +446,16 @@ export const SelectAbilityScores = ({
       setCurrentOptions(optionsAvailable);
     }
 
-    console.log(
-      `in ${selectName} - useEffect redux state -> selectedChoices:`,
-      selectedChoices,
-      'optionsAvailable:',
-      optionsAvailable,
-      'hasSelection:',
-      hasSelection,
-      'selectionValue:',
-      selectionValue
-    );
+    // console.log(
+    //   `in ${selectName} - useEffect redux state -> selectedChoices:`,
+    //   selectedChoices,
+    //   'optionsAvailable:',
+    //   optionsAvailable,
+    //   'hasSelection:',
+    //   hasSelection,
+    //   'selectionValue:',
+    //   selectionValue
+    // );
   }, [hasSelection, selectedChoices]);
 
   return (

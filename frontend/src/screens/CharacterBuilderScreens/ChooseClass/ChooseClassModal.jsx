@@ -6,7 +6,10 @@ import { useGetClassDataQuery } from '../../../services/classes';
 import ConfirmClass from './ConfirmClass';
 import Loader from '../../../components/Loader';
 import { parseClassData } from '../../../utility/parseClassData';
-import { setFilteredClass } from '../../../slices/characterBuilderSlice';
+import {
+  setFilteredClass,
+  classAdded,
+} from '../../../slices/characterBuilderSlice';
 import '../../../components/ConfirmationModal.css';
 
 function ChooseClassModal({
@@ -59,6 +62,7 @@ function ChooseClassModal({
     //   // '\n?selectedClass:',
     //   // selectedClass
     // );
+    dispatch(classAdded({ ...selection, ...classData }));
 
     dispatch(setFilteredClass({ ...selection, ...classData }));
 

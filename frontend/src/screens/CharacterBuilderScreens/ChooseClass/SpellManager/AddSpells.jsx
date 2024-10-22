@@ -1,34 +1,129 @@
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Accordion } from 'react-bootstrap';
+import { Accordion, AccordionCollapse, AccordionItem } from 'react-bootstrap';
+import {
+  spellAddedToInventory,
+  spellRemovedFromInventory,
+} from '../../../../slices/characterBuilderSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import CollapsibleSpellList from './CollapsibleSpellList';
+import FilterButtonGroup from './FilterButtonGroup';
+import { FilterSelector } from './SelectorHeading';
 import SpellSelector from './SpellSelector';
 
 const CharacterSpellsInfo = styled.div``;
 
-const FilterContainer = styled.div``;
+const FilterAccordion = styled(Accordion)`
+  margin: 10px 0px;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  padding: 0px 0px;
+  min-height: 22px;
+`;
+
+const StyledAccordionItem = styled(AccordionItem)`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+`;
+
+const StyledCollapse = styled(AccordionCollapse)`
+  margin-top: 10px;
+`;
 
 const SpellsAccordion = styled(Accordion)`
   margin-top: 20px;
 `;
 
 const AddSpells = ({ spells, introData, register, characterLevel }) => {
-  console.log('in AddSpells.jsx -> spells:', spells);
+  const dispatch = useDispatch();
+  const {
+    cantrips_known,
+    spell_slots_level_1,
+    spell_slots_level_2,
+    level_1_spells,
+    level_2_spells,
+    cantrips,
+    invocations,
+  } = useSelector((state) => state.character.spell_casting);
+  const [spellsKnownTotal, setSpellsKnownTotal] = useState(
+    spell_slots_level_1 + spell_slots_level_2
+  );
+  const [totalLearnedSpells, setTotalLearnedSpells] = useState(0);
+  const [levelFilter, setLevelFilter] = useState(characterLevel);
 
-  let levelFilters = spells.map((spell) => {
-    return spell.spell_level;
+  console.log(
+    'in AddSpells.jsx -> knownSpells:',
+    invocations,
+    level_1_spells,
+    level_2_spells,
+    cantrips,
+    cantrips_known,
+    spell_slots_level_1,
+    spell_slots_level_2
+  );
+
+  useEffect(() => {
+    let learnedSpells = level_1_spells.length + level_2_spells.length;
+    setTotalLearnedSpells(learnedSpells);
+  }, [
+    spell_slots_level_1,
+    spell_slots_level_2,
+    cantrips,
+    level_1_spells,
+    level_2_spells,
+  ]);
+
+  let spellLevels = spells.map((spell) => {
+    return { level: spell.spell_level, text: spell.level };
   });
 
-  console.log('levelFilters:', levelFilters);
+  const handleFilterClick = (level) => {
+    setLevelFilter(level);
+  };
+
+  const handleSpellAdd = (spell) => {
+    console.log('spell', spell);
+    dispatch(spellAddedToInventory({ spell: spell }));
+  };
+
+  const handleSpellRemove = (spell) => {
+    console.log('Spell to Remove:', spell);
+    dispatch(spellRemovedFromInventory({ spell: spell }));
+  };
 
   return (
-    <CollapsibleSpellList heading='Add Spells' eventKey='0'>
+    <CollapsibleSpellList heading='Add Spells' eventKey='1'>
       <div>
         <CharacterSpellsInfo>
-          {/* NEED to not hardcode this and use the useSelector to bring down the state spellcasting object for character */}
-          Cantrips: 0/2
+          Cantrips: {cantrips.length}/{cantrips_known}
         </CharacterSpellsInfo>
-        <CharacterSpellsInfo>Known Spells 0/4</CharacterSpellsInfo>
-        <FilterContainer>Spell Level Filter list goes here</FilterContainer>
+        <CharacterSpellsInfo>
+          Known Spells: {totalLearnedSpells}/{spellsKnownTotal}
+        </CharacterSpellsInfo>
+
+        <FilterAccordion defaultActiveKey={'filter'}>
+          <StyledAccordionItem eventKey='filter'>
+            <FilterSelector
+              eventKey={'filter'}
+              item={{}}
+              isFilter={true}
+              isModal={false}
+            >
+              Filter By Spell Level
+            </FilterSelector>
+            <StyledCollapse eventKey='filter'>
+              <FilterButtonGroup
+                spellLevelFilter={levelFilter}
+                levels={spellLevels}
+                click={handleFilterClick}
+              />
+            </StyledCollapse>
+          </StyledAccordionItem>
+        </FilterAccordion>
+
         {/* Do i need this defaultActiveKey ? */}
         <SpellsAccordion flush>
           {spells.map((spell, idx) => (
@@ -38,6 +133,8 @@ const AddSpells = ({ spells, introData, register, characterLevel }) => {
               register={register}
               selection={introData}
               isSpell={true}
+              learnClick={handleSpellAdd}
+              removeClick={handleSpellRemove}
             />
           ))}
         </SpellsAccordion>

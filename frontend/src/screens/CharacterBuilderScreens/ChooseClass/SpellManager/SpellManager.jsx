@@ -2,6 +2,9 @@ import { styled } from 'styled-components';
 import { Accordion } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import AddSpells from './AddSpells';
+import SpellBook from './SpellBook';
+import PreparedSpells from './PreparedSpells';
+import KnownSpells from './KnownSpells';
 
 const Container = styled.div`
   width: 100%;
@@ -15,13 +18,29 @@ const SpellListAccordion = styled(Accordion)`
 `;
 
 const SpellsManager = ({ introData, register, spells, characterLevel }) => {
-  const knownSpells = useSelector(
-    (state) => state.character.spellcasting.known_spells
+  const knownSpells = useSelector((state) => state.character.spell_casting);
+  console.log(
+    'in SpellsManager -> introData:',
+    introData,
+    'spells:',
+    spells,
+    'knownSpells:',
+    knownSpells,
+    'characterLevel:',
+    characterLevel
   );
-  console.log('in SpellsManager -> introData:', introData, 'spells:', spells);
+
+  let preparedSpellsList = ['Cleric', 'Paladin', 'Druid', 'Wizard'];
+
   return (
     <Container>
       <SpellListAccordion>
+        {preparedSpellsList.indexOf(introData.name) === -1 ? (
+          <KnownSpells />
+        ) : (
+          <PreparedSpells />
+        )}
+        {introData.name === 'Wizard' ? <SpellBook /> : null}
         <AddSpells
           spells={spells}
           register={register}

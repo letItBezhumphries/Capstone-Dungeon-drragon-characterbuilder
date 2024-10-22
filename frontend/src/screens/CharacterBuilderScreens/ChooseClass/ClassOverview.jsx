@@ -10,6 +10,8 @@ import FormRow from '../../../components/FormRow';
 import FormColumn from '../../../components/FormColumn';
 import { styled } from 'styled-components';
 import Loader from '../../../components/Loader';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import { useNavigation } from 'react-router-dom';
 
 const ClassSectionContainer = styled('div')`
@@ -108,7 +110,8 @@ const ClassOverview = ({ isRace, isModal, selection, register }) => {
       (feat) => feat.level <= currentLevel
     );
 
-    if (data) {
+    if (!isLoading && data.count > 0) {
+      console.log('SETTING UP FOR SPELL TABS');
       let availableSpells = data.results.filter(
         (spell) => spell.spell_level <= currentLevel
       );
@@ -128,19 +131,19 @@ const ClassOverview = ({ isRace, isModal, selection, register }) => {
       setFilteredItems([...featuresWithPopulatedSpells]);
       setTabs([
         {
-          title: 'Class Features',
+          label: 'Class Features',
           items: [
             introData.hit_points,
             introData.proficiencies,
             ...featuresWithPopulatedSpells,
           ],
         },
-        { title: 'Spells', items: availableSpells },
+        { label: 'Spells', items: availableSpells },
       ]);
     } else {
       setTabs([
         {
-          title: 'Class Features',
+          label: 'Class Features',
           items: [
             introData.hit_points,
             introData.proficiencies,
@@ -149,18 +152,7 @@ const ClassOverview = ({ isRace, isModal, selection, register }) => {
         },
       ]);
     }
-  }, [data, currentLevel]);
-
-  console.log(
-    'in ClassOverview -> tabs:',
-    tabs,
-    'spellsAvailable:',
-    spellsAvailable,
-    'currentLevel:',
-    currentLevel,
-    'filteredItems:',
-    filteredItems
-  );
+  }, [isLoading, data, currentLevel]);
 
   return (
     <div>
@@ -250,6 +242,7 @@ const ClassOverview = ({ isRace, isModal, selection, register }) => {
           ) : null}
         </Container>
       )}
+      <ToastContainer />
     </div>
   );
 };

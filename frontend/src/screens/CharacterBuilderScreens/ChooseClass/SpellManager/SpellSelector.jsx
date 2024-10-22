@@ -1,10 +1,14 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Card, AccordionCollapse, Col } from 'react-bootstrap';
-import CollapsibleHeading from './CollapsibleHeading';
+import { Card, AccordionCollapse } from 'react-bootstrap';
+import {
+  SpellAddedToast,
+  SpellRemovedToast,
+} from '../../../../components/Toast';
+import { useSelector } from 'react-redux';
+import SelectorHeading from './SelectorHeading';
 import SpellSchoolIcon from './SpellSchoolIcon';
 import SpellCard from './SpellCard';
-// import '../../../../components/Selector.css';
 
 const HeaderInfo = styled.div`
   max-height: 32px;
@@ -61,6 +65,18 @@ export const Button = styled.div`
   }
 `;
 
+export const RemoveButton = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+
+  & i {
+    color: red;
+    margin-right: 10px;
+  }
+`;
+
 const CollapsibleBody = styled(AccordionCollapse)`
   background-color: #fff;
   border-left: 1px solid #ece9e9;
@@ -79,12 +95,54 @@ const SpellSelector = ({
   selection,
   characterLevel,
   isSpell,
+  learnClick,
+  removeClick,
 }) => {
+  const { level_1_spells, level_2_spells, cantrips, invocations } = useSelector(
+    (state) => state.character.spell_casting
+  );
+
+  const [hasBeenSelected, setHasBeenSelected] = useState(false);
+
+  useEffect(() => {
+    let spellList = [
+      ...level_1_spells,
+      ...level_2_spells,
+      ...cantrips,
+      ...invocations,
+    ].map((spell) => {
+      return spell.name;
+    });
+
+    console.log('spellList:', spellList);
+
+    if (spellList.indexOf(item.name) !== -1) {
+      setHasBeenSelected(true);
+    }
+
+    // if (item.spell_level === 0 && cantrips.indexOf()) {
+  }, [level_1_spells, level_2_spells, cantrips, invocations]);
+
   // console.log('in SpellSelector item:', item);
+  const onLearnBtnClick = () => {
+    learnClick(item);
+    handleSelection(hasBeenSelected);
+    SpellAddedToast(item.name, selection.name);
+  };
+
+  const onRemoveBtnClick = () => {
+    removeClick(item);
+    handleSelection(hasBeenSelected);
+    SpellRemovedToast(item.name, selection.name);
+  };
+
+  const handleSelection = (bool) => {
+    setHasBeenSelected(!bool);
+  };
 
   return (
     <Card className={'selection-item'}>
-      <CollapsibleHeading
+      <SelectorHeading
         item={item}
         register={register}
         selection={selection}
@@ -98,18 +156,32 @@ const SpellSelector = ({
           <HeaderInfo>
             <PrimaryHeading>{item.name}</PrimaryHeading>
             <SecondaryHeading>
-              <span>{item.school}</span>
+              <span>
+                {item.level} &#8226; {item.school}
+              </span>
             </SecondaryHeading>
           </HeaderInfo>
-          <Button>LEARN</Button>
+
+          {hasBeenSelected ? (
+            <RemoveButton onClick={onRemoveBtnClick}>
+              <i className='fa-solid fa-x'></i>
+              Remove
+            </RemoveButton>
+          ) : (
+            <Button onClick={onLearnBtnClick}>LEARN</Button>
+          )}
         </InnerContainer>
-      </CollapsibleHeading>
+      </SelectorHeading>
       <CollapsibleBody eventKey={item.name}>
         <SpellCard
-          item={item}
+          spell={item}
           register={register}
           characterLevel={characterLevel}
           selection={selection}
+          hasBeenSelected={hasBeenSelected}
+          handleSelection={handleSelection}
+          learnClick={learnClick}
+          removeClick={removeClick}
         />
       </CollapsibleBody>
     </Card>

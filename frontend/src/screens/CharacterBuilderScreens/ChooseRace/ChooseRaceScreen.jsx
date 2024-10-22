@@ -61,6 +61,7 @@ const ChooseRaceScreen = () => {
     // console.log('FINAL Selection passed to eventhandler:', selection);
     setShowSelectionForm(true);
     // close the Confirmation Model
+
     handleClose();
   };
 

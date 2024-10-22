@@ -26,6 +26,12 @@ export const parseRaceData = (data) => {
   // console.log('in parseRaceData -> raceData:', raceData);
 
   let description = data.description + ' ' + data.desc.split('\n')[1].trim();
+  let vision;
+  if (data.vision.length > 0) {
+    vision = data.vision.split('._** ')[1];
+  } else {
+    vision = '';
+  }
 
   const finalRaceData = {
     ...raceData,
@@ -33,16 +39,16 @@ export const parseRaceData = (data) => {
     name: data.name,
     imgSrc: data.imgSrc,
     index: data.index,
-    age: data.age,
+    age: data.age.split('**_Age._** ')[1],
     asi: data.asi,
-    asi_desc: data.asi_desc,
-    languages: data.languages,
-    size: data.size,
+    asi_desc: data.asi_desc.split('**_Ability Score Increase._** ')[1],
+    languages: data.languages.split('**_Languages._** ')[1],
+    size: data.size.split('**_Size._** ')[1],
     size_raw: data.size_raw,
     slug: data.slug,
     speed: data.speed,
-    speed_desc: data.speed_desc,
-    vision: data.vision,
+    speed_desc: data.speed_desc.split('**_Speed._** ')[1],
+    vision: vision,
     subraces: data.subraces,
   };
 

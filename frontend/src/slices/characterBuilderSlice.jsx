@@ -8,6 +8,20 @@ const initialState = {
   traits: [],
   class_type: '',
   race: '',
+  size: {
+    desc: '',
+    size_type: '',
+  },
+  age: {
+    desc: '',
+    years: '',
+  },
+  race_desc: '',
+  speed: { desc: '' },
+  languages: {
+    desc: '',
+    known: [],
+  },
   ability_scores: {
     strength: 0,
     dexterity: 0,
@@ -16,18 +30,24 @@ const initialState = {
     wisdom: 0,
     charisma: 0,
   },
-  proficiencies: {
-    race_skills: {},
-    skills: {},
-    tools: {},
-    armor: '',
-    equipment: '',
-    weapons: '',
-    saving_throws: '',
-    total_choices: 0,
-    choices: [],
+  spell_casting: {
+    cantrips: [],
+    invocations: [],
+    level_1_spells: [],
+    level_2_spells: [],
+    level_3_spells: [],
+    level_4_spells: [],
+    level_5_spells: [],
+    level_6_spells: [],
+    level_7_spells: [],
+    level_8_spells: [],
+    level_9_spells: [],
   },
-  equipment: [],
+  class_features: [],
+  proficiencies: {},
+  proficiency_bonus: 2,
+  equipment: {},
+  class_specific: {},
   expertise_selected: [],
   expertise_available: [],
   skills_selected: [],
@@ -43,22 +63,15 @@ const initialState = {
     'Dexterity',
     'Charisma',
   ],
-  current_feature_selections: [],
-  active_class_features: [],
-  class_specific: {},
-  hit_points: {
-    max: 0,
-    current: 0,
-  },
+  current_feature_options_available: [],
+  current_feature_options_selected: [],
+  hit_points: {},
   level: 1,
   ability_score_bonuses: [],
   race_skills_selected: [],
   race_skillOptions_available: [],
   ability_bonus_selected: [],
   ability_bonusOptions_available: [],
-  spellcasting: {
-    known_spells: [],
-  },
   selected_race: {},
   selected_class: {},
   ability_autorolls_available: [8, 10, 12, 13, 14, 15],
@@ -85,53 +98,155 @@ const characterBuilderSlice = createSlice({
       state.name = name;
     },
     raceAdded: (state, action) => {
-      const { race, traits, ability_score_bonuses } = action.payload;
+      const {
+        name,
+        traits,
+        traitNames,
+        desc,
+        index,
+        asi,
+        asi_desc,
+        age,
+        languages,
+        size,
+        size_raw,
+        speed,
+        speed_desc,
+        vision,
+      } = action.payload;
 
-      (state.ability_score_bonuses = [
-        ...state.ability_score_bonuses,
-        ...ability_score_bonuses,
-      ]),
-        (state.traits = [...state.traits, ...traits]);
-      state.race = race;
-      state.ability_score_bonuses.forEach((ab, idx) => {
-        let abilityKey = ab.attributes[0];
-        state[abilityKey] = ab.value;
+      state.index = index;
+      state.race_desc = desc;
+      state.race = name;
+      state.traits = [...state.traits, traits];
+      state.speed = {
+        desc: speed_desc,
+        ...speed,
+        ...state.speed,
+      };
+      state.age = {
+        desc: age,
+        ...state.age,
+      };
+      state.languages = {
+        desc: languages,
+        ...state.languages,
+      };
+      state.size = {
+        size_type: size,
+        desc: size_raw,
+        ...state.size,
+      };
+
+      asi.forEach((ability) => {
+        let updateAbilityKey = ability.attributes[0].toLowerCase();
+        let value = ability.value;
+
+        state.ability_scores[updateAbilityKey] =
+          state.ability_scores[updateAbilityKey] + value;
       });
-    },
-    raceUpdated: (state, action) => {
-      const { race, traits, ability_score_bonuses } = action.payload;
 
-      state.ability_score_bonuses = [
-        ...state.ability_score_bonuses,
-        ...ability_score_bonuses,
-      ];
-      state.traits = [...state.traits, ...traits];
-      state.race = race;
+      if (name === 'Elf') {
+        state.proficiencies.skills = {
+          ...state.proficiencies.skills,
+          selected: ['Perception'],
+        };
+      }
+      if (name === 'Half-Orc') {
+        state.proficiencies.skills = {
+          ...state.proficiencies.skills,
+          selected: ['Intimidation'],
+        };
+      }
+      if (name === 'Tiefling') {
+        state.spell_casting.cantrips_total =
+          state.spell_casting.cantrips_total + 1;
+        state.spell_casting.cantrips = [
+          ...state.spell_casting.cantrips,
+          'Thaumaturgy',
+        ];
+      }
+      if (name === 'Human') {
+        state.ability_scores.strength = state.ability_scores.strength + 1;
+        state.ability_scores.constitution =
+          state.ability_scores.constitution + 1;
+        state.ability_scores.intelligence =
+          state.ability_scores.intelligence + 1;
+        state.ability_scores.wisdom = state.ability_scores.wisdom + 1;
+        state.ability_scores.dexterity = state.ability_scores.dexterity + 1;
+        state.ability_scores.charisma = state.ability_scores.charisma + 1;
+      }
     },
     classAdded: (state, action) => {
       const {
-        class_type,
-        equipment,
-        skills,
+        archetypes,
+        spellcasting,
         class_specific,
-        traits,
-        ability_score_bonuses,
-        proficiencies,
+        desc,
+        equipment,
+        features,
         hit_points,
+        imgSrc,
+        index,
+        name,
+        primary_ability,
+        primary_desc,
+        proficiencies,
+        table,
       } = action.payload;
-      state.class_type = class_type;
-      state.equipment = [...equipment];
-      state.skills = [...skills];
-      state.class_specific = { ...class_specific };
-      state.traits = [...state.traits, ...traits];
-      state.ability_score_bonuses = [
-        ...state.ability_score_bonuses,
-        ...ability_score_bonuses,
-      ];
+
+      state.class_type = name;
+      state.index = index;
+      state.class_specific.primary_ability = primary_ability;
+      state.class_specific.primary_desc = primary_desc;
+      state.class_specific.desc = desc;
+      state.class_specific.table = table;
+      state.class_specific.img_source = imgSrc;
+      state.proficiencies = {
+        ...state.proficiencies,
+        tools: {
+          ...state.proficiencies.tools,
+          ...proficiencies.tools,
+        },
+        skills: {
+          ...state.proficiencies.skills,
+          ...proficiencies.skills,
+        },
+      };
       state.hit_points = {
+        ...state.hit_points,
         ...hit_points,
       };
-      state.proficiencies = [...state.proficiencies, ...proficiencies];
+      state.equipment = {
+        ...state.equipment,
+        ...equipment,
+      };
+      state.class_features = [...state.class_features, ...features];
+      state.class_specific = {
+        ...state.class_specific,
+        ...class_specific,
+      };
+
+      state.spell_casting = {
+        ...state.spell_casting,
+        ...spellcasting,
+      };
+
+      if (name === 'Bard' || name === 'Rogue') {
+        let expertiseFeature = features.find((feat) => {
+          if (feat.name === 'Expertise') {
+            return feat;
+          }
+        });
+
+        state.expertise_available = [...expertiseFeature.choices];
+      }
+
+      state.tool_options_available = [
+        ...state.tool_options_available,
+        ...proficiencies.tools.choices,
+      ];
+      state.skill_options_available = [...proficiencies.skills.choices];
     },
     expertiseSkillsUpdated: (state, action) => {
       const { skill, total_choices } = action.payload;
@@ -264,21 +379,6 @@ const characterBuilderSlice = createSlice({
           return feat;
         }
       );
-      // let matchingFeature = state.selected_class.features.find(
-      //   (feat, index) => {
-      //     if (feat.name === name) {
-      //       return index;
-      //     }
-      //   }
-      // );
-
-      // if (matchingFeature) {
-      //   state.selected_class.features = state.selected_class.features.map((feature) => {
-      //     if (feature.name === name) {
-
-      //     }
-      //   })
-      // }
     },
     classUpdated: (state, action) => {
       const {
@@ -300,6 +400,87 @@ const characterBuilderSlice = createSlice({
       ];
       state.proficiencies = [...state.proficiencies, ...proficiencies];
     },
+    spellAddedToInventory: (state, action) => {
+      const { spell } = action.payload;
+
+      if (
+        spell.level_int === 2 &&
+        state.spell_casting.level_2_spells.length <
+          state.spell_casting.level_2_total
+      ) {
+        let matchingSpell = state.spell_casting.level_2_spells.find((sp) => {
+          if (sp.name === spell.name) {
+            return spell;
+          }
+        });
+
+        // the spell is not found to exist in state
+        if (!matchingSpell) {
+          state.spell_casting.level_2_spells = [
+            ...state.spell_casting.level_2_spells,
+            spell,
+          ];
+        }
+      } else if (
+        spell.level_int === 1 &&
+        state.spell_casting.level_1_spells.length <
+          state.spell_casting.level_1_total
+      ) {
+        let matchingSpell = state.spell_casting.level_1_spells.find((sp) => {
+          if (sp.name === spell.name) {
+            return spell;
+          }
+        });
+
+        if (!matchingSpell) {
+          state.spell_casting.level_1_spells = [
+            ...state.spell_casting.level_1_spells,
+            spell,
+          ];
+        }
+      } else {
+        if (
+          state.spell_casting.cantrips.length <
+          state.spell_casting.cantrips_total
+        ) {
+          let matchingSpell = state.spell_casting.cantrips.find((sp) => {
+            if (sp.name === spell.name) {
+              return spell;
+            }
+          });
+
+          if (!matchingSpell) {
+            state.spell_casting.cantrips = [
+              ...state.spell_casting.cantrips,
+              spell,
+            ];
+          }
+        }
+      }
+    },
+    spellRemovedFromInventory: (state, action) => {
+      const { spell } = action.payload;
+
+      if (spell.level_int === 2) {
+        state.spell_casting.level_2_spells = [
+          ...state.spell_casting.level_2_spells.filter(
+            (sp) => sp.name !== spell.name
+          ),
+        ];
+      } else if (spell.level_int === 1) {
+        state.spell_casting.level_1_spells = [
+          ...state.spell_casting.level_1_spells.filter(
+            (sp) => sp.name !== spell.name
+          ),
+        ];
+      } else {
+        state.spell_casting.cantrips = [
+          ...state.spell_casting.cantrips.filter(
+            (sp) => sp.name !== spell.name
+          ),
+        ];
+      }
+    },
     setSpellsAvailableForClass: (state, action) => {
       const { results } = action.payload;
       state.spells_available_to_class = [
@@ -308,22 +489,7 @@ const characterBuilderSlice = createSlice({
       ];
     },
     setFilteredRace: (state, action) => {
-      const {
-        name,
-        traits,
-        traitNames,
-        desc,
-        index,
-        asi,
-        asi_desc,
-        age,
-        languages,
-        size,
-        size_raw,
-        speed,
-        speed_desc,
-        vision,
-      } = action.payload;
+      const { name, traits } = action.payload;
 
       let skillVersatilityTrait = traits.find((tr) => {
         if (tr.name === 'Skill Versatility') {
@@ -385,15 +551,25 @@ const characterBuilderSlice = createSlice({
         ...proficiencies.tools.choices,
       ];
       state.skill_options_available = [...proficiencies.skills.choices];
+      // state.spells_available_to_class = [
+      //   ...state.spells_available_to_class,
+      //   ...spells,
+      // ];
     },
     clearFilteredRace: (state) => {
       state.selected_race = initialState.selected_race;
+      state.ability_bonusOptions_available =
+        initialState.ability_bonusOptions_available;
+      state.ability_bonus_selected = initialState.ability_bonus_selected;
+      state.race_skillOptions_available =
+        initialState.race_skillOptions_available;
+      state.race_skills_selected = initialState.race_skills_selected;
     },
     clearFilteredClass: (state) => {
       state.selected_class = initialState.selected_class;
       state.skill_options_available = initialState.skill_options_available;
       state.tool_options_available = initialState.tool_options_available;
-
+      state.expertise_available = initialState.expertise_available;
       state.spells_available_to_class = initialState.spells_available_to_class;
     },
   },
@@ -404,7 +580,6 @@ export const {
   nameAdded,
   nameUpdated,
   raceAdded,
-  raceUpdated,
   classAdded,
   classUpdated,
   skillsUpdated,
@@ -414,6 +589,8 @@ export const {
   manualAbilityRollsUpdated,
   expertiseSkillsUpdated,
   racebasedAbilityBonusUpdated,
+  spellAddedToInventory,
+  spellRemovedFromInventory,
   racebasedSkillsUpdated,
   selectClassFeature,
   setFilteredClass,

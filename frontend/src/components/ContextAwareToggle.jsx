@@ -24,6 +24,16 @@ const CollapseButton = styled.div`
   padding-left: 10px;
 `;
 
+const FilterButton = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1 1;
+  height: 100%;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 0px 0px;
+`;
+
 // is open is an object { icon: 'fa-solid fa-chevron-up', color: 'white' }
 
 function ContextAwareToggle({
@@ -36,6 +46,7 @@ function ContextAwareToggle({
   isOpen,
   isClosed,
   isSpell,
+  isFilter,
 }) {
   const { activeEventKey } = useContext(AccordionContext);
 
@@ -86,6 +97,19 @@ function ContextAwareToggle({
           )}
         </IconBox>
       </CollapseButton>
+    );
+  } else if (isFilter) {
+    content = (
+      <FilterButton onClick={decoratedOnClick}>
+        {children}
+        <div className='collapse-icon-box'>
+          {isCurrentEventKey ? (
+            <i className={isOpen.icon} style={{ color: isOpen.color }}></i>
+          ) : (
+            <i className={isClosed.icon} style={{ color: isClosed.color }}></i>
+          )}
+        </div>
+      </FilterButton>
     );
   } else {
     content = (

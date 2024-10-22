@@ -16,6 +16,19 @@ export const open5eClassApi = createApi({
   }),
 });
 
+//'https://www.dnd5eapi.co/api/classes/bard/levels/1' \
+
+export const open5eSRDClassApi = createApi({
+  reducerPath: 'open5eSRDClassApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://www.dnd5eapi.co/api/' }),
+  endpoints: (builder) => ({
+    getClassResourcesForLevel: builder.query({
+      query: (classType, level) => `classes/${classType}/levels/${level}`,
+    }),
+    keepUnusedDataFor: 5,
+  }),
+});
+
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
