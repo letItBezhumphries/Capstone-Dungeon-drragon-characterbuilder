@@ -15,7 +15,7 @@ const CollapsibleMenu = ({ tabs, introData, characterLevel, register }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('tabs:', tabs);
+    // console.log('tabs:', tabs);
 
     if (tabs.length) {
       setIsLoading(false);

@@ -1,7 +1,7 @@
 import { CHARACTERS_URL } from '../constants/constants';
-import { backendApi } from './backendApiSlice';
+import { apiSlice } from './apiSlice';
 
-export const charactersApiSlice = backendApi.injectEndpoints({
+export const charactersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCharacters: builder.query({
       query: () => ({
@@ -24,7 +24,7 @@ export const charactersApiSlice = backendApi.injectEndpoints({
     }),
     initCreateCharacter: builder.mutation({
       query: () => ({
-        url: `${CHARACTERS_URL}/new`,
+        url: `${CHARACTERS_URL}`,
         method: 'POST',
       }),
       // invalidateTags will stop this from getting cached since will use update instead and it wont cause page to refresh
@@ -45,6 +45,7 @@ export const charactersApiSlice = backendApi.injectEndpoints({
       }),
     }),
   }),
+  overrideExisting: true,
 });
 
 // export the query

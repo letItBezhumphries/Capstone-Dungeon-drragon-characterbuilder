@@ -4,11 +4,11 @@ import {
   FormContainerOuter,
 } from '../../../components/FormContainer';
 import CharacterName from '../CharacterName';
-import { Container, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateFormData } from '../../../slices/formSlice';
+import { nameAdded } from '../../../slices/characterBuilderSlice';
 import Button from '../../../components/Button';
 import './CharacterBuilder.css';
 
@@ -17,9 +17,18 @@ const CharacterBuilder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const currentCharacter = useSelector((state) => state.character);
+
   const onNextClickSubmit = (data) => {
     console.log('submited', data);
-    dispatch(updateFormData(data));
+    dispatch(nameAdded({ name: data.name }));
+    dispatch(
+      updateFormData({
+        _id: currentCharacter._id,
+        userId: currentCharacter.userId,
+        ...data,
+      })
+    );
     navigate('/character/chrace');
   };
 
@@ -36,6 +45,7 @@ const CharacterBuilder = () => {
             text='Prev'
             color='#74C0FC'
             icon='fa-solid fa-chevron-left fa-2xl'
+            disabled={true}
           />
           <FormContainerInner>
             <CharacterName register={register} />
@@ -43,7 +53,7 @@ const CharacterBuilder = () => {
           <Button
             step='Next'
             text='Next'
-            color='#74C0FC'
+            color='#fff'
             icon='fa-solid fa-chevron-right fa-2xl'
             type='submit'
           />

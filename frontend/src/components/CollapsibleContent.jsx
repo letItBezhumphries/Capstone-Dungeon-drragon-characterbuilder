@@ -42,7 +42,7 @@ const Title = styled.span`
 `;
 
 const Description = styled.div`
-  background-color: plum;
+  ${'' /* background-color: plum; */}
   margin-bottom: 20px;
 `;
 

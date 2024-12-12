@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 import { useGetMonstersPageQuery } from '../../services/monsters';
+import './MonstersScreen.css';
 
 const MonstersScreen = () => {
   // const monstersResponse = useGetMonstersQuery();
@@ -15,7 +17,7 @@ const MonstersScreen = () => {
   }, [isLoading]);
 
   return (
-    <>
+    <div className='monsters-container'>
       {isLoading ? (
         <h3>is loading...</h3>
       ) : error ? (
@@ -27,7 +29,7 @@ const MonstersScreen = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

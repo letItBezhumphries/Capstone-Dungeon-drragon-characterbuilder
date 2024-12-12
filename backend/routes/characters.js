@@ -6,7 +6,7 @@ const {
   getCharacters,
   getCharacterById,
   createNewCharacter,
-  createCharacter,
+  initCharacter,
   updateCharacter,
   deleteCharacter,
 } = require('../controllers/characterController');
@@ -14,13 +14,15 @@ const {
 const { protect } = require('../middleware/authMiddleware');
 const checkObjectId = require('../middleware/checkObjectId');
 
-router.route('/').get(getCharacters).post(protect, createCharacter);
+// api/characters
+router.route('/').get(getCharacters).post(protect, initCharacter);
 
 router
   .route('/:chrId')
   .get(checkObjectId, getCharacterById)
-  .delete(checkObjectId, protect, deleteCharacter)
-  .put(checkObjectId, protect, updateCharacter);
+  // .delete(checkObjectId, protect, deleteCharacter)
+  .delete(protect, deleteCharacter)
+  .put(protect, updateCharacter);
 router.put('/update/:chrId', protect, updateCharacter);
 router.post('/new/:id', protect, createNewCharacter);
 

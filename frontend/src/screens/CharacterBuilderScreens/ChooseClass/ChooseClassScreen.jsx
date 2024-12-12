@@ -77,58 +77,78 @@ const ChooseClassScreen = ({}) => {
 
   const onNextStepClick = (data) => {
     console.log('captured inputs from the form:', data);
-    const classData = JSON.parse(data.class_type);
-    console.log(
-      'parsed class data submited data:',
-      classData,
-      'selectedClass:',
-      selectedClass
-    );
 
-    let targetCache = {};
+    if (!data.class_type) {
+      navigate('/character/chabilities');
+    } else {
+      const classData = JSON.parse(data.class_type);
+      console.log(
+        'parsed class data submited data:',
+        classData,
+        'selectedClass:',
+        selectedClass
+      );
 
-    for (let key in data) {
-      if (key !== 'name' && key !== 'class_type') {
-        if (
-          key[key.length - 1] === '0' ||
-          key[key.length - 1] === '1' ||
-          key[key.length - 1] === '2' ||
-          key[key.length - 1] === '3'
-        ) {
-          let newKey = key.split('-')[0];
-          if (!targetCache[newKey]) {
-            targetCache[newKey] = [data[key]];
+      let targetCache = {};
+
+      for (let key in data) {
+        if (key !== 'name' && key !== 'class_type') {
+          if (
+            key[key.length - 1] === '0' ||
+            key[key.length - 1] === '1' ||
+            key[key.length - 1] === '2' ||
+            key[key.length - 1] === '3'
+          ) {
+            let newKey = key.split('-')[0];
+            if (!targetCache[newKey]) {
+              targetCache[newKey] = [data[key]];
+            } else {
+              targetCache[newKey].push(data[key]);
+            }
           } else {
-            targetCache[newKey].push(data[key]);
+            targetCache[key] = data[key];
           }
-        } else {
-          targetCache[key] = data[key];
         }
       }
-    }
 
-    console.log('targetCache:', targetCache);
+      console.log('targetCache:', targetCache);
 
-    for (let key in targetCache) {
-      classData.features.map((feat, idx) => {
-        if (feat.name === key) {
-          classData.features[idx].selected = targetCache[key];
+      for (let key in targetCache) {
+        console.log('key:', key);
+        if (key === 'skills') {
+          classData.proficiencies.skills.selected = [
+            ...classData.proficiencies.skills.selected,
+            ...targetCache[key],
+          ];
         }
-      });
+
+        if (key === 'Tool Proficiency') {
+          classData.proficiencies.tools.selected = [
+            ...classData.proficiencies.tools.selected,
+            ...targetCache[key],
+          ];
+        }
+        classData.features.map((feat, idx) => {
+          if (feat.name === key) {
+            classData.features[idx].selected = [
+              ...classData.features[idx].selected,
+              targetCache[key],
+            ];
+          }
+        });
+      }
+
+      console.log(
+        'after reassignment classData:',
+        classData,
+        '\nclassData.features:',
+        classData.features
+      );
+      dispatch(setFilteredClass(classData));
+
+      dispatch(updateFormData({ class_type: classData }));
+      navigate('/character/chabilities');
     }
-
-    // targetFeatures.forEach((tr) => {
-    //   let matchingTraitIndex = classData.features.map((t, idx) => {
-    //     if (t.name === tr) {
-    //       classData.traits[idx].selected = data[tr];
-    //     }
-    //   });
-    // });
-    console.log('after reassignment classData:', classData.features);
-    dispatch(setFilteredClass(classData));
-
-    dispatch(updateFormData({ class_type: classData }));
-    navigate('/character/chabilities');
   };
 
   return (
@@ -158,12 +178,6 @@ const ChooseClassScreen = ({}) => {
                   selection={temporaryClass}
                   register={register}
                 />
-                {/* <input
-                  value={JSON.stringify(selectedClass)}
-                  name='class'
-                  {...register('class_type')}
-                  style={{ display: 'none' }}
-                ></input> */}
               </>
             ) : (
               <div className='filtering-container'>

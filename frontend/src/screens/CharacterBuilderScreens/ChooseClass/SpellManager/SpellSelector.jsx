@@ -4,6 +4,7 @@ import { Card, AccordionCollapse } from 'react-bootstrap';
 import {
   SpellAddedToast,
   SpellRemovedToast,
+  SpellSlotNotAvailableToast,
 } from '../../../../components/Toast';
 import { useSelector } from 'react-redux';
 import SelectorHeading from './SelectorHeading';
@@ -65,6 +66,20 @@ export const Button = styled.div`
   }
 `;
 
+export const DisabledButton = styled.div`
+  background-color: #f9f9f9;
+  border-color: #eaeaea;
+  color: #aaa;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 8px;
+  min-height: 22px;
+  padding: 5px;
+  min-width: 43px;
+`;
+
 export const RemoveButton = styled.div`
   align-items: center;
   cursor: pointer;
@@ -98,10 +113,17 @@ const SpellSelector = ({
   learnClick,
   removeClick,
 }) => {
-  const { level_1_spells, level_2_spells, cantrips, invocations } = useSelector(
-    (state) => state.character.spell_casting
-  );
+  const {
+    level_1_spells,
+    level_2_spells,
+    cantrips,
+    cantrips_known,
+    invocations,
+    spell_slots_level_1,
+    spell_slots_level_2,
+  } = useSelector((state) => state.character.spell_casting);
 
+  const [isDisabled, setIsDisabled] = useState(false);
   const [hasBeenSelected, setHasBeenSelected] = useState(false);
 
   useEffect(() => {
@@ -114,20 +136,47 @@ const SpellSelector = ({
       return spell.name;
     });
 
-    console.log('spellList:', spellList);
-
     if (spellList.indexOf(item.name) !== -1) {
       setHasBeenSelected(true);
     }
-
-    // if (item.spell_level === 0 && cantrips.indexOf()) {
   }, [level_1_spells, level_2_spells, cantrips, invocations]);
+
+  useEffect(() => {
+    if (item.level_int === 0 && cantrips.length >= cantrips_known) {
+      setIsDisabled(true);
+    }
+    if (item.level_int === 1 && level_1_spells.length >= spell_slots_level_1) {
+      setIsDisabled(true);
+    }
+    if (item.level_int === 2 && level_2_spells.length >= spell_slots_level_2) {
+      setIsDisabled(true);
+    }
+  }, [
+    spell_slots_level_1,
+    spell_slots_level_2,
+    cantrips_known,
+    level_1_spells,
+    level_2_spells,
+    cantrips,
+  ]);
 
   // console.log('in SpellSelector item:', item);
   const onLearnBtnClick = () => {
-    learnClick(item);
-    handleSelection(hasBeenSelected);
-    SpellAddedToast(item.name, selection.name);
+    let spellLevel = item.level_int;
+
+    console.log('spellLevel in SpellSelector.jsx ->', spellLevel);
+
+    if (
+      (spellLevel === 0 && cantrips.length === cantrips_known) ||
+      (spellLevel === 1 && level_1_spells.length === spell_slots_level_1) ||
+      (spellLevel === 2 && level_2_spells.length === spell_slots_level_2)
+    ) {
+      SpellSlotNotAvailableToast(item.name, selection.name);
+    } else {
+      learnClick(item);
+      handleSelection(hasBeenSelected);
+      SpellAddedToast(item.name, selection.name);
+    }
   };
 
   const onRemoveBtnClick = () => {
@@ -167,6 +216,8 @@ const SpellSelector = ({
               <i className='fa-solid fa-x'></i>
               Remove
             </RemoveButton>
+          ) : isDisabled ? (
+            <DisabledButton>LEARN</DisabledButton>
           ) : (
             <Button onClick={onLearnBtnClick}>LEARN</Button>
           )}
@@ -180,6 +231,7 @@ const SpellSelector = ({
           selection={selection}
           hasBeenSelected={hasBeenSelected}
           handleSelection={handleSelection}
+          isDisabled={isDisabled}
           learnClick={learnClick}
           removeClick={removeClick}
         />

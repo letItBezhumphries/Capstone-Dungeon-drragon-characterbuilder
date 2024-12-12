@@ -33,6 +33,8 @@ export const parseRaceData = (data) => {
     vision = '';
   }
 
+  let finalLanguages = parseLanguages(data.languages, data.slug);
+
   const finalRaceData = {
     ...raceData,
     desc: description,
@@ -42,7 +44,7 @@ export const parseRaceData = (data) => {
     age: data.age.split('**_Age._** ')[1],
     asi: data.asi,
     asi_desc: data.asi_desc.split('**_Ability Score Increase._** ')[1],
-    languages: data.languages.split('**_Languages._** ')[1],
+    languages: finalLanguages,
     size: data.size.split('**_Size._** ')[1],
     size_raw: data.size_raw,
     slug: data.slug,
@@ -98,6 +100,7 @@ const parseRaceTraits = (traitsStr, race, asi) => {
               choices: parsedTableStr.tableOptions,
               headCells: parsedTableStr.headCells,
               tableCells: parsedTableStr.tableCells,
+              selected: [],
             });
           }
           // its greater than 1
@@ -206,5 +209,29 @@ const parseRaceTraits = (traitsStr, race, asi) => {
 
   // output.traits.push(asi);
   output.traitNames = raceTraitNames;
+  return output;
+};
+
+const parseLanguages = (languagesStr, race) => {
+  let output = {};
+
+  let description = languagesStr.replace('**_Languages._** ', '');
+  let known_languages;
+
+  if (race === 'half-elf') {
+    known_languages = ['Common', 'Elvish'];
+  } else if (race === 'human') {
+    known_languages = ['Common'];
+  } else {
+    known_languages = description
+      .split('.')[0]
+      .replace('You can speak, read, and write ', '')
+      .split('and ');
+  }
+
+  output.desc = description;
+  output.known_languages = known_languages;
+
+  // console.log('in parseLanguages:', output);
   return output;
 };

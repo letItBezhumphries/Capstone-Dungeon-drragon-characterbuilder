@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useGetClassDataQuery } from '../../../services/classes';
+import {
+  useGetClassDataQuery,
+  useGetSpellsForClassQuery,
+} from '../../../services/classes';
 import ConfirmClass from './ConfirmClass';
 import Loader from '../../../components/Loader';
 import { parseClassData } from '../../../utility/parseClassData';
@@ -29,6 +32,12 @@ function ChooseClassModal({
 
   const { data, isLoading, error } = useGetClassDataQuery(selection.index);
 
+  const {
+    data: spellsData,
+    isLoading: spellsIsloading,
+    error: spellsError,
+  } = useGetSpellsForClassQuery(selection.index);
+
   useEffect(() => {
     if (selection?.name && !isLoading) {
       // console.log('MODAL -> querydata:', data);
@@ -43,30 +52,57 @@ function ChooseClassModal({
     /*  !! NEED TO HANDLE DIFFERENT SELECTION DEPENDING ON IF isRace is true or not */
     /* ! ALSO NEED to add redux action here to store selection in state */
 
-    const classData = parseClassData({ ...selection, ...queryData });
+    if (!spellsIsloading && spellsData.count > 0) {
+      // console.log('spellsData:', spellsData);
+      const classData = parseClassData({
+        ...selection,
+        ...queryData,
+        spells: spellsData.results,
+      });
 
-    const selectionData = {
-      ...selection,
-      ...queryData,
-    };
+      const selectionData = {
+        ...selection,
+        ...queryData,
+        spells: spellsData.results,
+      };
 
-    // console.log(
-    //   'in ChooseClassModal-> selection handleSelectionCLick:',
-    //   selection,
-    //   '\n and here is classData:',
-    //   classData
-    //   // '\nis it same as selectionData:',
-    //   // selectionData,
-    //   // '\nqueryData:',
-    //   // queryData,
-    //   // '\n?selectedClass:',
-    //   // selectedClass
-    // );
-    dispatch(classAdded({ ...selection, ...classData }));
+      dispatch(
+        classAdded({ ...selection, ...classData, spells: spellsData.results })
+      );
 
-    dispatch(setFilteredClass({ ...selection, ...classData }));
+      dispatch(
+        setFilteredClass({
+          ...selection,
+          ...classData,
+          spells: spellsData.results,
+        })
+      );
 
-    onSelectionConfirm(selectionData);
+      onSelectionConfirm(selectionData);
+    } else {
+      const classData = parseClassData({ ...selection, ...queryData });
+
+      const selectionData = {
+        ...selection,
+        ...queryData,
+      };
+
+      dispatch(classAdded({ ...selection, ...classData }));
+
+      dispatch(setFilteredClass({ ...selection, ...classData }));
+
+      onSelectionConfirm(selectionData);
+    }
+    // const classData = parseClassData({ ...selection, ...queryData });
+
+    // const selectionData = {
+    //   ...selection,
+    //   ...queryData,
+    // };
+
+    // dispatch(setFilteredClass({ ...selection, ...classData }));
+
+    // onSelectionConfirm(selectionData);
   };
 
   const handleCancelClick = () => {

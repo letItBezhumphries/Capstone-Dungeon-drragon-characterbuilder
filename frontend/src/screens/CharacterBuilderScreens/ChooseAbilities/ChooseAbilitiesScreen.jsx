@@ -16,15 +16,23 @@ const ChooseAbilitiesScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const formData = useSelector((state) => state.form.formData);
+  const character = useSelector((state) => state.character);
 
-  console.log('in ChooseAbilitiesScreen -> formData:', formData);
+  console.log(
+    'in ChooseAbilitiesScreen -> formData:',
+    formData,
+    'character:',
+    character
+  );
 
-  const onPrevStepClick = (data) => {
-    console.log('captured inputs from the form:', data);
+  const onPrevStepClick = () => {
+    navigate('/character/chclass');
   };
 
   const onNextStepClick = (data) => {
-    console.log('captured inputs from the form:', data);
+    console.log('captured inputs from the Abilities form:', data);
+
+    navigate('/character/chbackground');
   };
 
   return (

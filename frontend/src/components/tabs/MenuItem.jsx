@@ -26,7 +26,7 @@ const TabButton = styled(Nav.Link)`
 const MenuItem = (props) => {
   const { label, items, introData, characterLevel, register } = props;
 
-  console.log('in MenuItem -> label:', label, 'items:', items);
+  // console.log('in MenuItem -> label:', label, 'items:', items);
 
   return (
     <TabItem>

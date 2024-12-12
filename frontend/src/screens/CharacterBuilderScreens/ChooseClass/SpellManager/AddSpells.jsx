@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { act, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { Accordion, AccordionCollapse, AccordionItem } from 'react-bootstrap';
 import {
@@ -48,22 +48,28 @@ const AddSpells = ({ spells, introData, register, characterLevel }) => {
     cantrips,
     invocations,
   } = useSelector((state) => state.character.spell_casting);
+
+  console.log(
+    'in AddSpells.jsx -> spellcasting - level 1 spells: ->',
+    level_1_spells,
+    '\nlevel 2 spells:',
+    level_2_spells,
+    '\ncantrips_known:',
+    cantrips_known,
+    '\ncantrips spells:',
+    cantrips,
+    '\nspell_slots_level_1:',
+    spell_slots_level_1,
+    '\nspell_slots_level_2:',
+    spell_slots_level_2
+  );
+
   const [spellsKnownTotal, setSpellsKnownTotal] = useState(
     spell_slots_level_1 + spell_slots_level_2
   );
   const [totalLearnedSpells, setTotalLearnedSpells] = useState(0);
-  const [levelFilter, setLevelFilter] = useState(characterLevel);
-
-  console.log(
-    'in AddSpells.jsx -> knownSpells:',
-    invocations,
-    level_1_spells,
-    level_2_spells,
-    cantrips,
-    cantrips_known,
-    spell_slots_level_1,
-    spell_slots_level_2
-  );
+  const [activeFilterLevels, setActiveFilterLevels] = useState([]);
+  const [spellList, setSpellList] = useState([...spells]);
 
   useEffect(() => {
     let learnedSpells = level_1_spells.length + level_2_spells.length;
@@ -76,12 +82,43 @@ const AddSpells = ({ spells, introData, register, characterLevel }) => {
     level_2_spells,
   ]);
 
+  useEffect(() => {
+    if (activeFilterLevels.length > 0) {
+      console.log(
+        `in useEffect #2 -> AddSpells.jsx - activeFilterLevels.length ${activeFilterLevels.length} is greater than 0`,
+        activeFilterLevels,
+        'filteredSpells:',
+        spells.filter((sp) => activeFilterLevels.indexOf(sp.spell_level) !== -1)
+      );
+      setSpellList((prevState) =>
+        prevState.filter(
+          (sp) => activeFilterLevels.indexOf(sp.spell_level) !== -1
+        )
+      );
+    } else {
+      setSpellList([...spells]);
+    }
+  }, [activeFilterLevels]);
+
   let spellLevels = spells.map((spell) => {
     return { level: spell.spell_level, text: spell.level };
   });
 
   const handleFilterClick = (level) => {
-    setLevelFilter(level);
+    console.log(
+      'in AddSpells.jsx -> level passed to handleFilterCLick -> level:',
+      level
+    );
+
+    // check if the level already exists in the activeFilterLevels array
+    if (activeFilterLevels.indexOf(level) !== -1) {
+      // toggle off the level filter by removing it and updating the state
+      setActiveFilterLevels((prevState) =>
+        prevState.filter((lv) => lv !== level)
+      );
+    } else {
+      setActiveFilterLevels((prevState) => [...prevState, level]);
+    }
   };
 
   const handleSpellAdd = (spell) => {
@@ -93,6 +130,8 @@ const AddSpells = ({ spells, introData, register, characterLevel }) => {
     console.log('Spell to Remove:', spell);
     dispatch(spellRemovedFromInventory({ spell: spell }));
   };
+
+  console.log('in AddSpells.jsx - spellList:', spellList);
 
   return (
     <CollapsibleSpellList heading='Add Spells' eventKey='1'>
@@ -116,7 +155,7 @@ const AddSpells = ({ spells, introData, register, characterLevel }) => {
             </FilterSelector>
             <StyledCollapse eventKey='filter'>
               <FilterButtonGroup
-                spellLevelFilter={levelFilter}
+                activeFilterLevels={activeFilterLevels}
                 levels={spellLevels}
                 click={handleFilterClick}
               />
@@ -126,7 +165,7 @@ const AddSpells = ({ spells, introData, register, characterLevel }) => {
 
         {/* Do i need this defaultActiveKey ? */}
         <SpellsAccordion flush>
-          {spells.map((spell, idx) => (
+          {spellList.map((spell, idx) => (
             <SpellSelector
               key={idx}
               item={spell}

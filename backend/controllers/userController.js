@@ -25,6 +25,7 @@ const authUser = asyncHandler(async (req, res) => {
       username: user.username,
       avatar: user.avatar,
       email: user.email,
+      isAdmin: user.isAdmin,
     });
   } else {
     res.status(401);
@@ -36,7 +37,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { name, username, email, password, isAdmin } = req.body;
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -57,6 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     avatar,
     password,
+    isAdmin,
   });
 
   if (user) {
@@ -68,6 +70,7 @@ const registerUser = asyncHandler(async (req, res) => {
       username: user.username,
       avatar: user.avatar,
       email: user.email,
+      isAdmin: user.isAdmin,
     });
   } else {
     res.status(400);
@@ -111,6 +114,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         avatar: user.avatar,
+        isAdmin: user.isAdmin,
         characters: charactersInProfile || [],
         dungeons: dungeonsInProfile || [],
       });
@@ -121,6 +125,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         avatar: user.avatar,
+        isAdmin: user.isAdmin,
         characters: [],
         dungeons: [],
       });
@@ -131,9 +136,104 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// @route    GET /api/users/profile/:id
-// @desc     get users profile by id
-// @access   Public
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+    user.avatar = req.body.avatar || user.avatar;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      avatar: updatedUser.avatar,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// Update route - update a user by id
+// @route    PUT api/users/:id
+// @desc     update a users username or password
+// @access   Private
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.username = req.body.username || user.username;
+    user.avatar = req.body.avatar || user.avatar;
+    user.email = req.body.email || user.email;
+    user.isAdmin = Boolean(req.body.isAdmin);
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      username: updatedUser.username,
+      avatar: updatedUser.avatar,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// Delete route - delete a user by id
+// @route    DELETE /api/users/:id
+// @desc     Delete user and characters and dungeons
+// @access   Private/Admin
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+
+  const usersCharacters = await Character.find({ userId: id });
+  const usersDungeons = await Dungeon.find({ userId: id });
+
+  if (user) {
+    if (user.isAdmin) {
+      res.status(400);
+      throw new Error('Unable to delete admin user');
+    }
+    await User.deleteOne({ _id: user._id });
+    await Character.deleteMany(usersCharacters);
+    await Dungeon.deleteMany(usersDungeons);
+
+    res.json({
+      message: `The User with id: ${id} has been successfully deleted`,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @route    Get user by ID
+// @desc     GET /api/users/:id
+// @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
   let { id } = req.params;
   const user = await User.findById(id).select('-password');
@@ -155,61 +255,6 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 });
 
-// Update route - update a user by id
-// @route    PUT api/users/:id
-// @desc     update a users username or password
-// @access   Private
-const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.username = req.body.username || user.username;
-    user.avatar = req.body.avatar || user.avatar;
-    user.email = req.body.email || user.email;
-
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      username: updatedUser.username,
-      avatar: updatedUser.avatar,
-      email: updatedUser.email,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
-
-// Delete route - delete a user by id
-// @route    DELETE /api/users/:id
-// @desc     Delete user and characters and dungeons
-// @access   Private
-const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById(id);
-
-  const usersCharacters = await Character.find({ userId: id });
-  const usersDungeons = await Dungeon.find({ userId: id });
-
-  if (user) {
-    await User.deleteOne({ _id: user._id });
-    await Character.deleteMany(usersCharacters);
-    await Dungeon.deleteMany(usersDungeons);
-
-    res.json({ message: `user with id: ${id} has been successfully deleted` });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
-
 module.exports = {
   authUser,
   registerUser,
@@ -218,5 +263,6 @@ module.exports = {
   getUserById,
   getUserProfile,
   updateUser,
+  updateUserProfile,
   deleteUser,
 };

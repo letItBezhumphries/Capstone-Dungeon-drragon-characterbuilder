@@ -31,19 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: (origin, cb) => cb(null, true),
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
     credentials: true,
-    preflightContinue: true,
-    exposedHeaders: [
-      'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Origin',
-      'Origin',
-      'X-Requested-With',
-      'Content-Type',
-      'Accept',
-      'X-Password-Expired',
-    ],
-    optionsSuccessStatus: 200,
   })
 );
 

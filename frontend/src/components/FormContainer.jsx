@@ -1,4 +1,4 @@
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { styled } from 'styled-components';
 
 const FormStepperInner = styled(Container)`
@@ -25,15 +25,20 @@ const ModalContainer = styled(Container)`
   margin: 0px 0px;
 `;
 
-const FormSectionContainer = styled(Container)`
-  width: 100%;
-  padding: 0px 0px;
-  margin: 0px 0px;
-  border-bottom: 1px solid #d8dde3;
-`;
-
 const FormContainer = ({ children, ...rest }) => {
   return <ModalContainer>{children}</ModalContainer>;
+};
+
+export const BaseFormContainer = ({ children }) => {
+  return (
+    <Container>
+      <Row className='justify-content-md-center'>
+        <Col xs={12} md={6}>
+          {children}
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 export const FormContainerInner = ({ children, ...rest }) => {

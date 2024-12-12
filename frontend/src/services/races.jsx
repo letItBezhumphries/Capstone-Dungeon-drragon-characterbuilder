@@ -12,6 +12,21 @@ export const open5eRaceApi = createApi({
   }),
 });
 
+// https://www.dnd5eapi.co/api/races/dragonborn
+
+export const dnd5eRaceApi = createApi({
+  reducerPath: 'dnd5eRaceApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://www.dnd5eapi.co/api/' }),
+  endpoints: (builder) => ({
+    getdnd5eRaceData: builder.query({
+      query: (race) => `races/${race}`,
+    }),
+    keepUnusedDataFor: 5,
+  }),
+});
+
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const { useGetDataForRaceQuery } = open5eRaceApi;
+
+export const { useGetdnd5eRaceDataQuery } = dnd5eRaceApi;

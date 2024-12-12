@@ -3,18 +3,18 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './CharacterName.css';
 
-const CharacterName = ({ register, avatar, ...rest }) => {
+const CharacterName = ({ register, avatar }) => {
   const location = useLocation();
-  const [hasAvatar, setHasAvatar] = useState(false);
+  const [hasAvatar, setHasAvatar] = useState(true);
   const [name, setName] = useState('');
-  const characterName = useSelector((state) => state.form.formData.name);
+  const character = useSelector((state) => state.character);
 
   useEffect(() => {
-    // console.log('location:', location);
-    if (location.pathname !== '/character') {
-      setName(characterName);
+    if (location.pathname !== '/character' && character.name !== '') {
+      console.log('in character name useEffect -> :', character.name);
+      setName(character.name);
     }
-  }, [location]);
+  }, [location, character]);
 
   const handleInputChange = (e) => {
     setName(e.target.value);
@@ -30,7 +30,9 @@ const CharacterName = ({ register, avatar, ...rest }) => {
             </i>
           </div>
         ) : (
-          <img className='avatar' src='' alt='' />
+          <div className='avatar-placeholder'>
+            <span>+</span>
+          </div>
         )}
       </div>
       <div className='input-container'>
@@ -46,8 +48,8 @@ const CharacterName = ({ register, avatar, ...rest }) => {
             onChange={handleInputChange}
             value={name || ''}
             placeholder={
-              characterName !== undefined
-                ? `${characterName}`
+              character.name !== undefined
+                ? `${character.name}`
                 : 'Name your Adventurerer!'
             }
           />

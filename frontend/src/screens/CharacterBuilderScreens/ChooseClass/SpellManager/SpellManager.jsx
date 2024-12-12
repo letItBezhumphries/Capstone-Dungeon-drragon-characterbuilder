@@ -18,17 +18,14 @@ const SpellListAccordion = styled(Accordion)`
 `;
 
 const SpellsManager = ({ introData, register, spells, characterLevel }) => {
-  const knownSpells = useSelector((state) => state.character.spell_casting);
-  console.log(
-    'in SpellsManager -> introData:',
-    introData,
-    'spells:',
-    spells,
-    'knownSpells:',
-    knownSpells,
-    'characterLevel:',
-    characterLevel
-  );
+  const spellInventory = useSelector((state) => state.character.spell_casting);
+
+  // console.log(
+  //   'in SpellsManager -> spellInventory:',
+  //   spellInventory,
+  //   'characterLevel:',
+  //   characterLevel
+  // );
 
   let preparedSpellsList = ['Cleric', 'Paladin', 'Druid', 'Wizard'];
 
@@ -48,6 +45,12 @@ const SpellsManager = ({ introData, register, spells, characterLevel }) => {
           characterLevel={characterLevel}
         />
       </SpellListAccordion>
+      <input
+        value={JSON.stringify(spellInventory)}
+        name='spellcasting'
+        {...register('spellcasting')}
+        style={{ display: 'none' }}
+      ></input>
     </Container>
   );
 };

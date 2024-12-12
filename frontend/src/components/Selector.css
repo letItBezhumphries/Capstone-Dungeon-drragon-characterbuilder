@@ -76,3 +76,7 @@
 .card-body p {
   margin: 0 0;
 }
+
+.card-body select {
+  margin-bottom: 10px;
+}

@@ -13,5 +13,7 @@
 }
 
 .filtering-container {
-  width: 100%;
+  margin: 0 auto;
+  width: 85%;
+  background-color: plum;
 }

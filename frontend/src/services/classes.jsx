@@ -18,11 +18,14 @@ export const open5eClassApi = createApi({
 
 //'https://www.dnd5eapi.co/api/classes/bard/levels/1' \
 
-export const open5eSRDClassApi = createApi({
-  reducerPath: 'open5eSRDClassApi',
+export const dnd5eClassApi = createApi({
+  reducerPath: 'dnd5eClassApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://www.dnd5eapi.co/api/' }),
   endpoints: (builder) => ({
-    getClassResourcesForLevel: builder.query({
+    getdnd5eClassData: builder.query({
+      query: (classType) => `classes/${classType}`,
+    }),
+    getdnd5eClassResourcesForLevel: builder.query({
       query: (classType, level) => `classes/${classType}/levels/${level}`,
     }),
     keepUnusedDataFor: 5,
@@ -31,10 +34,11 @@ export const open5eSRDClassApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {
-  useGetClassDataQuery,
-  useGetA5ESpellsForClassQuery,
-  useGetSpellsForClassQuery,
-} = open5eClassApi;
+export const { useGetClassDataQuery, useGetSpellsForClassQuery } =
+  open5eClassApi;
 
+export const {
+  useGetdnd5eClassDataQuery,
+  useGetdnd5eClassResourcesForLevelQuery,
+} = dnd5eClassApi;
 // spells/?search=${classType}?limit=1000&spell_level=${level}

@@ -1,10 +1,9 @@
+import { apiSlice } from './apiSlice';
 import { USERS_URL } from '../constants/constants';
-import { backendApi } from './backendApiSlice';
 
-export const usersApiSlice = backendApi.injectEndpoints({
+export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
-      // data is the email and password
       query: (data) => ({
         url: `${USERS_URL}/auth`,
         method: 'POST',
@@ -22,6 +21,13 @@ export const usersApiSlice = backendApi.injectEndpoints({
       query: () => ({
         url: `${USERS_URL}/logout`,
         method: 'POST',
+      }),
+    }),
+    profile: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/profile`,
+        method: 'PUT',
+        body: data,
       }),
     }),
     getUsers: builder.query({
@@ -52,9 +58,11 @@ export const usersApiSlice = backendApi.injectEndpoints({
       invalidatesTags: ['User'],
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {
+  useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
   useProfileMutation,
@@ -62,5 +70,4 @@ export const {
   useDeleteUserMutation,
   useUpdateUserMutation,
   useGetUserDetailsQuery,
-  useLoginMutation,
-} = usersApiSlice;
+} = userApiSlice;

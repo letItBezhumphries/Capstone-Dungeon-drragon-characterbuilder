@@ -1,13 +1,10 @@
 import { styled } from 'styled-components';
 import React, { useEffect } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useRef } from 'react';
-// import { autoAbilityRollsUpdated } from '../../../slices/characterBuilderSlice';
 import { characterAbilities } from '../../../data/selectors';
 import SelectAbilityScore from './SelectAbilityScore';
 import AbilityScoreCalculations from './AbilityScoreCalculations';
-
-// import './AbilitiesForm.css';
 
 const AbilitiesContainer = styled.div`
   display: flex;
@@ -39,7 +36,6 @@ const RollManagerContainer = styled.div`
 `;
 
 const AbilityScoresBoard = styled.div`
-  background-color: yellow;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -61,37 +57,6 @@ const ManagerOption = styled.option``;
 
 const AbilitiesForm = ({ register }) => {
   const managerRef = useRef();
-  // const dispatch = useDispatch();
-
-  // const remainingAbilityRolls = useSelector(
-  //   (state) => state.character.ability_autorolls_available
-  // );
-
-  // const [rollOptions, setRollOptions] = useState(remainingAbilityRolls);
-  // const [strength, setStrength] = useState(0);
-  // const [constitution, setConstitution] = useState(0);
-  // const [intelligence, setIntelligence] = useState(0);
-  // const [wisdom, setWisdom] = useState(0);
-  // const [dexterity, setDexterity] = useState(0);
-  // const [charisma, setCharisma] = useState(0);
-
-  // const values = [
-  //   strength,
-  //   constitution,
-  //   intelligence,
-  //   wisdom,
-  //   dexterity,
-  //   charisma,
-  // ];
-
-  // const setters = [
-  //   setStrength,
-  //   setConstitution,
-  //   setIntelligence,
-  //   setWisdom,
-  //   setDexterity,
-  //   setCharisma,
-  // ];
 
   const [abilityRollType, setAbilityRollType] = useState('standard');
 
@@ -99,48 +64,6 @@ const AbilitiesForm = ({ register }) => {
     console.log('the type of roll selected is :', e.target.value);
     setAbilityRollType(e.target.value);
   };
-
-  // const handleAbilityScoreAdded = (e, index) => {
-  //   console.log(
-  //     'handleAbilityScoreAdded - target:',
-  //     typeof parseInt(e.target.value),
-  //     'index:',
-  //     index
-  //   );
-  //   setters[index](parseInt(e.target.value));
-
-  //   dispatch(
-  //     autoAbilityRollsUpdated(
-  //       parseInt({ ability: values[index], roll: parseInt(e.target.value) })
-  //     )
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   if (strength > 0) {
-  //     setRollOptions();
-  //   }
-
-  //   console.log(
-  //     'in AbilitiesForm.jsx -> remainingAbilityRolls:',
-  //     remainingAbilityRolls,
-  //     'strength:',
-  //     strength,
-  //     'intelligence:',
-  //     intelligence,
-  //     'constitution:',
-  //     constitution,
-  //     'wisdom:',
-  //     wisdom,
-  //     'charisma:',
-  //     charisma,
-  //     'dexterity:',
-  //     dexterity
-  //   );
-  //   setRollOptions(remainingAbilityRolls);
-  // }, [remainingAbilityRolls, strength]);
-
-  console.log('abilityRollType:', abilityRollType);
 
   return (
     <AbilitiesContainer>

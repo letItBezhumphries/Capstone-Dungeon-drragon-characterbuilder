@@ -6,7 +6,7 @@ import {
 } from '../slices/characterBuilderSlice';
 
 export const SelectRaceTrait = ({ item, selection, register, onFormReady }) => {
-  // console.log('in SelectRaceTrait - selection:', selection, 'item:', item);
+  console.log('in SelectRaceTrait - selection:', selection, 'item:', item);
   const defaultOption =
     item.name === undefined
       ? '- Choose an Option -'
@@ -77,13 +77,14 @@ export const SelectRaceTraitOption = ({
 
   const handleSelection = (e) => {
     const capturedValue = e.target.value;
-    // console.log('in handleSelect of SelectRaceTraitOption.jsx:', capturedValue);
+    console.log('in handleSelect of SelectRaceTraitOption.jsx:', capturedValue);
     setSelectionValue(capturedValue);
     setHasSelection((prevState) => !prevState);
     dispatch(
       racebasedSkillsUpdated({
         skill: capturedValue,
         total_choices: item.total_choices,
+        index: selectIdx,
       })
     );
   };
@@ -161,22 +162,31 @@ export const SelectAbilityScoreOption = ({
       racebasedAbilityBonusUpdated({
         ability: capturedValue,
         total_choices: item.total_choices,
+        index: selectIdx,
       })
     );
   };
 
   useEffect(() => {
-    console.log(
-      `in ${selectName} - useEffect redux state -> selectedChoices:`,
-      selectedChoices,
-      'optionsAvailable:',
-      optionsAvailable,
-      'hasSelection:',
-      hasSelection,
-      'selectionValue:',
-      selectionValue
-    );
-    if (!hasSelection && selectedChoices.length > 1) {
+    // console.log(
+    //   `in ${selectName} - useEffect redux state -> selectedChoices:`,
+    //   selectedChoices,
+    //   'optionsAvailable:',
+    //   optionsAvailable,
+    //   'hasSelection:',
+    //   hasSelection,
+    //   'selectionValue:',
+    //   selectionValue
+    // );
+    if (!hasSelection && selectedChoices.length > 0) {
+      // console.log(
+      //   `in ${selectName} - useEffect redux state NEED TO RESET OPTIONS-> selectedChoices:`,
+      //   selectedChoices,
+      //   'optionsAvailable:',
+      //   optionsAvailable,
+      //   'hasSelection:',
+      //   hasSelection
+      // );
       setCurrentOptions(optionsAvailable);
     }
   }, [hasSelection, selectedChoices]);

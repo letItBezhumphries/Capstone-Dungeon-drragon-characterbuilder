@@ -13,6 +13,11 @@ const ScoreSelect = styled.select`
   width: 100%;
 `;
 
+const RollOption = styled.option`
+  font-size: 15px;
+  color: rgb(0, 0, 0);
+`;
+
 const ScoreBox = styled.div`
   width: 16%;
   display: flex;
@@ -20,12 +25,15 @@ const ScoreBox = styled.div`
   align-items: center;
 `;
 
-const LabelBox = styled.div``;
+const LabelBox = styled.span`
+  text-align: center;
+`;
 
 const Label = styled.label`
-  font-family: 'Roboto Condensed' 'sans-serif';
+  font-family: 'Roboto Condensed';
   font-size: 1rem;
   font-weight: 700;
+  line-height: normal;
   margin: 10px 0;
 `;
 
@@ -43,74 +51,40 @@ const ScoreTotal = styled.div`
   text-transform: uppercase;
 `;
 
-const ScoreOption = styled.option``;
-
-const SelectAbilityScore = ({ register, ability, index }) => {
+const SelectAbilityScore = ({ register, ability }) => {
   const dispatch = useDispatch();
-
-  const remainingAbilityRolls = useSelector(
-    (state) => state.character.ability_autorolls_available
-  );
+  const formData = useSelector((state) => state.form);
+  const abilityRolls = [8, 10, 12, 13, 14, 15];
 
   const abilityRollsSelected = useSelector(
     (state) => state.character.ability_autorolls_selected
   );
-
   const abilityScores = useSelector((state) => state.character.ability_scores);
-
+  let key = ability.toLowerCase();
+  const currentAbility = abilityScores[key];
   const [value, setValue] = useState('');
-  const [hasMadeSelection, setHasMadeSelection] = useState(false);
-  const [abilityRollsAvailable, setAbilityRollsAvailable] = useState(
-    remainingAbilityRolls
-  );
+
+  useEffect(() => {
+    if (currentAbility.base_score > 0) {
+      setValue(currentAbility.base_score);
+    }
+  }, [currentAbility.base_score]);
 
   const handleAbilityScoreAdded = (e) => {
     let capturedValue = parseInt(e.target.value);
     setValue(capturedValue);
     dispatch(
-      autoAbilityRollsUpdated({ ability: ability, roll: capturedValue })
+      autoAbilityRollsUpdated({
+        ability: ability.toLowerCase(),
+        roll: capturedValue,
+      })
     );
-    setHasMadeSelection((prevState) => !prevState);
   };
-
-  console.log(
-    'in SelectAbilityScore.jsx -> ability:',
-    ability,
-    '\nremainingAbilityRolls:',
-    remainingAbilityRolls,
-    '\nabilityRollsSelected:',
-    abilityRollsSelected,
-    '\nabilityScores:',
-    abilityScores
-  );
-
-  useEffect(() => {
-    console.log(
-      'useEffect -> remainingAbilityRolls:',
-      remainingAbilityRolls,
-      '\nability:',
-      ability,
-      '\nremainingAbilityRolls:',
-      remainingAbilityRolls,
-      '\nabilityRollsSelected:',
-      abilityRollsSelected,
-      '\nabilityScores:',
-      abilityScores
-    );
-
-    if (!hasMadeSelection && abilityRollsSelected.length > 0) {
-      console.log(
-        `the ability ${ability} - in state abilityScores:`,
-        abilityScores
-      );
-      setAbilityRollsAvailable(remainingAbilityRolls);
-    }
-  }, [remainingAbilityRolls, abilityRollsSelected, abilityScores]);
 
   return (
     <ScoreBox>
       <LabelBox>
-        <Label>{ability}</Label>
+        <Label>{ability.toUpperCase()}</Label>
       </LabelBox>
       <AbilityScore>
         <ScoreSelect
@@ -122,17 +96,32 @@ const SelectAbilityScore = ({ register, ability, index }) => {
           // onChange={handleAbilityScoreAdded}
           {...register(ability)}
         >
-          <option value='--'>--</option>
-          {abilityRollsAvailable.map((ab, idx) => (
-            <option key={idx} value={ab}>
+          <RollOption value={0} disabled={false}>
+            --
+          </RollOption>
+          {abilityRolls.map((ab, idx) => (
+            <RollOption
+              key={idx}
+              value={ab}
+              disabled={abilityRollsSelected.indexOf(ab) === -1 ? false : true}
+              style={
+                abilityRollsSelected.indexOf(ab) !== -1
+                  ? {
+                      display: 'none',
+                    }
+                  : {
+                      display: 'block',
+                    }
+              }
+            >
               {ab}
-            </option>
+            </RollOption>
           ))}
         </ScoreSelect>
       </AbilityScore>
       <ScoreTotal>
         Total:
-        {value}
+        {value + currentAbility.bonus}
       </ScoreTotal>
     </ScoreBox>
   );

@@ -4,6 +4,7 @@ import {
   skillsUpdated,
   toolsUpdated,
   selectClassFeature,
+  selectClassFeatureOptions,
   asiUpdated,
   expertiseSkillsUpdated,
 } from '../slices/characterBuilderSlice';
@@ -149,7 +150,7 @@ export const SelectToolProficiency = ({
     // );
   }, [hasSelection, selectedChoices]);
 
-  console.log('in SelectToolProficiency:', currentOptions);
+  // console.log('in SelectToolProficiency:', currentOptions);
 
   return (
     <select
@@ -180,10 +181,16 @@ export const SelectClassFeatureOptions = ({
   onSelect,
 }) => {
   const dispatch = useDispatch();
+  const character = useSelector((state) => state.character);
+  let selected;
 
-  console.log('in SelectClassFeatureOptions - item:', item);
+  if (item.name === 'Favored Enemy') {
+    selected = character.favored_enemy_selected;
+  } else {
+    selected = character.natural_explorer_selected;
+  }
 
-  const [currentOptions, setCurrentOptions] = useState();
+  const [currentOptions, setCurrentOptions] = useState(item.choices);
   const [selectionValue, setSelectionValue] = useState('');
   const [hasSelection, setHasSelection] = useState(false);
 
@@ -209,27 +216,15 @@ export const SelectClassFeatureOptions = ({
     setSelectionValue(capturedValue);
     setHasSelection((prevState) => !prevState);
     onSelect(capturedValue);
-    // dispatch(
-
-    // );
+    dispatch(
+      selectClassFeatureOptions({
+        featureName: item.name,
+        selection: capturedValue,
+      })
+    );
   };
 
-  // useEffect(() => {
-  //   if (!hasSelection && selectedChoices.length > 0) {
-  //     setCurrentOptions(toolsAvailable);
-  //   }
-
-  //   console.log(
-  //     `in ${selectName} - useEffect redux state -> selectedChoices:`,
-  //     selectedChoices,
-  //     'toolsAvailable:',
-  //     toolsAvailable,
-  //     'hasSelection:',
-  //     hasSelection,
-  //     'selectionValue:',
-  //     selectionValue
-  //   );
-  // }, [hasSelection, selectedChoices]);
+  console.log('selected:', selected);
 
   return (
     <select
@@ -241,14 +236,25 @@ export const SelectClassFeatureOptions = ({
       {...register(selectName)}
     >
       <option>{defaultOption}</option>
-      <option>another option</option>
-      {/* {currentOptions.map((opt, idx) => {
+
+      {currentOptions.map((opt, idx) => {
         return (
-          <option key={idx} index={idx} value={opt}>
+          <option
+            key={idx}
+            index={idx}
+            value={opt}
+            style={
+              selected.indexOf(opt) !== -1
+                ? {
+                    display: 'none',
+                  }
+                : { display: 'block' }
+            }
+          >
             {opt}
           </option>
         );
-      })} */}
+      })}
     </select>
   );
 };
@@ -287,12 +293,12 @@ export const SelectClassFeature = ({ register, item, selection }) => {
     );
   };
 
-  console.log(
-    'in SelectClassFeature - item:',
-    item,
-    'currentOptions:',
-    currentOptions
-  );
+  // console.log(
+  //   'in SelectClassFeature - item:',
+  //   item,
+  //   'currentOptions:',
+  //   currentOptions
+  // );
 
   return (
     <select

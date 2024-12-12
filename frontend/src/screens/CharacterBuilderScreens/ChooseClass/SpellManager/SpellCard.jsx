@@ -1,6 +1,7 @@
+import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { Button, RemoveButton } from './SpellSelector';
+import { Button, RemoveButton, DisabledButton } from './SpellSelector';
 import {
   SpellAddedToast,
   SpellRemovedToast,
@@ -75,6 +76,7 @@ const SpellCard = ({
   removeClick,
   hasBeenSelected,
   handleSelection,
+  isDisabled,
 }) => {
   const onLearnBtnClick = () => {
     learnClick(spell);
@@ -143,6 +145,8 @@ const SpellCard = ({
             <i className='fa-solid fa-x'></i>
             Remove
           </RemoveButton>
+        ) : isDisabled ? (
+          <DisabledButton>LEARN</DisabledButton>
         ) : (
           <Button onClick={onLearnBtnClick}>LEARN</Button>
         )}

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGetSpellsForClassQuery } from '../../../services/classes';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Col, Row, Container } from 'react-bootstrap';
-import { setSpellsAvailableForClass } from '../../../slices/characterBuilderSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import CollapsibleMenu from '../../../components/CollapsibleMenu';
 import HitpointsManager from '../../../components/HitpointsManager';
@@ -12,7 +10,6 @@ import { styled } from 'styled-components';
 import Loader from '../../../components/Loader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { useNavigation } from 'react-router-dom';
 
 const ClassSectionContainer = styled('div')`
   width: 100%;
@@ -97,14 +94,14 @@ const ClassOverview = ({ isRace, isModal, selection, register }) => {
   };
 
   useEffect(() => {
-    console.log(
-      `ClassOverview - useEffect #1 - is in Modal:${isModal} - introData:`,
-      introData,
-      `\ncurrentLevel:`,
-      currentLevel,
-      '\ndata:',
-      data
-    );
+    // console.log(
+    //   `ClassOverview - useEffect #1 - is in Modal:${isModal} - introData:`,
+    //   introData,
+    //   `\ncurrentLevel:`,
+    //   currentLevel,
+    //   '\ndata:',
+    //   data
+    // );
 
     let filteredFeatures = introData.features.filter(
       (feat) => feat.level <= currentLevel
@@ -115,6 +112,8 @@ const ClassOverview = ({ isRace, isModal, selection, register }) => {
       let availableSpells = data.results.filter(
         (spell) => spell.spell_level <= currentLevel
       );
+
+      // dispatch(addAvailableSpells({ spells: availableSpells }));
 
       // populate the features with spell choices
       const featuresWithPopulatedSpells = filteredFeatures.map((feat) => {

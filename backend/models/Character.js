@@ -6,13 +6,18 @@ const CharacterSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    img: {
+      type: String,
+    },
+    class_img_src: {
+      type: String,
+    },
     name: {
       type: String,
       required: true,
     },
     class_type: {
       type: String,
-      required: true,
     },
     level: {
       type: Number,
@@ -21,7 +26,6 @@ const CharacterSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      required: true,
     },
     age: {
       type: Number,
@@ -29,16 +33,14 @@ const CharacterSchema = new mongoose.Schema(
     age_desc: {
       type: String,
     },
-    img: {
-      type: String,
-    },
     race: {
       type: String,
-      // required: true,
+    },
+    race_img_src: {
+      type: String,
     },
     alignment_desc: {
       type: String,
-      // required: true,
     },
     alignment: {
       type: String,
@@ -50,27 +52,21 @@ const CharacterSchema = new mongoose.Schema(
     },
     strength: {
       type: Number,
-      // required: true,
     },
     dexterity: {
       type: Number,
-      // required: true,
     },
     constitution: {
       type: Number,
-      // required: true,
     },
     intelligence: {
       type: Number,
-      // required: true,
     },
     wisdom: {
       type: Number,
-      // required: true,
     },
     charisma: {
       type: Number,
-      // required: true,
     },
     size: {
       type: String,
@@ -107,17 +103,6 @@ const CharacterSchema = new mongoose.Schema(
         },
         desc: {
           type: String,
-        },
-        ability_score: {
-          index: {
-            type: String,
-          },
-          name: {
-            type: String,
-          },
-          url: {
-            type: String,
-          },
         },
       },
     ],
@@ -281,27 +266,12 @@ const CharacterSchema = new mongoose.Schema(
         type: Number,
       },
     },
-    // armor_class: {
-    //   type: Number,
-    //   required: true,
-    // },
     speed: {
       walk: {
         type: Number,
       },
     },
-    hit_points: {
-      max: {
-        type: Number,
-      },
-      current: {
-        type: Number,
-      },
-    },
     hit_die: {
-      type: Number,
-    },
-    constitution_modifier: {
       type: Number,
     },
     hit_points: {
@@ -331,68 +301,57 @@ const CharacterSchema = new mongoose.Schema(
         },
       },
     ],
-    spells: [
-      {
-        index: {
-          type: String,
-        },
-        name: {
-          type: String,
-        },
-        url: {
-          type: String,
-        },
-        level: {
-          type: Number,
-        },
-      },
-    ],
-    cantrips_known: {
-      type: Number,
-    },
-    spell_slots_level_1: {
-      type: Number,
-    },
-    spell_slots_level_2: {
-      type: Number,
-    },
-    spell_slots_level_3: {
-      type: Number,
-    },
-    spell_slots_level_4: {
-      type: Number,
-    },
-    spell_slots_level_5: {
-      type: Number,
-    },
-    spell_slots_level_6: {
-      type: Number,
-    },
-    spell_slots_level_7: {
-      type: Number,
-    },
-    spell_slots_level_8: {
-      type: Number,
-    },
-    spell_slots_level_9: {
-      type: Number,
-    },
     spellcasting: {
-      level: {
+      sorcery_points: {
         type: Number,
       },
+      cantrips: [],
+      invocations: [],
+      level_1_spells: [],
+      level_2_spells: [],
+      level_3_spells: [],
+      level_4_spells: [],
+      level_5_spells: [],
+      level_6_spells: [],
+      level_7_spells: [],
+      level_8_spells: [],
+      level_9_spells: [],
       spellcasting_ability: {
-        index: {
-          type: String,
-        },
-        name: {
-          type: String,
-        },
-        url: {
-          type: String,
-        },
+        type: String,
       },
-      info: [],
+      cantrips_known: {
+        type: Number,
+      },
+      invocations_known: {
+        type: Number,
+      },
+      spell_slots_level_1: {
+        type: Number,
+      },
+      spell_slots_level_2: {
+        type: Number,
+      },
+      spell_slots_level_3: {
+        type: Number,
+      },
+      spell_slots_level_4: {
+        type: Number,
+      },
+      spell_slots_level_5: {
+        type: Number,
+      },
+      spell_slots_level_6: {
+        type: Number,
+      },
+      spell_slots_level_7: {
+        type: Number,
+      },
+      spell_slots_level_8: {
+        type: Number,
+      },
+      spell_slots_level_9: {
+        type: Number,
+      },
     },
   },
   {

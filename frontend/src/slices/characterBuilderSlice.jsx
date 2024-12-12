@@ -4,31 +4,67 @@ const initialState = {
   _id: '',
   userId: '',
   name: '',
-  index: '',
+  class_index: '',
   traits: [],
   class_type: '',
   race: '',
-  size: {
-    desc: '',
-    size_type: '',
-  },
-  age: {
-    desc: '',
-    years: '',
-  },
+  race_index: '',
+  size: {},
+  age: {},
   race_desc: '',
-  speed: { desc: '' },
-  languages: {
-    desc: '',
-    known: [],
-  },
+  speed: {},
+  languages: {},
+  vision: '',
+  asi: [],
   ability_scores: {
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    intelligence: 0,
-    wisdom: 0,
-    charisma: 0,
+    strength: {
+      bonus: 0,
+      base_score: 0,
+      modifier: 0,
+      total_score: 0,
+      set_score: 0,
+      stacking_bonus: 0,
+    },
+    dexterity: {
+      bonus: 0,
+      base_score: 0,
+      modifier: 0,
+      total_score: 0,
+      set_score: 0,
+      stacking_bonus: 0,
+    },
+    constitution: {
+      bonus: 0,
+      base_score: 0,
+      modifier: 0,
+      total_score: 0,
+      set_score: 0,
+      stacking_bonus: 0,
+    },
+    intelligence: {
+      bonus: 0,
+      base_score: 0,
+      modifier: 0,
+      total_score: 0,
+      set_score: 0,
+      stacking_bonus: 0,
+    },
+    wisdom: {
+      bonus: 0,
+      base_score: 0,
+      modifier: 0,
+      total_score: 0,
+      set_score: 0,
+      stacking_bonus: 0,
+    },
+    charisma: {
+      bonus: 0,
+      base_score: 0,
+      modifier: 0,
+      total_score: 0,
+      set_score: 0,
+      stacking_bonus: 0,
+    },
   },
   spell_casting: {
     cantrips: [],
@@ -42,9 +78,27 @@ const initialState = {
     level_7_spells: [],
     level_8_spells: [],
     level_9_spells: [],
+    spell_slots_level_1: 0,
+    spell_slots_level_2: 0,
+    spell_slots_level_3: 0,
+    spell_slots_level_4: 0,
+    spell_slots_level_5: 0,
+    spell_slots_level_6: 0,
+    spell_slots_level_7: 0,
+    spell_slots_level_8: 0,
+    spell_slots_level_9: 0,
+    cantrips_known: 0,
+    invocations_known: 0,
   },
   class_features: [],
-  proficiencies: {},
+  proficiencies: {
+    skills: {
+      selected: [],
+    },
+    tools: {
+      selected: [],
+    },
+  },
   proficiency_bonus: 2,
   equipment: {},
   class_specific: {},
@@ -64,13 +118,19 @@ const initialState = {
     'Charisma',
   ],
   current_feature_options_available: [],
+  favored_enemy_selected: [],
+  natural_explorer_selected: [],
   current_feature_options_selected: [],
   hit_points: {},
   level: 1,
   ability_score_bonuses: [],
+  race_skill_selection_0: '',
+  race_skill_selection_1: '',
   race_skills_selected: [],
   race_skillOptions_available: [],
   ability_bonus_selected: [],
+  ability_bonus_selection_0: '',
+  ability_bonus_selection_1: '',
   ability_bonusOptions_available: [],
   selected_race: {},
   selected_class: {},
@@ -86,8 +146,9 @@ const characterBuilderSlice = createSlice({
   initialState: initialState,
   reducers: {
     characterAddedToBuilder: (state, action) => {
-      const { _id } = action.payload;
+      const { _id, userId } = action.payload;
       state._id = _id;
+      state.userId = userId;
     },
     nameAdded: (state, action) => {
       const { name } = action.payload;
@@ -115,10 +176,10 @@ const characterBuilderSlice = createSlice({
         vision,
       } = action.payload;
 
-      state.index = index;
+      state.race_index = index;
       state.race_desc = desc;
       state.race = name;
-      state.traits = [...state.traits, traits];
+      state.traits = [...state.traits, ...traits];
       state.speed = {
         desc: speed_desc,
         ...speed,
@@ -129,34 +190,62 @@ const characterBuilderSlice = createSlice({
         ...state.age,
       };
       state.languages = {
-        desc: languages,
+        desc: languages.desc,
+        known_languages: languages.known_languages,
         ...state.languages,
       };
       state.size = {
-        size_type: size,
-        desc: size_raw,
+        size_type: size_raw,
+        desc: size,
         ...state.size,
       };
+
+      let skillVersatilityTrait = traits.find((tr) => {
+        if (tr.name === 'Skill Versatility') {
+          return tr;
+        }
+      });
+
+      if (skillVersatilityTrait) {
+        state.race_skillOptions_available = [
+          ...state.race_skillOptions_available,
+          ...skillVersatilityTrait.choices,
+        ];
+      }
+
+      if (name === 'Half-Elf') {
+        state.ability_bonusOptions_available = [
+          ...state.ability_bonusOptions_available,
+          'Strength',
+          'Constitution',
+          'Intelligence',
+          'Wisdom',
+          'Dexterity',
+        ];
+      }
+      state.asi = [...state.asi, ...asi];
 
       asi.forEach((ability) => {
         let updateAbilityKey = ability.attributes[0].toLowerCase();
         let value = ability.value;
 
-        state.ability_scores[updateAbilityKey] =
-          state.ability_scores[updateAbilityKey] + value;
+        if (updateAbilityKey !== 'other') {
+          state.ability_scores[updateAbilityKey].bonus =
+            state.ability_scores[updateAbilityKey].bonus + value;
+        }
       });
 
       if (name === 'Elf') {
-        state.proficiencies.skills = {
-          ...state.proficiencies.skills,
-          selected: ['Perception'],
-        };
+        state.proficiencies.skills.selected = [
+          ...state.proficiencies.skills.selected,
+          'Perception',
+        ];
       }
       if (name === 'Half-Orc') {
-        state.proficiencies.skills = {
-          ...state.proficiencies.skills,
-          selected: ['Intimidation'],
-        };
+        state.proficiencies.skills.selected = [
+          ...state.proficiencies.skills.selected,
+          'Intimidation',
+        ];
       }
       if (name === 'Tiefling') {
         state.spell_casting.cantrips_total =
@@ -165,16 +254,6 @@ const characterBuilderSlice = createSlice({
           ...state.spell_casting.cantrips,
           'Thaumaturgy',
         ];
-      }
-      if (name === 'Human') {
-        state.ability_scores.strength = state.ability_scores.strength + 1;
-        state.ability_scores.constitution =
-          state.ability_scores.constitution + 1;
-        state.ability_scores.intelligence =
-          state.ability_scores.intelligence + 1;
-        state.ability_scores.wisdom = state.ability_scores.wisdom + 1;
-        state.ability_scores.dexterity = state.ability_scores.dexterity + 1;
-        state.ability_scores.charisma = state.ability_scores.charisma + 1;
       }
     },
     classAdded: (state, action) => {
@@ -193,10 +272,11 @@ const characterBuilderSlice = createSlice({
         primary_desc,
         proficiencies,
         table,
+        spells,
       } = action.payload;
 
       state.class_type = name;
-      state.index = index;
+      state.class_index = index;
       state.class_specific.primary_ability = primary_ability;
       state.class_specific.primary_desc = primary_desc;
       state.class_specific.desc = desc;
@@ -229,8 +309,20 @@ const characterBuilderSlice = createSlice({
 
       state.spell_casting = {
         ...state.spell_casting,
+        cantrips_known: spellcasting.cantrips_known,
+        spell_slots_level_1: spellcasting.spell_slots_level_1,
+        spell_slots_level_2: spellcasting.spell_slots_level_2,
         ...spellcasting,
       };
+
+      if (spells !== undefined) {
+        if (spells.length > 0) {
+          state.spells_available_to_class = [
+            ...state.spells_available_to_class,
+            ...spells,
+          ];
+        }
+      }
 
       if (name === 'Bard' || name === 'Rogue') {
         let expertiseFeature = features.find((feat) => {
@@ -315,7 +407,7 @@ const characterBuilderSlice = createSlice({
       }
     },
     racebasedAbilityBonusUpdated: (state, action) => {
-      const { ability, total_choices } = action.payload;
+      const { ability, total_choices, index } = action.payload;
 
       if (state.ability_bonus_selected.length < total_choices + 1) {
         state.ability_bonusOptions_available =
@@ -330,6 +422,41 @@ const characterBuilderSlice = createSlice({
           ...state.ability_bonus_selected,
           { name: ability, value: 1 },
         ];
+      }
+
+      // to properly update the corresponding ability_bonus_selection_{index} is undefined or not
+      if (index === 0) {
+        if (state.ability_bonus_selection_0 !== '') {
+          // update the ability
+          let key = state.ability_bonus_selection_0;
+          state.ability_scores[key].bonus = state.ability_scores[key].bonus - 1;
+
+          let newKey = ability.toLowerCase();
+          state.ability_bonus_selection_0 = newKey;
+
+          state.ability_scores[newKey].bonus =
+            state.ability_scores[newKey].bonus + 1;
+        } else {
+          // set ability_bonus_selection_0
+          let key = ability.toLowerCase();
+          state.ability_bonus_selection_0 = key;
+          state.ability_scores[key].bonus = state.ability_scores[key].bonus + 1;
+        }
+      } else {
+        if (state.ability_bonus_selection_1 !== '') {
+          let key = state.ability_bonus_selection_1;
+          state.ability_scores[key].bonus = state.ability_scores[key].bonus - 1;
+
+          let newKey = ability.toLowerCase();
+          state.ability_bonus_selection_1 = newKey;
+
+          state.ability_scores[newKey].bonus =
+            state.ability_scores[newKey].bonus + 1;
+        } else {
+          let key = ability.toLowerCase();
+          state.ability_bonus_selection_1 = key;
+          state.ability_scores[key].bonus = state.ability_scores[key].bonus + 1;
+        }
       }
     },
     asiUpdated: (state, action) => {
@@ -353,16 +480,58 @@ const characterBuilderSlice = createSlice({
     },
     autoAbilityRollsUpdated: (state, action) => {
       const { ability, roll } = action.payload;
+      // first check if the current ability has a roll already selected
+      let prevSelection = state.ability_scores[ability].base_score;
 
-      state.ability_scores[ability] = state.ability_scores[ability] + roll;
+      if (prevSelection > 0 && roll === 0) {
+        state.ability_scores[ability].base_score =
+          state.ability_scores[ability].base_score - prevSelection + roll;
 
-      state.ability_autorolls_available =
-        state.ability_autorolls_available.filter((r) => r !== roll);
+        state.ability_scores[ability].total_score =
+          state.ability_scores[ability].total_score - prevSelection + roll;
 
-      state.ability_autorolls_selected = [
-        ...state.ability_autorolls_selected,
-        roll,
-      ];
+        state.ability_scores[ability].modifier = 0;
+
+        state.ability_autorolls_selected =
+          state.ability_autorolls_selected.filter((r) => r !== prevSelection);
+      } else if (prevSelection > 0 && prevSelection !== roll) {
+        state.ability_scores[ability].base_score =
+          state.ability_scores[ability].base_score - prevSelection + roll;
+        //2
+        state.ability_scores[ability].total_score =
+          state.ability_scores[ability].total_score - prevSelection + roll;
+        //3
+        let modifier = Math.floor(
+          (state.ability_scores[ability].base_score + roll - 10) / 2
+        );
+        state.ability_scores[ability].modifier = modifier;
+        //4
+        state.ability_autorolls_selected = [
+          ...state.ability_autorolls_selected.filter(
+            (r) => r !== prevSelection
+          ),
+          roll,
+        ];
+      } else {
+        state.ability_scores[ability].base_score =
+          state.ability_scores[ability].base_score + roll;
+
+        state.ability_scores[ability].total_score =
+          state.ability_scores[ability].total_score +
+          state.ability_scores[ability].base_score +
+          state.ability_scores[ability].bonus;
+
+        let modifier = Math.floor(
+          (state.ability_scores[ability].total_score - 10) / 2
+        );
+
+        state.ability_scores[ability].modifier = modifier;
+
+        state.ability_autorolls_selected = [
+          ...state.ability_autorolls_selected,
+          roll,
+        ];
+      }
     },
     manualAbilityRollsUpdated: (state, action) => {},
     selectClassFeature: (state, action) => {
@@ -380,25 +549,78 @@ const characterBuilderSlice = createSlice({
         }
       );
     },
+    selectClassFeatureOptions: (state, action) => {
+      const { featureName, selection } = action.payload;
+
+      if (featureName === 'Favored Enemy') {
+        state.favored_enemy_selected = [
+          ...state.favored_enemy_selected,
+          selection,
+        ];
+      } else {
+        state.natural_explorer_selected = [
+          ...state.natural_explorer_selected,
+          selection,
+        ];
+      }
+    },
     classUpdated: (state, action) => {
-      const {
-        class_type,
-        equipment,
-        skills,
-        class_specific,
-        traits,
-        ability_score_bonuses,
-        proficiencies,
-      } = action.payload;
-      state.class_type = class_type;
-      (state.equipment = [...equipment]), (state.skills = [...skills]);
-      state.class_specific = { ...class_specific };
-      state.traits = [...state.traits, ...traits];
-      state.ability_score_bonuses = [
-        ...state.ability_score_bonuses,
-        ...ability_score_bonuses,
-      ];
-      state.proficiencies = [...state.proficiencies, ...proficiencies];
+      state.proficiencies = {
+        tools: {
+          selected: [...state.selected_class.proficiencies.tools.selected],
+          ...state.proficiencies.tools,
+        },
+        skills: {
+          selected: [...state.selected_class.proficiencies.skills.selected],
+          ...state.proficiencies.skills,
+        },
+        ...state.proficiencies,
+        ...state.selected_class.proficiencies,
+      };
+    },
+    raceUpdated: (state, action) => {
+      const { traits } = action.payload;
+
+      traits.forEach((tr) => {
+        if (tr.name === 'Ability Score Increase' && state.race !== 'Human') {
+          state.asi[1].attributes = [
+            ...state.asi[1].attributes,
+            tr.selected[0],
+          ];
+          state.asi[1].attributes = state.asi[1].attributes.filter(
+            (att) => att !== 'Other'
+          );
+
+          state.asi[2].attributes = [
+            ...state.asi[2].attributes,
+            tr.selected[1],
+          ];
+          state.asi[2].attributes = state.asi[2].attributes.filter(
+            (att) => att !== 'Other'
+          );
+        }
+
+        if (tr.name === 'Languages') {
+          state.languages.known_languages = [
+            ...state.languages.known_languages,
+            ...tr.selected,
+          ];
+        }
+
+        if (tr.name === 'Skill Versatility') {
+          state.proficiencies.skills.selected = [
+            ...state.proficiencies.skills.selected,
+            ...tr.selected,
+          ];
+        }
+
+        if (tr.name === 'Tool Proficiency') {
+          state.proficiencies.tools.selected = [
+            ...state.proficiencies.tools.selected,
+            ...tr.selected,
+          ];
+        }
+      });
     },
     spellAddedToInventory: (state, action) => {
       const { spell } = action.payload;
@@ -406,7 +628,7 @@ const characterBuilderSlice = createSlice({
       if (
         spell.level_int === 2 &&
         state.spell_casting.level_2_spells.length <
-          state.spell_casting.level_2_total
+          state.spell_casting.spell_slots_level_2
       ) {
         let matchingSpell = state.spell_casting.level_2_spells.find((sp) => {
           if (sp.name === spell.name) {
@@ -424,7 +646,7 @@ const characterBuilderSlice = createSlice({
       } else if (
         spell.level_int === 1 &&
         state.spell_casting.level_1_spells.length <
-          state.spell_casting.level_1_total
+          state.spell_casting.spell_slots_level_1
       ) {
         let matchingSpell = state.spell_casting.level_1_spells.find((sp) => {
           if (sp.name === spell.name) {
@@ -441,7 +663,7 @@ const characterBuilderSlice = createSlice({
       } else {
         if (
           state.spell_casting.cantrips.length <
-          state.spell_casting.cantrips_total
+          state.spell_casting.cantrips_known
         ) {
           let matchingSpell = state.spell_casting.cantrips.find((sp) => {
             if (sp.name === spell.name) {
@@ -481,47 +703,7 @@ const characterBuilderSlice = createSlice({
         ];
       }
     },
-    setSpellsAvailableForClass: (state, action) => {
-      const { results } = action.payload;
-      state.spells_available_to_class = [
-        ...state.spells_available_to_class,
-        results,
-      ];
-    },
     setFilteredRace: (state, action) => {
-      const { name, traits } = action.payload;
-
-      let skillVersatilityTrait = traits.find((tr) => {
-        if (tr.name === 'Skill Versatility') {
-          return tr;
-        }
-      });
-
-      if (skillVersatilityTrait) {
-        state.race_skillOptions_available = [
-          ...state.race_skillOptions_available,
-          ...skillVersatilityTrait.choices,
-        ];
-      }
-
-      if (name === 'Half-Elf') {
-        state.ability_bonusOptions_available = [
-          ...state.ability_bonusOptions_available,
-          'Strength',
-          'Constitution',
-          'Intelligence',
-          'Wisdom',
-          'Dexterity',
-        ];
-        state.ability_bonus_selected = [
-          ...state.ability_bonus_selected,
-          {
-            name: 'Charisma',
-            value: 2,
-          },
-        ];
-      }
-
       state.selected_race = {
         ...state.selected_race,
         ...action.payload,
@@ -551,10 +733,6 @@ const characterBuilderSlice = createSlice({
         ...proficiencies.tools.choices,
       ];
       state.skill_options_available = [...proficiencies.skills.choices];
-      // state.spells_available_to_class = [
-      //   ...state.spells_available_to_class,
-      //   ...spells,
-      // ];
     },
     clearFilteredRace: (state) => {
       state.selected_race = initialState.selected_race;
@@ -582,6 +760,7 @@ export const {
   raceAdded,
   classAdded,
   classUpdated,
+  raceUpdated,
   skillsUpdated,
   toolsUpdated,
   asiUpdated,
@@ -593,8 +772,8 @@ export const {
   spellRemovedFromInventory,
   racebasedSkillsUpdated,
   selectClassFeature,
+  selectClassFeatureOptions,
   setFilteredClass,
-  setSpellsAvailableForClass,
   setFilteredRace,
   clearFilteredClass,
   clearFilteredRace,

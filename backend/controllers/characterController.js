@@ -33,12 +33,13 @@ const getCharacterById = asyncHandler(async (req, res) => {
 
 // @desc    Create a character
 // @route   POST /api/characters
-// @access  Private/Admin
-const createCharacter = asyncHandler(async (req, res) => {
+// @access  Private
+const initCharacter = asyncHandler(async (req, res) => {
+  console.log('req.user:', req.user);
   const character = new Character({
     name: 'Sample name',
     userId: req.user._id,
-    img: '/frontend/src/assets/stock/iStock-458649605.jpg',
+    img: '/frontend/src/assets/stock/character_builder_bg.jpg',
   });
 
   const createdCharacter = await character.save();
@@ -105,12 +106,15 @@ const updateCharacter = asyncHandler(async (req, res) => {
 const deleteCharacter = asyncHandler(async (req, res) => {
   const { chrId } = req.params;
 
-  const character = await Character.findById(chrId).populate('userId');
+  const character = await Character.findById(chrId);
 
   if (character) {
-    await character.remove();
+    console.log('this is the character to delete:', character);
+    await Character.deleteOne({ _id: character._id });
 
-    res.json(character);
+    res.json({
+      message: `Character ${character.name} has been deleted successfully`,
+    });
   } else {
     res.status(404);
     throw new Error('Character not found');
@@ -120,7 +124,7 @@ const deleteCharacter = asyncHandler(async (req, res) => {
 module.exports = {
   getCharacters,
   getCharacterById,
-  createCharacter,
+  initCharacter,
   createNewCharacter,
   updateCharacter,
   deleteCharacter,

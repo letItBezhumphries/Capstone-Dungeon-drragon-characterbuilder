@@ -1,7 +1,3 @@
-import {
-  FormContainerInner,
-  FormContainerOuter,
-} from '../../../components/FormContainer';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,9 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { updateFormData } from '../../../slices/formSlice';
 import {
   clearFilteredRace,
-  setFilteredRace,
+  raceUpdated,
 } from '../../../slices/characterBuilderSlice';
 import CharacterBuilderStepMenu from '../CharacterBuilderStepMenu';
+import {
+  FormContainerInner,
+  FormContainerOuter,
+} from '../../../components/FormContainer';
+import CharacterOptionsList from '../../../components/CharacterOptionsList';
 import FilterOptionItem from '../../../components/FilterOptionItem';
 import ConfirmRace from './ConfirmRace';
 import CharacterName from '../CharacterName';
@@ -24,6 +25,10 @@ const ChooseRaceScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
+
+  const formData = useSelector((state) => state.form.formData);
+
+  console.log('in ChooseRaceScreen -> formData:', formData);
 
   const race = useSelector((state) => state.character.selected_race);
 
@@ -75,48 +80,59 @@ const ChooseRaceScreen = () => {
     // find the matching trait choice
     console.log('these are the inputs captured data:', data);
     // store the parsed race data
-    const raceData = JSON.parse(data.race);
-    console.log('Race data submitted by form:', raceData);
-    // create a cache object
-    const targetCache = {};
-    // loop over the keys in data and only target keys that aren't 'name', and 'race'
-    for (let key in data) {
-      if (key !== 'name' && key !== 'race') {
-        // for the multiple select traits target only the keys that end with a 1 or 0
-        if (key[key.length - 1] === '0' || key[key.length - 1] === '1') {
-          // store the matching trait name by getting rid of index added to name
-          let newKey = key.split('-')[0];
-          // check if newKey exists on cache
-          if (!targetCache[newKey]) {
-            // it doesn't so just assign it to array literal with the value of the key as the only element
-            targetCache[newKey] = [data[key]];
+    if (!data.race) {
+      navigate('/character/chclass');
+    } else {
+      const raceData = JSON.parse(data.race);
+      console.log('Race data submitted by form:', raceData);
+      // create a cache object
+      const targetCache = {};
+      // loop over the keys in data and only target keys that aren't 'name', and 'race'
+      for (let key in data) {
+        if (key !== 'name' && key !== 'race') {
+          // for the multiple select traits target only the keys that end with a 1 or 0
+          if (key[key.length - 1] === '0' || key[key.length - 1] === '1') {
+            // store the matching trait name by getting rid of index added to name
+            let newKey = key.split('-')[0];
+            // check if newKey exists on cache
+            if (!targetCache[newKey]) {
+              // it doesn't so just assign it to array literal with the value of the key as the only element
+              targetCache[newKey] = [data[key]];
+            } else {
+              // it does exist therefore need to add the value for the key to the cache
+              targetCache[newKey].push(data[key]);
+            }
           } else {
-            // it does exist therefore need to add the value for the key to the cache
-            targetCache[newKey].push(data[key]);
+            // here it is not a trait that has multple options so just assign the cache[key] to the value of the key in data
+            targetCache[key] = data[key];
           }
-        } else {
-          // here it is not a trait that has multple options so just assign the cache[key] to the value of the key in data
-          targetCache[key] = data[key];
         }
       }
-    }
 
-    console.log('targetCache:', targetCache);
-    for (let key in targetCache) {
-      raceData.traits.map((tr, idx) => {
-        if (tr.name === key) {
-          raceData.traits[idx].selected = targetCache[key];
-        }
-      });
-    }
+      console.log('targetCache:', targetCache);
+      for (let key in targetCache) {
+        console.log('key for race:', key);
 
-    console.log(
-      'ChooseRaceScreen - after raceData onNextStep click:',
-      raceData.traits
-    );
-    dispatch(setFilteredRace(raceData));
-    dispatch(updateFormData({ race: raceData }));
-    navigate('/character/chclass');
+        raceData.traits.map((tr, idx) => {
+          if (tr.name === key) {
+            raceData.traits[idx].selected = [
+              ...raceData.traits[idx].selected,
+              targetCache[key],
+            ];
+          }
+        });
+      }
+
+      console.log(
+        'ChooseRaceScreen - after targetCache modifies raceData.traits onNextStep:',
+        raceData
+      );
+
+      dispatch(clearFilteredRace());
+      dispatch(raceUpdated({ traits: raceData.traits }));
+      dispatch(updateFormData({ race: raceData }));
+      navigate('/character/chclass');
+    }
   };
 
   const handleCancelSelection = () => {
@@ -157,20 +173,28 @@ const ChooseRaceScreen = () => {
                 ></input>
               </>
             ) : (
-              <div className='filtering-container'>
-                {characterRaces.map((race, idx) => (
-                  <FilterOptionItem
-                    key={idx}
-                    name={race.name}
-                    index={race.index}
-                    imgsrc={race.imgSrc}
-                    onSelectOption={handleRaceFilter}
-                    showConfirmationModal={showConfirmationModal}
-                    optionSelected={temporaryRace}
-                    isRace={true}
-                  />
-                ))}
-              </div>
+              <>
+                {/* <div className='filtering-container'>
+                  {characterRaces.map((race, idx) => (
+                    <FilterOptionItem
+                      key={idx}
+                      name={race.name}
+                      index={race.index}
+                      imgsrc={race.imgSrc}
+                      onSelectOption={handleRaceFilter}
+                      showConfirmationModal={showConfirmationModal}
+                      optionSelected={temporaryRace}
+                      isRace={true}
+                    />
+                  ))}
+                </div> */}
+                <CharacterOptionsList
+                  options={characterRaces}
+                  onSelectOption={handleRaceFilter}
+                  showConfirmationModal={showConfirmationModal}
+                  optionSelected={temporaryRace}
+                />
+              </>
             )}
           </FormContainerInner>
           <Button

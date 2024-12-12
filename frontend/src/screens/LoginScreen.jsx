@@ -3,9 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
-import { useLoginMutation } from '../services/backend';
+// import { useLoginMutation } from '../services/backend';
+import { useLoginMutation } from '../slices/userApiSlice';
 import { setCredentials } from '../slices/authSlice';
-import FormContainer from '../components/FormContainer';
+import { BaseFormContainer } from '../components/FormContainer';
 import { toast } from 'react-toastify';
 
 const LoginScreen = () => {
@@ -16,7 +17,7 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   //  to get the login RTK query
-  const [login, { isLoading, data }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   // need to bring in userInfo from auth state
   const { userInfo } = useSelector((state) => state.auth);
@@ -24,29 +25,32 @@ const LoginScreen = () => {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   // check if there was a redirect in the url which would mean we need to go back to that previous page
-  const redirect = sp.get('redirect' || '/');
+  const redirect = sp.get('redirect') || '/';
 
   useEffect(() => {
     if (userInfo) {
       navigate(redirect);
     }
-  }, [userInfo, redirect, navigate]);
+  }, [redirect, navigate, userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       // unwrap to extract or unwrap the resolved value from the promise
       const res = await login({ email, password }).unwrap();
+
+      console.log('in submitHandler Login -> res:', res);
+
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (err) {
       // put question marks just in case we get errors because these properties are undefined
-      toast.error(err?.data?.message || err);
+      toast.error(err?.data?.message || err.error);
     }
   };
 
   return (
-    <FormContainer>
+    <BaseFormContainer>
       <h1>Sign In</h1>
       {isLoading && <Loader />}
       <Form onSubmit={submitHandler}>
@@ -82,7 +86,7 @@ const LoginScreen = () => {
           </Link>
         </Col>
       </Row>
-    </FormContainer>
+    </BaseFormContainer>
   );
 };
 

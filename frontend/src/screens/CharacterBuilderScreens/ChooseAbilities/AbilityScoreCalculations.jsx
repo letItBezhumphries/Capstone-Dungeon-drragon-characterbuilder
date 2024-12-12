@@ -21,7 +21,7 @@ const AbilityScoreCalculationList = styled.div`
 `;
 
 const AbilityScoreCalculations = () => {
-  const abilityScores = useSelector((state) => state.character.abilityScores);
+  const abilityScores = useSelector((state) => state.character.ability_scores);
 
   const icons = [
     '<i class="fa-solid fa-dumbbell"></i>',

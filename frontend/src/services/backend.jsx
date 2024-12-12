@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+// import { backendApi } from '../slices/backendApiSlice'
 
 // Define a service using a base URL and expected endpoints
 export const backendMonstersApi = createApi({
@@ -30,12 +31,20 @@ export const backendCharactersApi = createApi({
         url: `/api/characters/new/${character.userId}`,
         method: 'POST',
         body: { ...character },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
       }),
     }),
     initCharacter: builder.mutation({
       query: () => ({
-        url: `/api/characters/new`,
+        url: `/api/characters`,
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
       }),
       // invalidateTags will stop this from getting cached since will use update instead and it wont cause page to refresh
       invalidatesTags: ['Character'],
@@ -45,6 +54,10 @@ export const backendCharactersApi = createApi({
         url: `/api/characters/update/${character._id}`,
         method: 'PUT',
         body: { ...character },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
       }),
       keepUnusedDataFor: 5,
     }),
@@ -65,12 +78,15 @@ export const backendUsersApi = createApi({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: () => `/api/users`,
+      credentials: 'include',
       providesTags: ['User'],
     }),
     login: builder.mutation({
       query: (data) => ({
-        url: `/api/auth`,
+        url: `/api/users/auth`,
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: data,
       }),
     }),
@@ -126,6 +142,7 @@ export const {
   useGetBackendCharactersQuery,
   useGetCharacterDetailsQuery,
   useCreateCharacterMutation,
+  useInitCharacterMutation,
   useUpdateCharacterMutation,
   useDeleteCharacterMutation,
 } = backendCharactersApi;

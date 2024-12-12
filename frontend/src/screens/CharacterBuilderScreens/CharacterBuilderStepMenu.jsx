@@ -39,24 +39,19 @@ const MenuLink = styled(Nav.Link)`
     color: white;
   }
 
-  ${
-    '' /* &:active {
-    color: ${pallete.COLOR_MAGENTA_PANTONE}
-  } */
-  }
-
-  &:after:active {
+  &:hover:after {
     border-color: #1c9aef;
   }
 
-  &:hover:after {
+  ${'' /*  if there was a space between '&' and '.active' this didn't work */}
+  &.active:after {
     border-color: #1c9aef;
   }
 `;
 
 const CharacterBuilderStepMenu = ({ step0, step1, step2, step3, step4 }) => {
   return (
-    <CharacterBuilderNav>
+    <CharacterBuilderNav defaultActiveKey='home'>
       <span>Character Builder</span>
       <Nav.Item>
         {step0 ? (
@@ -74,7 +69,7 @@ const CharacterBuilderStepMenu = ({ step0, step1, step2, step3, step4 }) => {
       <Nav.Item>
         {step0 ? (
           <LinkContainer to='/character/chrace'>
-            <MenuLink>1. RACE</MenuLink>
+            <MenuLink eventKey='race'>1. RACE</MenuLink>
           </LinkContainer>
         ) : (
           <MenuLink disabled>RACE</MenuLink>
@@ -83,7 +78,7 @@ const CharacterBuilderStepMenu = ({ step0, step1, step2, step3, step4 }) => {
       <Nav.Item>
         {step0 ? (
           <LinkContainer to='/character/chclass'>
-            <MenuLink>2. CLASS</MenuLink>
+            <MenuLink eventKey='class'>2. CLASS</MenuLink>
           </LinkContainer>
         ) : (
           <MenuLink disabled>2. CLASS</MenuLink>
@@ -93,22 +88,32 @@ const CharacterBuilderStepMenu = ({ step0, step1, step2, step3, step4 }) => {
         {/*  REMEMEMBER NEED TO CHANGE THIS BACK TO PROPER STEPS NEEDED TO HIT ROUTE */}
         {step0 ? (
           <LinkContainer to='/character/chabilities'>
-            <MenuLink>3. ABILITES</MenuLink>
+            <MenuLink eventKey='abilities'>3. ABILITES</MenuLink>
           </LinkContainer>
         ) : (
           <MenuLink disabled>3. ABILITIES</MenuLink>
         )}
       </Nav.Item>
       <Nav.Item>
+        {/*  REMEMEMBER NEED TO CHANGE THIS BACK TO PROPER STEPS NEEDED TO HIT ROUTE */}
+        {step0 ? (
+          <LinkContainer to='/character/chbackground'>
+            <MenuLink eventKey='background'>4. BACKGROUND</MenuLink>
+          </LinkContainer>
+        ) : (
+          <MenuLink disabled>4. BACKGROUND</MenuLink>
+        )}
+      </Nav.Item>
+      <Nav.Item>
         {step4 ? (
           <LinkContainer to='/chfinal'>
-            <MenuLink>
+            <MenuLink eventKey='final'>
               <i className='fa-solid fa-address-card'></i>
             </MenuLink>
           </LinkContainer>
         ) : (
           <LinkContainer to='/chfinal'>
-            <MenuLink>
+            <MenuLink eventKey={'final'}>
               <i className='fa-solid fa-address-card'></i>
             </MenuLink>
           </LinkContainer>

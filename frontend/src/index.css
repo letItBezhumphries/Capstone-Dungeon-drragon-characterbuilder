@@ -39,8 +39,6 @@ h6 {
 body,
 #root {
   font-family: 'Roboto', Arial, sans-serif;
-  width: 100vw;
-  height: 100vh;
   margin: 0 0;
   padding: 0 0;
 }
@@ -49,27 +47,9 @@ body,
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 100%;
-  width: 100%;
-}
-
-/* the homepage link */
-nav a {
-  text-decoration: none;
-  color: var(--davys-gray);
-}
-
-nav a:hover {
-  text-decoration: none;
-}
-
-.nav-link a {
-  text-decoration: none;
-  color: var(--davys-gray);
-}
-
-.nav-link a:hover {
-  color: lightpink;
+  height: 100vh;
+  width: 100vw;
+  max-height: 100vh;
 }
 
 .page-header {

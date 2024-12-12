@@ -3,7 +3,8 @@ import {
   thievesSkills,
   musicalInstruments,
   characterAbilities,
-  characterFeats,
+  metamagicSpells,
+  mysticArcanumSpells,
   terrainTypes,
   enemyTypes,
 } from '../data/selectors';
@@ -102,115 +103,7 @@ export const parseClassData = (data) => {
 
   let proficiencies = parseProficiencies(data);
 
-  // console.log('categories for characters class:', categories);
-  // let spellCasterClasses = [
-  //   'Bard',
-  //   'Cleric',
-  //   'Druid',
-  //   'Paladin',
-  //   'Ranger',
-  //   'Sorcerer',
-  //   'Warlock',
-  //   'Wizard',
-  // ];
-
-  // if (spellCasterClasses.includes(data.name)) {
-  //   output.spellcasting = {
-  //     name: 'Spellcasting',
-  //   };
-  // }
-
-  // let sorceryPointsIndex = table[0].indexOf('Sorcery Points');
-  // let spellsKnownIndex = table[0].indexOf('Spells Known');
-  // let cantripsKnownIndex = table[0].indexOf('Cantrips Known');
-  // let invocationsKnownIndex = table[0].indexOf('Invocations Known');
-  // let spellSlotsIndex = table[0].indexOf('Spell Slots');
-  // let slotLevelIndex = table[0].indexOf('Slot Level');
-  // let level1SpellsIndex = table[0].indexOf('1st');
-  // let level2SpellsIndex = table[0].indexOf('2nd');
-
   let featuresIdx = table[0].indexOf('Features');
-
-  // // check if class has spells known for level1 by storing the index of 'Spells Known' from the header cells
-  // if (spellsKnownIndex > -1) {
-  //   if (table[1][spellsKnownIndex] === '-') {
-  //     output.spellcasting.spells_known = 0;
-  //   } else {
-  //     output.spellcasting.spells_known = parseInt(table[1][spellsKnownIndex]);
-  //   }
-  // }
-
-  // // check if class has cantrips known for level1 by storing the indexof 'Cantrips known' from the header cells
-  // if (cantripsKnownIndex > -1) {
-  //   if (table[1][cantripsKnownIndex] === '-') {
-  //     output.spellcasting.cantrips_total = 0;
-  //     // console.log('cantripsKnown = -:', table[1][cantripsKnownIndex]);
-  //   } else {
-  //     // console.log('cantripsKnown:', parseInt(table[1][cantripsKnownIndex]));
-  //     output.spellcasting.cantrips_total = parseInt(
-  //       table[1][cantripsKnownIndex]
-  //     );
-  //   }
-  // }
-
-  // // check if the class has 1st level spells
-  // if (level1SpellsIndex > -1) {
-  //   if (table[1][level1SpellsIndex] === '-') {
-  //     output.spellcasting.level_1_total = 0;
-  //     output.spellcasting.level_1_spells = [];
-  //   } else {
-  //     output.spellcasting.level_1_total = parseInt(table[1][level1SpellsIndex]);
-  //     output.spellcasting.level_1_spells = [];
-  //   }
-  // }
-
-  // // check if the class has 2nd level spells
-  // if (level2SpellsIndex > -1) {
-  //   if (table[1][level2SpellsIndex] === '-') {
-  //     output.spellcasting.level_2_total = 0;
-  //     output.spellcasting.level_2_spells = [];
-  //   } else {
-  //     output.spellcasting.level_2_total = parseInt(table[1][level2SpellsIndex]);
-  //     output.spellcasting.level_2_spells = [];
-  //   }
-  // }
-
-  // if (invocationsKnownIndex > -1) {
-  //   if (table[1][invocationsKnownIndex] === '-') {
-  //     output.spellcasting.invocations_total = 0;
-  //     output.spellcasting.invocations = [];
-  //   } else {
-  //     output.spellcasting.invocations_total = parseInt(
-  //       table[1][invocationsKnownIndex]
-  //     );
-  //     output.spellcasting.invocations = [];
-  //   }
-  // }
-  // if (sorceryPointsIndex > -1) {
-  //   if (table[1][sorceryPointsIndex] === '-') {
-  //     output.spellcasting.sorcery_points = 0;
-  //   } else {
-  //     output.spellcasting.sorcery_points = parseInt(
-  //       table[1][sorceryPointsIndex]
-  //     );
-  //   }
-  // }
-  // if (spellSlotsIndex > -1) {
-  //   if (table[1][spellSlotsIndex] === '-') {
-  //     output.spellcasting.spell_slots_total = 0;
-  //   } else {
-  //     output.spellcasting.spell_slots_total = parseInt(
-  //       table[1][spellSlotsIndex]
-  //     );
-  //   }
-  // }
-  // if (slotLevelIndex > -1) {
-  //   if (table[1][slotLevelIndex] === '-') {
-  //     output.spellcasting.spell_slot_level = 0;
-  //   } else {
-  //     output.spellcasting.spell_slot_level = parseInt(table[1][slotLevelIndex]);
-  //   }
-  // }
 
   let featuresList = getFeaturesList(table.slice(1), featuresIdx);
   // console.log('parseClassData - featuresList:', featuresList);
@@ -867,7 +760,7 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
           {
             name: 'Mystic Arcanum',
             total_choices: 1,
-            choices: [],
+            choices: mysticArcanumSpells,
             subtype: 'spells',
             selected: [],
           },
@@ -910,7 +803,7 @@ const getPrimaryInfo = (name, data, descriptions, skills) => {
           {
             name: 'Metamagic',
             total_choices: 4,
-            choices: [],
+            choices: metamagicSpells,
             subtype: 'spells',
             selected: [],
           },
@@ -1127,7 +1020,7 @@ barbarian -
   proficiencies - 2 choices
   primal path - 1 choice = path archetypes
 bard - 
-  proficiencies - 6 choices
+  proficiencies - 3 skills, 3 tools = 6 choices
   bard college - 1 choice - college archetypes
   magical secrets - 2 choices spells of any class 
   expertise - 2 choices - skill proficiencies bonus
@@ -1145,31 +1038,31 @@ monk -
   proficiencies - 3 choices
   manastic tradition - 1 choice - archetypes
 paladin -
-  profs - 2 choices
+  proficiencies - 2 choices
   fighting style - 1 choice
   sacred oath - 1 choice - oath archetypes
 ranger - 
-  profs - 3 choices
+  proficiencies - 3 choices
   favored enemy - 3 choices 
   natural explorer - 3 choices 
   fighting style - 1 choice
   ranger archetype - 1 choice - archetypes
 rogue -
-  profs - 4 choices
+  proficiencies - 4 choices
   expertise - 2 choices
   roguish archetype - 1 choice
 sorcerer -
-  profs - 2 choices
+  proficiencies - 2 choices
   sorcerous origin - 1 choice
   metamagic - 4 choices
 warlock -
-  profs - 2 choices
+  proficiencies - 2 choices
   otherworldly patron - 1 choice
   eldritch invocations - 8 choices
   pact boon - 1 choice
   mystic arcanum - 1 choice
 wizard -
-  profs - 2 choices
+  proficiencies - 2 choices
   arcane tradition - 1 choice
   spell mastery - 2 choices
   signature spells - 2 choices

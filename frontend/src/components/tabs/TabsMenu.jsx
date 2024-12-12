@@ -22,7 +22,7 @@ const TabList = styled.ul`
 `;
 
 const TabsMenu = ({ tabs, introData, characterLevel, register }) => {
-  console.log('TabsMenu -> items:', tabs[0].items);
+  // console.log('TabsMenu -> items:', tabs[0].items);
   return (
     <>
       <TabMenuRow>

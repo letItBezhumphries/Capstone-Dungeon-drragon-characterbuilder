@@ -18,10 +18,9 @@ import CharacterBuilder from './screens/CharacterBuilderScreens/CharacterBuilder
 import ChooseRaceScreen from './screens/CharacterBuilderScreens/ChooseRace/ChooseRaceScreen';
 import ChooseClassScreen from './screens/CharacterBuilderScreens/ChooseClass/ChooseClassScreen';
 import ChooseAbilitiesScreen from './screens/CharacterBuilderScreens/ChooseAbilities/ChooseAbilitiesScreen';
+import ChooseBackgroundScreen from './screens/CharacterBuilderScreens/ChooseBackground/ChooseBackgroundScreen';
 import ProfileScreen from './screens/ProfileScreens/ProfileScreen';
 import CharacterDetailsScreen from './screens/CharacterDetailsScreen/CharacterDetails';
-import CharacterEditScreen from './screens/admin/CharacterEditScreen';
-import CharacterListScreen from './screens/admin/CharacterListScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 
@@ -49,6 +48,11 @@ const router = createBrowserRouter(
         <Route
           path='/character/chabilities'
           element={<ChooseAbilitiesScreen />}
+          exact
+        ></Route>
+        <Route
+          path='/character/chbackground'
+          element={<ChooseBackgroundScreen />}
           exact
         ></Route>
         <Route

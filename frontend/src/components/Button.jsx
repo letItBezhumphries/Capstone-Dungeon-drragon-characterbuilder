@@ -22,6 +22,7 @@ const NavIcon = styled.div`
   height: 35px;
   justify-content: center;
   width: 35px;
+  color: #fff;
 `;
 
 // top: 245px;
@@ -54,11 +55,12 @@ const NavButton = styled.button`
   border-radius: 3px;
   cursor: pointer;
   display: flex;
-  opacity: 0.4;
+  opacity: 0.6;
   position: fixed;
   transition: all 0.2s;
   top: 245px;
   border: none;
+  padding: 8px;
 
   &:hover,
   &:focus {
@@ -66,7 +68,40 @@ const NavButton = styled.button`
     opacity: 1;
   }
   &:hover ${NavText} {
-    margin-left: 10px;
+    ${'' /* margin-left: 10px; */}
+    max-width: 200px;
+    font-family: 'Roboto Condensed';
+    font-size: 16px;
+  }
+  &:hover ${NavIcon} {
+    max-width: 200px;
+  }
+`;
+
+const DisabledNavButton = styled(NavButton)`
+  background-color: lightgrey;
+  align-items: center;
+  color: #777;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  opacity: 0.4;
+  position: fixed;
+  transition: all 0.2s;
+  top: 245px;
+  border: none;
+
+  &:hover ${NavText} {
+    color: #777;
+  }
+
+  &:hover,
+  &:focus {
+    border: none;
+    opacity: 1;
+  }
+  &:hover ${NavText} {
+    margin-right: 10px;
     max-width: 200px;
   }
   &:hover ${NavIcon} {
@@ -74,26 +109,44 @@ const NavButton = styled.button`
   }
 `;
 
-const Button = ({ step, icon, color, text, type, click }) => {
+const Button = ({ step, icon, color, text, disabled, type, click }) => {
   return (
     <>
       {step === 'Prev' ? (
         <ButtonContainerPrev>
-          <NavButton type={type} onClick={click}>
-            <NavText>{text}</NavText>
-            <NavIcon>
-              <i className={icon} style={{ color: color }}></i>
-            </NavIcon>
-          </NavButton>
+          {disabled ? (
+            <DisabledNavButton type={type} disabled={true}>
+              <NavIcon>
+                <i className={icon} style={{ color: '#777' }} />
+              </NavIcon>
+              <NavText>{text}</NavText>
+            </DisabledNavButton>
+          ) : (
+            <NavButton type={type} onClick={click}>
+              <NavIcon>
+                <i className={icon} style={{ color: color }}></i>
+              </NavIcon>
+              <NavText>{text}</NavText>
+            </NavButton>
+          )}
         </ButtonContainerPrev>
       ) : (
         <ButtonContainerNext>
-          <NavButton type={type}>
-            <NavText>{text}</NavText>
-            <NavIcon>
-              <i className={icon} style={{ color: color }}></i>
-            </NavIcon>
-          </NavButton>
+          {disabled ? (
+            <DisabledNavButton type={type} disabled={true}>
+              <NavText>{text}</NavText>
+              <NavIcon>
+                <i className={icon} style={{ color: '#777' }}></i>
+              </NavIcon>
+            </DisabledNavButton>
+          ) : (
+            <NavButton type={type}>
+              <NavText>{text}</NavText>
+              <NavIcon>
+                <i className={icon} style={{ color: color }}></i>
+              </NavIcon>
+            </NavButton>
+          )}
         </ButtonContainerNext>
       )}
     </>
