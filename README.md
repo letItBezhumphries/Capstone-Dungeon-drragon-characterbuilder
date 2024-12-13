@@ -1,6 +1,4 @@
-# Project Name
-
-> Dungeon&Dragons Character Builder Application
+# Dungeon&Dragons Character Builder Application
 
 <img src="./frontend/src/assets/homescreen.png">
 <img src="./frontend/src/assets/D&D_Character_Builder.png">
